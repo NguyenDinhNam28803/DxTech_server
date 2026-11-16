@@ -1,0 +1,37 @@
+# Production stack used by the CI/CD deploy job.
+# Required in ~/dxtechs-server/.env on the VPS (never commit it):
+#   POSTGRES_USER=...
+#   POSTGRES_PASSWORD=...   (strong, not the dev password)
+#   POSTGRES_DB=...
+services:
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env}
+      POSTGRES_DB: ${POSTGRES_DB:?set in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      retries: 10
+    # no "ports": the database is reachable only from the api container
+
+  api:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+    ports:
+      - "127.0.0.1:8080:8080"   # only Nginx on the VPS can reach it
+
+volumes:
+  postgres_data:
