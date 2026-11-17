@@ -1,30 +1,77 @@
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// ---------------------------------------------------------------------------
+// Services
+// ---------------------------------------------------------------------------
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Lỗi không bắt được -> trả về RFC 7807 ProblemDetails thay vì trang lỗi/stack trace.
+builder.Services.AddProblemDetails();
+
+// "ready" = API chạy VÀ kết nối được PostgreSQL. CI dùng endpoint này để quyết định deploy thành công.
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>("database", tags: ["ready"]);
+
+// Production: API nằm sau Nginx trên cùng VPS. Nginx gửi X-Forwarded-For/Proto.
+// Container chỉ publish ở 127.0.0.1:8080 (docker-compose.prod.yml), nên mọi request tới
+// đều đi qua Nginx; request lại đến từ gateway của mạng Docker (172.x) chứ không phải
+// loopback, vì vậy phải bỏ danh sách proxy mặc định (chỉ tin 127.0.0.1) thì header mới
+// được áp dụng. KHÔNG mở cổng 8080 ra Internet khi còn cấu hình này.
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.ForwardLimit = 1;
+    if (builder.Environment.IsProduction())
+    {
+        options.KnownNetworks.Clear();
+        options.KnownProxies.Clear();
+    }
+});
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ---------------------------------------------------------------------------
+// HTTP pipeline
+// ---------------------------------------------------------------------------
+
+// Phải đứng đầu để các middleware sau (log, HTTPS, auth) thấy đúng IP/scheme của client.
+app.UseForwardedHeaders();
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Ở Production, Nginx lo HTTPS; container chỉ nghe HTTP 8080 nên redirect ở đây là vô nghĩa.
+if (!app.Environment.IsProduction())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthorization();
+
+// Liveness: process còn sống, không chạm DB (dùng cho uptime monitor).
+app.MapHealthChecks("/api/health", new HealthCheckOptions { Predicate = _ => false });
+// Readiness: kiểm tra cả PostgreSQL (dùng cho bước kiểm tra sau deploy).
+app.MapHealthChecks("/api/health/ready", new HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("ready"),
+});
 
 app.MapControllers();
 

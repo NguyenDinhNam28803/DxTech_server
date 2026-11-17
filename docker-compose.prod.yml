@@ -3,6 +3,8 @@
 #   POSTGRES_USER=...
 #   POSTGRES_PASSWORD=...   (strong, not the dev password)
 #   POSTGRES_DB=...
+# API_TAG is set by CI to the short commit SHA, so every deploy leaves a tagged
+# image behind that can be started again for a rollback (see .github/workflows/ci-cd.yml).
 services:
   postgres:
     image: postgres:15
@@ -17,21 +19,40 @@ services:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       retries: 10
-    # no "ports": the database is reachable only from the api container
+    # no "ports": the database is reachable only from containers on this network
 
-  api:
+  # Applies pending EF Core migrations once, then exits. If it fails, the API is
+  # not (re)started and the deploy job fails, so the old API keeps serving.
+  migrate:
+    image: dxtechs-api-migrator:${API_TAG:-latest}
     build:
       context: .
       dockerfile: server/Dockerfile
-    restart: unless-stopped
+      target: migrator
+    restart: "no"
     depends_on:
       postgres:
         condition: service_healthy
     environment:
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+
+  api:
+    image: dxtechs-api:${API_TAG:-latest}
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+      target: final
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
     ports:
-      - "127.0.0.1:8080:8080"   # only Nginx on the VPS can reach it
+      - "127.0.0.1:8080:8080"   # only Nginx on the VPS can reach it; required by the forwarded-headers setup in Program.cs
 
 volumes:
   postgres_data:
