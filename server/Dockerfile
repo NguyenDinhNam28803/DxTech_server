@@ -23,6 +23,24 @@ FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
+# Builds an EF Core migrations bundle: one executable that applies pending migrations.
+# dotnet-ef version is pinned in .config/dotnet-tools.json (must match EF Core 8.0.x).
+FROM build AS migrations-build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+RUN dotnet tool restore \
+ && dotnet tool run dotnet-ef migrations bundle \
+      --project server/server.csproj \
+      --configuration $BUILD_CONFIGURATION \
+      --output /app/efbundle
+
+# One-shot container run by docker-compose.prod.yml before the API starts.
+# Reads the same ConnectionStrings__DefaultConnection variable as the API.
+FROM base AS migrator
+WORKDIR /app
+COPY --from=migrations-build /app/efbundle .
+ENTRYPOINT ["/bin/sh", "-c", "exec ./efbundle --connection \"$ConnectionStrings__DefaultConnection\""]
+
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
