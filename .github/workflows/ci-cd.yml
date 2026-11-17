@@ -1,0 +1,82 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: Build (.NET 8) & Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # Build the project file directly: the .NET 8 SDK cannot read server.slnx.
+      - run: dotnet restore server/server.csproj
+      - run: dotnet build server/server.csproj -c Release --no-restore
+
+      - name: Docker build
+        run: docker build -f server/Dockerfile -t dxtechs-api:ci .
+
+  deploy:
+    name: Deploy to VPS (Docker Compose)
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      VPS_HOST: ${{ secrets.VPS_HOST }}
+      VPS_USER: ${{ secrets.VPS_USER }}
+      VPS_PORT: ${{ secrets.VPS_PORT || '22' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_deploy ~/.ssh/known_hosts
+
+      - name: Upload source
+        run: |
+          git archive --format=tar.gz -o src.tgz HEAD
+          scp -P "$VPS_PORT" -i ~/.ssh/id_deploy src.tgz "$VPS_USER@$VPS_HOST:/tmp/dxtechs-server.tgz"
+
+      - name: Build & start containers
+        run: |
+          ssh -p "$VPS_PORT" -i ~/.ssh/id_deploy "$VPS_USER@$VPS_HOST" 'bash -s' <<'EOF'
+          set -euo pipefail
+          base="$HOME/dxtechs-server"
+          if [ ! -f "$base/.env" ]; then
+            echo "::error::Missing $base/.env on the VPS (see docker-compose.prod.yml)"; exit 1
+          fi
+          rm -rf "$base/src" && mkdir -p "$base/src"
+          tar -xzf /tmp/dxtechs-server.tgz -C "$base/src"
+          rm -f /tmp/dxtechs-server.tgz
+          cd "$base"
+          compose="docker compose -p dxtechs-server --env-file .env -f src/docker-compose.prod.yml"
+          $compose up -d --build --remove-orphans
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8080/WeatherForecast >/dev/null; then
+              echo "API is up"; docker image prune -f >/dev/null; exit 0
+            fi
+            sleep 2
+          done
+          echo "::error::API did not respond on 127.0.0.1:8080"
+          $compose logs --tail 80 api
+          exit 1
+          EOF
