@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Test được truy cập kiểu internal (entity, handler) mà không phải để public (ADR-001). -->
+    <InternalsVisibleTo Include="server.UnitTests" />
+    <InternalsVisibleTo Include="server.IntegrationTests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

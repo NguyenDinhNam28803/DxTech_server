@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
-using server.Data;
+using server.Infrastructure.Options;
+using server.Infrastructure.Persistence;
+using server.Infrastructure.Persistence.Interceptors;
+using server.Modules.Catalog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +12,35 @@ var builder = WebApplication.CreateBuilder(args);
 // Services
 // ---------------------------------------------------------------------------
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Production: log dạng JSON một dòng mỗi sự kiện → `docker logs` đọc/lọc được, sau này đẩy vào hệ thống log.
+if (builder.Environment.IsProduction())
+{
+    builder.Logging.ClearProviders();
+    builder.Logging.AddJsonConsole(options =>
+    {
+        options.UseUtcTimestamp = true;
+        options.TimestampFormat = "yyyy-MM-ddTHH:mm:ss.fffZ";
+    });
+}
+
+// Nguồn thời gian duy nhất của ứng dụng (ADR-006): test thay bằng FakeTimeProvider/TimeProvider tự viết.
+builder.Services.AddSingleton(TimeProvider.System);
+
+// Thiếu chuỗi kết nối → API không khởi động được (fail fast lúc deploy, không phải lúc khách dùng).
+// Chỉ kiểm tra khi host chạy; công cụ EF lúc design-time (migrations bundle) không bị ảnh hưởng.
+builder.Services.AddOptions<DatabaseOptions>()
+    .Bind(builder.Configuration.GetSection(DatabaseOptions.SectionName))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
+builder.Services.AddSingleton<AuditableInterceptor>();
+builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
+    options
+        .UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+        .AddInterceptors(serviceProvider.GetRequiredService<AuditableInterceptor>()));
+
+// Module nghiệp vụ (ADR-001): mỗi module tự đăng ký service của mình.
+builder.Services.AddCatalogModule(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -57,8 +87,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Ở Production, Nginx lo HTTPS; container chỉ nghe HTTP 8080 nên redirect ở đây là vô nghĩa.
-if (!app.Environment.IsProduction())
+// Chỉ máy dev mới redirect sang HTTPS. Ở Production, Nginx lo HTTPS (container chỉ nghe HTTP 8080);
+// môi trường test chạy trên TestServer không có HTTPS.
+if (app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
@@ -76,3 +107,6 @@ app.MapHealthChecks("/api/health/ready", new HealthCheckOptions
 app.MapControllers();
 
 app.Run();
+
+// Cho phép project test dùng WebApplicationFactory<Program>.
+public partial class Program;
