@@ -12,8 +12,30 @@ concurrency:
 
 jobs:
   build:
+    # Keep this job name stable: branch rulesets reference it as the required check.
     name: Build (.NET 8) & Docker image
     runs-on: ubuntu-latest
+
+    # Real PostgreSQL (same major version as production) for integration tests (ADR-005).
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: dxtechs_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U test -d dxtechs_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      TEST_CONNECTION_STRING: Host=localhost;Port=5432;Database=dxtechs_test;Username=test;Password=test
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+
     steps:
       - uses: actions/checkout@v5
 
@@ -21,9 +43,24 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      # Build the project file directly: the .NET 8 SDK cannot read server.slnx.
-      - run: dotnet restore server/server.csproj
-      - run: dotnet build server/server.csproj -c Release --no-restore
+      # Build project files directly: the .NET 8 SDK cannot read server.slnx.
+      - name: Restore
+        run: |
+          dotnet restore server/server.csproj
+          dotnet restore tests/server.UnitTests/server.UnitTests.csproj
+          dotnet restore tests/server.IntegrationTests/server.IntegrationTests.csproj
+
+      - name: Build
+        run: |
+          dotnet build server/server.csproj -c Release --no-restore
+          dotnet build tests/server.UnitTests/server.UnitTests.csproj -c Release --no-restore
+          dotnet build tests/server.IntegrationTests/server.IntegrationTests.csproj -c Release --no-restore
+
+      - name: Unit tests
+        run: dotnet test tests/server.UnitTests/server.UnitTests.csproj -c Release --no-build --logger "console;verbosity=normal"
+
+      - name: Integration tests (PostgreSQL 15)
+        run: dotnet test tests/server.IntegrationTests/server.IntegrationTests.csproj -c Release --no-build --logger "console;verbosity=normal"
 
       # Both images the VPS will build: the API and the one-shot migrations runner.
       - name: Docker build (api)

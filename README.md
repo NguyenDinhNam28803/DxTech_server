@@ -14,6 +14,46 @@ dotnet run --project server/server.csproj --launch-profile http
 > .NET 8 SDK không đọc được `server.slnx` trên dòng lệnh: luôn build/run qua `server/server.csproj`
 > (Visual Studio 2022 17.13+ mở được `.slnx`).
 
+## Cấu trúc (ADR-001)
+
+```
+server/
+├─ Program.cs                     chỉ đăng ký hạ tầng + AddXxxModule(); không chứa logic
+├─ Shared/                        kernel, không phụ thuộc module/hạ tầng (test kiến trúc kiểm tra)
+│  ├─ Results/                    Result, Result<T>, Error, ErrorType           (ADR-004)
+│  ├─ Paging/                     PageRequest, PagedResult<T>
+│  ├─ Ids/UuidV7.cs               khoá chính UUID v7                            (ADR-006)
+│  └─ Abstractions/IAuditable.cs  created_at / updated_at
+├─ Infrastructure/
+│  ├─ Persistence/                AppDbContext, SnakeCaseNamingConvention, AuditableInterceptor
+│  ├─ Http/ResultHttpExtensions   Result → 200/201/204 hoặc ProblemDetails
+│  └─ Options/                    cấu hình có kiểm tra khi khởi động (ValidateOnStart)
+└─ Modules/<Module>/              Contracts/ (public) · Domain/ · Persistence/ · Features/ · Api/
+tests/
+├─ server.UnitTests/              Shared, convention, interceptor, quy tắc kiến trúc
+└─ server.IntegrationTests/       API thật + PostgreSQL thật (WebApplicationFactory)
+docs/adr/                         ADR-001 … ADR-010
+```
+
+Quy ước trong module:
+- Entity, handler, cấu hình EF: `internal`. Chỉ `Contracts/`, `Api/` (controller) và lớp `XxxModule` là `public`.
+- Module A không dùng type của module B ngoài `Modules/B/Contracts`.
+- Bảng luôn đặt tên tường minh, số nhiều, có schema: `ToTable("products", CatalogModule.Schema)`.
+  Cột, khoá, index tự sinh theo snake_case.
+- Use case trả `Result<T>`; controller gọi `this.ToActionResult(result)`.
+
+## Test
+
+```bash
+docker compose up -d                       # PostgreSQL cho integration test
+dotnet test tests/server.UnitTests/server.UnitTests.csproj
+dotnet test tests/server.IntegrationTests/server.IntegrationTests.csproj
+```
+
+Integration test dùng PostgreSQL thật (ADR-005). Mặc định trỏ tới database của `docker compose`
+(`appdb` / `appuser`); đổi bằng biến môi trường `TEST_CONNECTION_STRING`. Trên CI, GitHub Actions
+chạy một container `postgres:15` cho mỗi lần build.
+
 ## Health check
 
 | Endpoint | Ý nghĩa | Dùng cho |
@@ -29,11 +69,13 @@ Mọi controller dùng tiền tố `api/`, ví dụ `[Route("api/[controller]")]
 ## Migration (EF Core)
 
 ```bash
-dotnet tool run dotnet-ef migrations add <TenMigration> --project server/server.csproj
+dotnet tool run dotnet-ef migrations add <Module>_<TenMigration> --project server/server.csproj \
+  --output-dir Infrastructure/Persistence/Migrations
 dotnet tool run dotnet-ef database update --project server/server.csproj   # áp vào DB local
 ```
 
-Commit cả thư mục `server/Migrations/`. Khi deploy, service `migrate` trong `docker-compose.prod.yml`
+Commit cả thư mục `server/Infrastructure/Persistence/Migrations/` và đính kèm SQL
+(`dotnet tool run dotnet-ef migrations script --project server/server.csproj`) vào PR để review. Khi deploy, service `migrate` trong `docker-compose.prod.yml`
 chạy migrations bundle **trước** khi khởi động API; migration lỗi thì API cũ vẫn chạy và job deploy báo đỏ.
 
 Quy tắc: migration phải tương thích ngược với code đang chạy (thêm cột nullable/bảng mới trước,
