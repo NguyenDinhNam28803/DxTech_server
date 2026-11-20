@@ -62,6 +62,21 @@ jobs:
       - name: Integration tests (PostgreSQL 15)
         run: dotnet test tests/server.IntegrationTests/server.IntegrationTests.csproj -c Release --no-build --logger "console;verbosity=normal"
 
+      # ADR-009: roles.sql against PostgreSQL 15 (psql 15 in a container, same as db-roles on the VPS).
+      - name: Database roles script (ADR-009)
+        env:
+          PGHOST: localhost
+          PGPORT: "5432"
+          PGUSER: test
+          PGPASSWORD: test
+          DB_ROLES_PSQL_IMAGE: postgres:15
+        run: .github/scripts/test-db-roles.sh
+
+      - name: Validate production compose file
+        run: |
+          POSTGRES_USER=u POSTGRES_PASSWORD=p POSTGRES_DB=d DB_OWNER_PASSWORD=o DB_APP_PASSWORD=a \
+            docker compose -f docker-compose.prod.yml config --quiet
+
       # Both images the VPS will build: the API and the one-shot migrations runner.
       - name: Docker build (api)
         run: docker build -f server/Dockerfile --target final -t dxtechs-api:ci .
@@ -140,7 +155,7 @@ jobs:
           # so the previous version keeps serving traffic.
           if ! $compose up -d --build --remove-orphans; then
             echo "::error::docker compose up failed (migrations or build)"
-            $compose logs --tail 80 migrate api || true
+            $compose logs --tail 80 db-roles migrate api || true
             exit 1
           fi
 
@@ -160,7 +175,7 @@ jobs:
             sleep 2
           done
           echo "::error::API did not become ready on 127.0.0.1:8080/api/health/ready"
-          $compose logs --tail 80 migrate api
+          $compose logs --tail 80 db-roles migrate api
           exit 1
           EOF
           ssh_retry --stdin remote-deploy.sh ssh -p "$VPS_PORT" -i ~/.ssh/id_deploy "$VPS_USER@$VPS_HOST" \

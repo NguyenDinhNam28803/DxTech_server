@@ -1,8 +1,11 @@
 # Production stack used by the CI/CD deploy job.
 # Required in ~/dxtechs-server/.env on the VPS (never commit it):
-#   POSTGRES_USER=...
-#   POSTGRES_PASSWORD=...   (strong, not the dev password)
+#   POSTGRES_USER=...       superuser: only postgres itself, db-roles and admin/backup use it
+#   POSTGRES_PASSWORD=...
 #   POSTGRES_DB=...
+#   DB_OWNER_PASSWORD=...   role dxtechs_owner (migrate)  — generate: openssl rand -hex 24
+#   DB_APP_PASSWORD=...     role dxtechs_app   (api)      — generate: openssl rand -hex 24
+# Hex passwords on purpose: they go into connection strings without any escaping.
 # API_TAG is set by CI to the short commit SHA, so every deploy leaves a tagged
 # image behind that can be started again for a rollback (see .github/workflows/ci-cd.yml).
 services:
@@ -21,6 +24,26 @@ services:
       retries: 10
     # no "ports": the database is reachable only from containers on this network
 
+  # ADR-009: creates/updates roles dxtechs_owner + dxtechs_app and their privileges
+  # (deploy/postgres/roles.sql, idempotent) as the superuser, on every deploy, before
+  # "migrate". Changing DB_OWNER_PASSWORD / DB_APP_PASSWORD in .env + redeploy = rotation.
+  db-roles:
+    image: postgres:15
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGHOST: postgres
+      PGUSER: ${POSTGRES_USER:?set in .env}
+      PGPASSWORD: ${POSTGRES_PASSWORD:?set in .env}
+      PGDATABASE: ${POSTGRES_DB:?set in .env}
+      DB_OWNER_PASSWORD: ${DB_OWNER_PASSWORD:?set in .env (openssl rand -hex 24)}
+      DB_APP_PASSWORD: ${DB_APP_PASSWORD:?set in .env (openssl rand -hex 24)}
+    volumes:
+      - ./deploy/postgres/roles.sql:/roles.sql:ro
+    entrypoint: ["psql", "-X", "-v", "ON_ERROR_STOP=1", "-f", "/roles.sql"]
+
   # Applies pending EF Core migrations once, then exits. If it fails, the API is
   # not (re)started and the deploy job fails, so the old API keeps serving.
   migrate:
@@ -31,10 +54,11 @@ services:
       target: migrator
     restart: "no"
     depends_on:
-      postgres:
-        condition: service_healthy
+      db-roles:
+        condition: service_completed_successfully
     environment:
-      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      # Owner role: may create/alter schemas and tables, nothing else (no superuser).
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=dxtechs_owner;Password=${DB_OWNER_PASSWORD}
 
   api:
     image: dxtechs-api:${API_TAG:-latest}
@@ -50,7 +74,8 @@ services:
         condition: service_completed_successfully
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      # App role: SELECT/INSERT/UPDATE/DELETE only. A bug or SQL injection cannot DROP/ALTER tables.
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=dxtechs_app;Password=${DB_APP_PASSWORD}
     ports:
       - "127.0.0.1:8080:8080"   # only Nginx on the VPS can reach it; required by the forwarded-headers setup in Program.cs
 

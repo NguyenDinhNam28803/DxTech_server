@@ -13,7 +13,7 @@ Chi tiết so sánh và sơ đồ: tài liệu "DXTechs — Thiết kế Server 
 | [006](006-naming-ids-money-time.md) | snake_case, UUID v7, tiền bigint VND, enum text, timestamptz UTC | Một phần — PR-1 (snake_case, UuidV7, IAuditable + TimeProvider); cột tiền/enum ở PR-3 |
 | [007](007-soft-delete-and-concurrency.md) | Soft delete chỉ cho catalog; concurrency bằng xmin | Đã chấp nhận — áp dụng ở PR-3 |
 | [008](008-full-text-search-and-category-tree.md) | Tìm kiếm full-text tiếng Việt không dấu; cây danh mục adjacency list | Đã chấp nhận — áp dụng ở PR-3/PR-4 |
-| [009](009-database-roles.md) | Tách role database: owner (migrate) và app (API) | Đã chấp nhận — áp dụng ở PR-2 (cần thao tác trên VPS) |
+| [009](009-database-roles.md) | Tách role database: owner (migrate) và app (API) | Đã áp dụng (PR-2) |
 | [010](010-demo-seed-on-demand.md) | Dữ liệu demo chạy theo lệnh | Đã chấp nhận — áp dụng ở PR-5 |
 | [011](011-api-subdomain.md) | API trên subdomain riêng `api.dxtechs.com` | Đã áp dụng — hạ tầng 20/11/2026; CORS ở PR-C1 |
 
