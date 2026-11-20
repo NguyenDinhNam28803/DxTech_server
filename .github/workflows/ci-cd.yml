@@ -72,10 +72,19 @@ jobs:
           DB_ROLES_PSQL_IMAGE: postgres:15
         run: .github/scripts/test-db-roles.sh
 
+      - name: VPS ops scripts (syntax + D2 Nginx edit)
+        run: |
+          for f in deploy/vps/*.sh deploy/vps/tests/*.sh; do bash -n "$f"; done
+          deploy/vps/tests/test-d2-nginx.sh
+
       - name: Validate production compose file
         run: |
           POSTGRES_USER=u POSTGRES_PASSWORD=p POSTGRES_DB=d DB_OWNER_PASSWORD=o DB_APP_PASSWORD=a \
             docker compose -f docker-compose.prod.yml config --quiet
+          # Every service must have log rotation.
+          POSTGRES_USER=u POSTGRES_PASSWORD=p POSTGRES_DB=d DB_OWNER_PASSWORD=o DB_APP_PASSWORD=a \
+            docker compose -f docker-compose.prod.yml config --format json \
+            | python3 -c 'import json,sys; s=json.load(sys.stdin)["services"]; bad=[n for n,v in s.items() if v.get("logging",{}).get("options",{}).get("max-size")!="10m"]; sys.exit("no log rotation: %s" % bad if bad else 0)'
 
       # Both images the VPS will build: the API and the one-shot migrations runner.
       - name: Docker build (api)

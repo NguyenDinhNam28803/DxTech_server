@@ -8,10 +8,19 @@
 # Hex passwords on purpose: they go into connection strings without any escaping.
 # API_TAG is set by CI to the short commit SHA, so every deploy leaves a tagged
 # image behind that can be started again for a rollback (see .github/workflows/ci-cd.yml).
+# Log rotation for every container of this stack (10 MB × 3 files each), set here instead of
+# /etc/docker/daemon.json: no Docker daemon restart, versioned and reviewed, applied by the next deploy.
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   postgres:
     image: postgres:15
     restart: unless-stopped
+    logging: *default-logging
     environment:
       POSTGRES_USER: ${POSTGRES_USER:?set in .env}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env}
@@ -30,6 +39,7 @@ services:
   db-roles:
     image: postgres:15
     restart: "no"
+    logging: *default-logging
     depends_on:
       postgres:
         condition: service_healthy
@@ -53,6 +63,7 @@ services:
       dockerfile: server/Dockerfile
       target: migrator
     restart: "no"
+    logging: *default-logging
     depends_on:
       db-roles:
         condition: service_completed_successfully
@@ -67,6 +78,7 @@ services:
       dockerfile: server/Dockerfile
       target: final
     restart: unless-stopped
+    logging: *default-logging
     depends_on:
       postgres:
         condition: service_healthy
