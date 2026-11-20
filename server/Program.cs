@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
+using server.Infrastructure.Http;
 using server.Infrastructure.Options;
 using server.Infrastructure.Persistence;
 using server.Infrastructure.Persistence.Interceptors;
@@ -49,6 +51,24 @@ builder.Services.AddSwaggerGen();
 // Lỗi không bắt được -> trả về RFC 7807 ProblemDetails thay vì trang lỗi/stack trace.
 builder.Services.AddProblemDetails();
 
+// CORS (ADR-011): web https://dxtechs.com gọi API https://api.dxtechs.com — khác origin.
+// Chỉ các origin liệt kê trong cấu hình "Cors:AllowedOrigins" được gọi, có gửi kèm cookie.
+// Cấu hình sai (rỗng, "*", có đường dẫn, http ngoài localhost) ⇒ API không khởi động.
+builder.Services.AddOptions<ApiCorsOptions>()
+    .Bind(builder.Configuration.GetSection(ApiCorsOptions.SectionName))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+builder.Services.AddCors();
+builder.Services.AddOptions<CorsOptions>()
+    .Configure<Microsoft.Extensions.Options.IOptions<ApiCorsOptions>>((cors, api) =>
+        cors.AddDefaultPolicy(policy => policy
+            .WithOrigins(api.Value.AllowedOrigins)
+            .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE")
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .WithExposedHeaders("Location")
+            .SetPreflightMaxAge(ApiCorsOptions.PreflightMaxAge)));
+
 // "ready" = API chạy VÀ kết nối được PostgreSQL. CI dùng endpoint này để quyết định deploy thành công.
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<AppDbContext>("database", tags: ["ready"]);
@@ -77,6 +97,14 @@ var app = builder.Build();
 
 // Phải đứng đầu để các middleware sau (log, HTTPS, auth) thấy đúng IP/scheme của client.
 app.UseForwardedHeaders();
+
+// CORS đặt sớm, trước mọi middleware có thể trả response (health check, controller...).
+// Header CORS được gắn qua callback OnStarting nên vẫn có mặt trên response lỗi (404/500) —
+// trình duyệt đọc được ProblemDetails thay vì báo "lỗi CORS" che mất lỗi thật
+// (test: CorsTests.Error_responses_keep_cors_headers...).
+// Vary trước CORS: preflight OPTIONS do CORS trả lời ngay tại chỗ, đặt sau sẽ không bao giờ chạy tới.
+app.UseVaryByOrigin();
+app.UseCors();
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();

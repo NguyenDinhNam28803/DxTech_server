@@ -15,6 +15,7 @@ Chi tiết so sánh và sơ đồ: tài liệu "DXTechs — Thiết kế Server 
 | [008](008-full-text-search-and-category-tree.md) | Tìm kiếm full-text tiếng Việt không dấu; cây danh mục adjacency list | Đã chấp nhận — áp dụng ở PR-3/PR-4 |
 | [009](009-database-roles.md) | Tách role database: owner (migrate) và app (API) | Đã chấp nhận — áp dụng ở PR-2 (cần thao tác trên VPS) |
 | [010](010-demo-seed-on-demand.md) | Dữ liệu demo chạy theo lệnh | Đã chấp nhận — áp dụng ở PR-5 |
+| [011](011-api-subdomain.md) | API trên subdomain riêng `api.dxtechs.com` | Đã áp dụng — hạ tầng 20/11/2026; CORS ở PR-C1 |
 
 ## Thêm ADR mới
 Tạo file `NNN-ten-ngan.md` theo cùng khuôn. Không sửa nội dung một ADR đã chấp nhận: muốn đổi thì viết ADR mới và ghi "Thay thế ADR-NNN".
