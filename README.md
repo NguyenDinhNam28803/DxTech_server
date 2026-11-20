@@ -54,6 +54,24 @@ Integration test dùng PostgreSQL thật (ADR-005). Mặc định trỏ tới da
 (`appdb` / `appuser`); đổi bằng biến môi trường `TEST_CONNECTION_STRING`. Trên CI, GitHub Actions
 chạy một container `postgres:15` cho mỗi lần build.
 
+## Địa chỉ production (ADR-011)
+
+| Thành phần | URL |
+|---|---|
+| Web (client) | `https://dxtechs.com` |
+| API | `https://api.dxtechs.com/api/...` |
+| Kiểm tra sức khoẻ | `https://api.dxtechs.com/api/health`, `https://api.dxtechs.com/api/health/ready` |
+
+API chỉ nghe `127.0.0.1:8080` trên VPS, Nginx chuyển tiếp từ `api.dxtechs.com`. Gọi trực tiếp để debug qua SSH tunnel:
+`ssh -N -L 8080:127.0.0.1:8080 dxtechs` rồi `curl http://localhost:8080/api/health/ready`.
+
+## CORS
+
+Web và API khác origin nên trình duyệt cần CORS. Danh sách origin được phép nằm ở `Cors:AllowedOrigins`
+(`appsettings.json`: `https://dxtechs.com`; `appsettings.Development.json`: `http://localhost:5173`, `http://localhost:4173`).
+Ghi đè trên VPS bằng biến môi trường `Cors__AllowedOrigins__0=...`. Cấm `*`, cấm đường dẫn hoặc `/` cuối,
+cấm `http://` ngoài localhost — sai cấu hình thì API không khởi động.
+
 ## Health check
 
 | Endpoint | Ý nghĩa | Dùng cho |
