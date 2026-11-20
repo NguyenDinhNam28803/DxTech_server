@@ -104,16 +104,26 @@ jobs:
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
           printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/id_deploy ~/.ssh/known_hosts
+          # Không treo vô hạn khi VPS không phản hồi; phát hiện kết nối chết giữa chừng.
+          printf 'Host *\n  ConnectTimeout 20\n  ServerAliveInterval 15\n  ServerAliveCountMax 4\n' > ~/.ssh/config
+          chmod 600 ~/.ssh/config
 
+      # scp/ssh đi qua ssh_retry: lỗi kết nối thoáng qua (exit 255, ví dụ sshd MaxStartups ngắt
+      # "kex_exchange_identification: Connection reset by peer") được thử lại tối đa 4 lần (5s/15s/30s).
+      # Lỗi của script deploy hoặc sai key/known_hosts thì KHÔNG thử lại. Xem .github/scripts/ssh-retry.sh.
       - name: Upload source
         run: |
+          source .github/scripts/ssh-retry.sh
           git archive --format=tar.gz -o src.tgz HEAD
-          scp -P "$VPS_PORT" -i ~/.ssh/id_deploy src.tgz "$VPS_USER@$VPS_HOST:/tmp/dxtechs-server.tgz"
+          ssh_retry scp -P "$VPS_PORT" -i ~/.ssh/id_deploy src.tgz "$VPS_USER@$VPS_HOST:/tmp/dxtechs-server.tgz"
 
       - name: Migrate database & start API
         run: |
-          ssh -p "$VPS_PORT" -i ~/.ssh/id_deploy "$VPS_USER@$VPS_HOST" \
-            "API_TAG='${GITHUB_SHA::7}' bash -s" <<'EOF'
+          source .github/scripts/ssh-retry.sh
+          # Script chạy trên VPS. Dòng đầu tiên in "[remote] started": từ đây trở đi, lỗi KHÔNG được thử lại
+          # (migration/compose có thể đã chạy một phần).
+          cat > remote-deploy.sh <<'EOF'
+          echo "[remote] started"
           set -euo pipefail
           base="$HOME/dxtechs-server"
           if [ ! -f "$base/.env" ]; then
@@ -153,3 +163,5 @@ jobs:
           $compose logs --tail 80 migrate api
           exit 1
           EOF
+          ssh_retry --stdin remote-deploy.sh ssh -p "$VPS_PORT" -i ~/.ssh/id_deploy "$VPS_USER@$VPS_HOST" \
+            "API_TAG='${GITHUB_SHA::7}' bash -s"
