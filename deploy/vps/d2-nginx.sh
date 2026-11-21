@@ -8,9 +8,15 @@ f=/etc/nginx/sites-available/dxtechs
 
 say "Kiểm tra trước"
 [ "$(readlink -f /etc/nginx/sites-enabled/dxtechs)" = "$f" ] || die "sites-enabled/dxtechs không trỏ tới $f"
-grep -rqs 'api\.dxtechs\.com' /var/www/dxtechs/current/assets/ \
-  || die "Bản client đang chạy chưa gọi https://api.dxtechs.com — chưa được tắt /api/ trên dxtechs.com."
-ok "Client đang chạy đã gọi https://api.dxtechs.com"
+# Bản client từ PR-C2 trở đi có <link rel="preconnect" href="https://api.dxtechs.com"> trong index.html.
+# Không tìm trong assets/: khi chưa trang nào gọi API, Vite loại bỏ lớp gọi API khỏi bundle (tree-shaking)
+# nên chuỗi base URL không xuất hiện (sự cố 21/11/2026).
+grep -qs 'api\.dxtechs\.com' /var/www/dxtechs/current/index.html \
+  || die "Bản client đang chạy cũ hơn PR-C2 (index.html chưa có api.dxtechs.com) — chưa được tắt /api/ trên dxtechs.com."
+if grep -rqsE '["'"'"'`]/api/' /var/www/dxtechs/current/assets/; then
+  die "Bundle client còn gọi đường dẫn tương đối /api/ — tắt /api/ trên dxtechs.com sẽ làm hỏng client."
+fi
+ok "Client đang chạy là bản PR-C2+ và không gọi /api/ tương đối"
 nginx -t >/dev/null 2>&1 || die "nginx -t đang lỗi TỪ TRƯỚC — không sửa thêm."
 
 say "Thay đổi sẽ áp dụng"
