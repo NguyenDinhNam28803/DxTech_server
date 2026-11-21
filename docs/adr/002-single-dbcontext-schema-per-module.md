@@ -1,6 +1,6 @@
 # ADR-002: Một AppDbContext, mỗi module một schema PostgreSQL
 
-- **Trạng thái:** Đã chấp nhận — `AppDbContext` ở PR-1, schema đầu tiên (`catalog`) ở PR-3
+- **Trạng thái:** Đã áp dụng — `AppDbContext` ở PR-1; schema `catalog` (3 bảng) ở PR-3
 - **Ngày:** 2026-11-18
 
 ## Bối cảnh

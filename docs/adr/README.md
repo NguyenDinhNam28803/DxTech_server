@@ -6,13 +6,13 @@ Chi tiết so sánh và sơ đồ: tài liệu "DXTechs — Thiết kế Server 
 | ADR | Quyết định | Trạng thái |
 |---|---|---|
 | [001](001-modular-monolith.md) | Modular monolith dạng gọn trong một project | Đã áp dụng — PR-1 (khung `Modules/`, test kiến trúc) |
-| [002](002-single-dbcontext-schema-per-module.md) | Một AppDbContext, mỗi module một schema PostgreSQL | Đã chấp nhận — `AppDbContext` ở PR-1, schema đầu tiên (`catalog`) ở PR-3 |
+| [002](002-single-dbcontext-schema-per-module.md) | Một AppDbContext, mỗi module một schema PostgreSQL | Đã áp dụng — `AppDbContext` ở PR-1; schema `catalog` (3 bảng) ở PR-3 |
 | [003](003-handlers-dbcontext-manual-mapping.md) | Handler gọi trực tiếp, DbContext trực tiếp, map tay | Đã chấp nhận — áp dụng từ PR-4 |
 | [004](004-result-problem-details.md) | Result<T> + ProblemDetails cho lỗi nghiệp vụ | Đã áp dụng — PR-1 (`Shared/Results`, `Infrastructure/Http/ResultHttpExtensions`) |
 | [005](005-integration-tests-real-postgres.md) | Integration test với PostgreSQL thật | Đã áp dụng — PR-1 (`tests/server.IntegrationTests`, service postgres trong CI) |
-| [006](006-naming-ids-money-time.md) | snake_case, UUID v7, tiền bigint VND, enum text, timestamptz UTC | Một phần — PR-1 (snake_case, UuidV7, IAuditable + TimeProvider); cột tiền/enum ở PR-3 |
-| [007](007-soft-delete-and-concurrency.md) | Soft delete chỉ cho catalog; concurrency bằng xmin | Đã chấp nhận — áp dụng ở PR-3 |
-| [008](008-full-text-search-and-category-tree.md) | Tìm kiếm full-text tiếng Việt không dấu; cây danh mục adjacency list | Đã chấp nhận — áp dụng ở PR-3/PR-4 |
+| [006](006-naming-ids-money-time.md) | snake_case, UUID v7, tiền bigint VND, enum text, timestamptz UTC | Đã áp dụng — PR-1 (snake_case, UuidV7, IAuditable + TimeProvider); PR-3 (`price_vnd bigint`, enum text + CHECK qua `SnakeCaseEnumConverter`) |
+| [007](007-soft-delete-and-concurrency.md) | Soft delete chỉ cho catalog; concurrency bằng xmin | Đã áp dụng — PR-3 (`ISoftDeletable` + query filter + unique index `WHERE deleted_at IS NULL`; `xmin` trên `product_variants`) |
+| [008](008-full-text-search-and-category-tree.md) | Tìm kiếm full-text tiếng Việt không dấu; cây danh mục adjacency list | Một phần — PR-3 (`catalog.f_unaccent`, `search_vector` generated + GIN, `parent_id`); truy vấn tìm kiếm và cây danh mục ở PR-4 |
 | [009](009-database-roles.md) | Tách role database: owner (migrate) và app (API) | Đã áp dụng (PR-2) |
 | [010](010-demo-seed-on-demand.md) | Dữ liệu demo chạy theo lệnh | Đã chấp nhận — áp dụng ở PR-5 |
 | [011](011-api-subdomain.md) | API trên subdomain riêng `api.dxtechs.com` | Đã áp dụng — hạ tầng 20/11/2026; CORS ở PR-C1 |

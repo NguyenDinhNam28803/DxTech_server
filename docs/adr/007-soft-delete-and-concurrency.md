@@ -1,6 +1,6 @@
 # ADR-007: Soft delete chỉ cho catalog; concurrency bằng xmin
 
-- **Trạng thái:** Đã chấp nhận — áp dụng ở PR-3
+- **Trạng thái:** Đã áp dụng — PR-3 (`ISoftDeletable` + query filter + unique index `WHERE deleted_at IS NULL`; `xmin` trên `product_variants`)
 - **Ngày:** 2026-11-18
 
 ## Bối cảnh
@@ -14,3 +14,9 @@ Soft delete toàn bộ; không kiểm soát ghi đè.
 
 ## Hệ quả
 Unique index của bảng soft delete phải có `WHERE deleted_at IS NULL`.
+
+## Ghi chú triển khai (PR-3, 21/11/2026)
+- `ProductVariant.Version` (uint) map tường minh vào cột hệ thống `xmin` kiểu `xid` — phải đặt `HasColumnName("xmin")`,
+  nếu không convention snake_case đổi thành `version` (cột không tồn tại).
+- Cột có DEFAULT trong DB (`is_active`, `seats`) dùng `HasDefaultValue(x).HasSentinel(x)`: nếu để sentinel mặc định
+  của CLR, EF bỏ `is_active = false` khỏi INSERT và DB ghi `true` (lỗi đã bắt được bằng integration test).
