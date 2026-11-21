@@ -2,7 +2,7 @@
 """D2: trong server block của dxtechs.com (cổng 443), thay `location /api/ {...}` bằng `return 404`.
 Không đụng block api.dxtechs.com. In ra bản mới để so sánh; chỉ ghi khi chạy với --apply.
 Mã thoát: 0 = có thay đổi · 3 = đã làm rồi, không cần sửa · 1 = cấu hình khác dự kiến, KHÔNG sửa gì."""
-import re, sys
+import datetime, re, sys
 
 path, apply = sys.argv[1], "--apply" in sys.argv
 src = open(path, encoding="utf-8").read()
@@ -61,7 +61,7 @@ if re.search(r"return\s+404\s*;", strip_comments(old)) and "proxy_pass" not in s
     print("ĐÃ LÀM: `location /api/` đã trả 404. Không sửa gì.", file=sys.stderr)
     sys.exit(3)
 ind = lm.group(1)
-new = (f"{ind}# D2 (20/11/2026): API chỉ phục vụ ở https://api.dxtechs.com — không proxy qua dxtechs.com nữa.\n"
+new = (f"{ind}# D2 ({datetime.date.today():%d/%m/%Y}): API chỉ phục vụ ở https://api.dxtechs.com — không proxy qua dxtechs.com nữa.\n"
        f"{ind}location /api/ {{\n{ind}    return 404;\n{ind}}}")
 out = src[:start] + block[:lm.start()] + new + block[lend:] + src[end:]
 
