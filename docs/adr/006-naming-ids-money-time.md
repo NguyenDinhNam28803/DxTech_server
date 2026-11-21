@@ -1,6 +1,6 @@
 # ADR-006: snake_case, UUID v7, tiền bigint VND, enum text, timestamptz UTC
 
-- **Trạng thái:** Một phần — PR-1 (snake_case, UuidV7, IAuditable + TimeProvider); cột tiền/enum ở PR-3
+- **Trạng thái:** Đã áp dụng — PR-1 (snake_case, UuidV7, IAuditable + TimeProvider); PR-3 (`price_vnd bigint`, enum text + CHECK qua `SnakeCaseEnumConverter`)
 - **Ngày:** 2026-11-18
 
 ## Bối cảnh

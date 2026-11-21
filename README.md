@@ -96,6 +96,9 @@ Commit cả thư mục `server/Infrastructure/Persistence/Migrations/` và đín
 (`dotnet tool run dotnet-ef migrations script --project server/server.csproj`) vào PR để review. Khi deploy, service `migrate` trong `docker-compose.prod.yml`
 chạy migrations bundle **trước** khi khởi động API; migration lỗi thì API cũ vẫn chạy và job deploy báo đỏ.
 
+File SQL để review đặt ở `docs/migrations/<tên migration>.sql`
+(`dotnet tool run dotnet-ef migrations script <trước> <sau> --project server/server.csproj -o docs/migrations/...`).
+
 Quy tắc: migration phải tương thích ngược với code đang chạy (thêm cột nullable/bảng mới trước,
 xoá/đổi tên cột ở một lần deploy sau), vì API cũ vẫn phục vụ cho tới khi API mới sẵn sàng.
 
