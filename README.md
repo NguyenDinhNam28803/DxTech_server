@@ -99,6 +99,19 @@ chạy migrations bundle **trước** khi khởi động API; migration lỗi th
 Quy tắc: migration phải tương thích ngược với code đang chạy (thêm cột nullable/bảng mới trước,
 xoá/đổi tên cột ở một lần deploy sau), vì API cũ vẫn phục vụ cho tới khi API mới sẵn sàng.
 
+## Role database (ADR-009)
+
+| Role | Dùng bởi | Quyền |
+|---|---|---|
+| `POSTGRES_USER` | postgres, `db-roles`, backup/admin | superuser |
+| `dxtechs_owner` | `migrate` | chủ database, tạo/sửa schema và bảng |
+| `dxtechs_app` | `api` | chỉ SELECT/INSERT/UPDATE/DELETE |
+
+Service `db-roles` chạy `deploy/postgres/roles.sql` (idempotent) trước `migrate` ở mọi lần deploy.
+`.env` trên VPS cần thêm `DB_OWNER_PASSWORD` và `DB_APP_PASSWORD` (`openssl rand -hex 24`).
+Migration **không** được chứa lệnh cần superuser (ví dụ `CREATE EXTENSION`) — thêm vào `roles.sql`.
+Kiểm thử: `PGHOST=... PGUSER=<superuser> PGPASSWORD=... .github/scripts/test-db-roles.sh`.
+
 ## Deploy & rollback
 
 Merge vào `main` → GitHub Actions build, tải mã nguồn lên VPS và chạy
