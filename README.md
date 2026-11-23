@@ -84,7 +84,7 @@ cấm `http://` ngoài localhost — sai cấu hình thì API không khởi đ�
 | Endpoint | Mô tả |
 |---|---|
 | `GET /api/categories` | Cây danh mục đang hiển thị |
-| `GET /api/products?category=&platform=&licenseType=&minPrice=&maxPrice=&q=&sort=&page=&pageSize=` | Danh sách sản phẩm đang bán; `category` gồm danh mục con; `sort` = `newest` (mặc định) \| `price_asc` \| `price_desc` \| `relevance` (khi có `q`); `pageSize` mặc định 12, tối đa 100 |
+| `GET /api/products?category=&platform=&licenseType=&minPrice=&maxPrice=&q=&sort=&page=&pageSize=` | Danh sách sản phẩm đang bán (giá, giá gốc, tên gói đều của gói rẻ nhất); `category` gồm danh mục con; `sort` = `newest` (mặc định) \| `price_asc` \| `price_desc` \| `relevance` (khi có `q`); `pageSize` mặc định 12, tối đa 100 |
 | `GET /api/products/search?q=` | Tìm không dấu, khớp tiền tố, xếp theo độ liên quan; nhận cùng bộ lọc |
 | `GET /api/products/{slug}` | Chi tiết + gói đang bán + breadcrumb; sản phẩm ẩn/đã xoá ⇒ 404 `catalog.product_not_found` |
 

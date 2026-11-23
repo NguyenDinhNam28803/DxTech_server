@@ -183,6 +183,7 @@ public class CatalogApiTests(ApiFactory factory, CatalogApiData data) : IClassFi
         ProductListItem design = Assert.Single(page.Items);
         Assert.Equal(1_500_000, design.MinPriceVnd);
         Assert.Equal(1_900_000, design.CompareAtPriceVnd);
+        Assert.Equal("Gói 1500000", design.VariantName); // tên của chính gói rẻ nhất, không phải gói mặc định
         Assert.Equal(2, design.VariantCount);
         Assert.Equal("subscription", design.LicenseType);
         Assert.Equal(data.Child.Slug, design.Category.Slug);
