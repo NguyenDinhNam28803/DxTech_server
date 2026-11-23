@@ -1,5 +1,6 @@
 using server.Modules.Catalog.Features.Categories;
 using server.Modules.Catalog.Features.Products;
+using server.Modules.Catalog.Seeding;
 
 namespace server.Modules.Catalog;
 
@@ -27,6 +28,30 @@ public static class CatalogModule
         services.AddScoped<GetCategoryTreeHandler>();
         services.AddScoped<ListProductsHandler>();
         services.AddScoped<GetProductBySlugHandler>();
+        services.AddScoped<DemoCatalogSeeder>();
         return services;
+    }
+
+    /// <summary>
+    /// Lệnh <c>--seed-demo [--dry-run]</c> (ADR-010): nạp dữ liệu demo rồi thoát, không khởi động web server.
+    /// Trả mã thoát 0 khi thành công, 1 khi lỗi (để script/CI biết).
+    /// </summary>
+    public static async Task<int> SeedDemoAsync(IServiceProvider services, bool dryRun, TextWriter output, CancellationToken ct = default)
+    {
+        await using AsyncServiceScope scope = services.CreateAsyncScope();
+        try
+        {
+            SeedReport r = await scope.ServiceProvider.GetRequiredService<DemoCatalogSeeder>().RunAsync(dryRun, ct);
+            await output.WriteLineAsync(
+                $"seed-demo{(r.DryRun ? " (DRY RUN — đã rollback, không ghi gì)" : "")}: " +
+                $"danh mục +{r.CategoriesCreated} (bỏ qua {r.CategoriesSkipped}), " +
+                $"sản phẩm +{r.ProductsCreated} (bỏ qua {r.ProductsSkipped}), gói +{r.VariantsCreated}");
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            await output.WriteLineAsync($"seed-demo THẤT BẠI — không ghi gì (transaction rollback): {ex.GetBaseException().Message}");
+            return 1;
+        }
     }
 }

@@ -14,7 +14,7 @@ Chi tiết so sánh và sơ đồ: tài liệu "DXTechs — Thiết kế Server 
 | [007](007-soft-delete-and-concurrency.md) | Soft delete chỉ cho catalog; concurrency bằng xmin | Đã áp dụng — PR-3 (`ISoftDeletable` + query filter + unique index `WHERE deleted_at IS NULL`; `xmin` trên `product_variants`) |
 | [008](008-full-text-search-and-category-tree.md) | Tìm kiếm full-text tiếng Việt không dấu; cây danh mục adjacency list | Đã áp dụng — PR-3 (schema, `f_unaccent`, GIN); PR-4 (truy vấn tìm kiếm, CTE cây danh mục) |
 | [009](009-database-roles.md) | Tách role database: owner (migrate) và app (API) | Đã áp dụng (PR-2) |
-| [010](010-demo-seed-on-demand.md) | Dữ liệu demo chạy theo lệnh | Đã chấp nhận — áp dụng ở PR-5 |
+| [010](010-demo-seed-on-demand.md) | Dữ liệu demo chạy theo lệnh | Đã áp dụng — PR-5 (`--seed-demo`, chỉ thêm cái còn thiếu) |
 | [011](011-api-subdomain.md) | API trên subdomain riêng `api.dxtechs.com` | Đã áp dụng — hạ tầng 20/11/2026; CORS ở PR-C1 |
 
 ## Thêm ADR mới

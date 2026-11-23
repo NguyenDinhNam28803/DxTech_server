@@ -15,6 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Dữ liệu demo của catalog (ADR-010), đọc bằng GetManifestResourceStream — không phụ thuộc thư mục chạy. -->
+    <EmbeddedResource Include="Modules/Catalog/Seeding/demo-catalog.json" LogicalName="server.Modules.Catalog.Seeding.demo-catalog.json" />
+    <Content Remove="Modules/Catalog/Seeding/demo-catalog.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
