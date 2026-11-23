@@ -19,6 +19,12 @@ bash audit.sh            # CHỈ ĐỌC — chụp hiện trạng, chạy trư�
 | 6 | `ufw-cleanup.sh` | Xoá rule mở cổng 22 | Không | `ufw allow 22/tcp` |
 | 7 | `webdeploy.sh '<public key>'` | User riêng cho CI client, không có Docker | Cần đổi secret repo client | `webdeploy.sh --rollback` |
 
+**Backup** chạy bằng user `deploy` (không phải root) — xem [`backup/README.md`](backup/README.md):
+
+| Script | Việc | Quay lại |
+|---|---|---|
+| `backup/backup.sh --install` | Cài backup 02:15 + bản sao mã hoá GPG ra kho S3 ngoài VPS + thử khôi phục hằng tháng; thay cron `backup-db.sh` cũ | `crontab -e` khôi phục dòng cũ (file `~/backup-db.sh` được giữ) |
+
 Giới hạn log Docker **không** làm ở đây: nằm trong `docker-compose.prod.yml` (`x-logging`), áp dụng ở lần deploy kế tiếp.
 
 Nguyên tắc chung của các script:
