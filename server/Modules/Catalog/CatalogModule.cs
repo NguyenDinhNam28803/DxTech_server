@@ -1,3 +1,6 @@
+using server.Modules.Catalog.Features.Categories;
+using server.Modules.Catalog.Features.Products;
+
 namespace server.Modules.Catalog;
 
 /// <summary>
@@ -7,10 +10,11 @@ namespace server.Modules.Catalog;
 ///   Contracts/    — interface + DTO công khai cho module khác (ICatalogApi). Chỉ thư mục này là public.
 ///   Domain/       — entity và quy tắc nghiệp vụ (internal).
 ///   Persistence/  — IEntityTypeConfiguration&lt;&gt;, ToTable(..., schema: "catalog").
-///   Features/     — mỗi file một use case: Query/Command + Handler + Response.
+///   Features/     — mỗi file một use case: Query/Command + Handler + Response. Public vì controller (bắt buộc
+///                   public) nhận/trả các kiểu này; module khác vẫn chỉ được dùng Contracts (test kiến trúc).
 ///   Api/          — controller mỏng, chỉ gọi handler và đổi Result sang HTTP.
 ///
-/// Bảng và use case được thêm ở PR-3 (migration Catalog_Initial) và PR-4 (Catalog API).
+/// Bảng: PR-3 (migration Catalog_Initial). Use case + API: PR-4.
 /// </summary>
 public static class CatalogModule
 {
@@ -18,9 +22,11 @@ public static class CatalogModule
 
     public static IServiceCollection AddCatalogModule(this IServiceCollection services, IConfiguration configuration)
     {
-        // Đăng ký handler của module tại đây khi có use case, ví dụ:
-        // services.AddScoped<ListProductsHandler>();
         _ = configuration;
+
+        services.AddScoped<GetCategoryTreeHandler>();
+        services.AddScoped<ListProductsHandler>();
+        services.AddScoped<GetProductBySlugHandler>();
         return services;
     }
 }

@@ -42,6 +42,7 @@ public class ArchitectureRulesSelfTests
         IReadOnlyList<string> violations = ArchitectureRules.CrossModuleViolations(TestAssembly, "ArchFixtures");
 
         Assert.Contains(violations, v => v.Contains("BadOrderService") && v.Contains("Catalog.Domain.Product"));
+        Assert.Contains(violations, v => v.Contains("FeatureLeakOrderService") && v.Contains("Catalog.Features.ProductListItem"));
         Assert.DoesNotContain(violations, v => v.Contains("GoodOrderService"));
     }
 
@@ -51,6 +52,8 @@ public class ArchitectureRulesSelfTests
         IReadOnlyList<string> violations = ArchitectureRules.PublicSurfaceViolations(TestAssembly, "ArchFixtures");
 
         Assert.Contains(violations, v => v.Contains("ArchFixtures.Modules.Catalog.Domain.Product"));
+        Assert.Contains(violations, v => v.Contains("ArchFixtures.Modules.Catalog.Persistence.ProductConfiguration"));
+        Assert.DoesNotContain(violations, v => v.Contains("Catalog.Features.ProductListItem"));
         Assert.DoesNotContain(violations, v => v.Contains("Contracts.ProductDto"));
         Assert.DoesNotContain(violations, v => v.Contains("CatalogModule"));
     }
