@@ -41,7 +41,10 @@ public sealed class ListProductsQuery
 
 public sealed record CategoryRef(string Slug, string Name);
 
-/// <summary>Một thẻ sản phẩm trong danh sách. Giá lấy từ gói rẻ nhất đang bán ("Từ 690.000đ", gạch giá gốc của chính gói đó).</summary>
+/// <summary>
+/// Một thẻ sản phẩm trong danh sách. Giá, giá gốc và tên gói đều lấy từ CÙNG gói rẻ nhất đang bán
+/// ("Từ 690.000đ", gạch giá gốc của chính gói đó, "Vĩnh viễn · 1 PC").
+/// </summary>
 public sealed record ProductListItem(
     Guid Id,
     string Slug,
@@ -55,6 +58,7 @@ public sealed record ProductListItem(
     CategoryRef Category,
     long MinPriceVnd,
     long? CompareAtPriceVnd,
+    string VariantName,
     int VariantCount);
 
 public sealed class ListProductsHandler(AppDbContext db)
@@ -143,6 +147,10 @@ public sealed class ListProductsHandler(AppDbContext db)
                     .OrderBy(v => v.PriceVnd).ThenBy(v => v.SortOrder)
                     .Select(v => v.CompareAtPriceVnd)
                     .FirstOrDefault(),
+                VariantName = p.Variants.Where(v => v.IsActive)
+                    .OrderBy(v => v.PriceVnd).ThenBy(v => v.SortOrder)
+                    .Select(v => v.Name)
+                    .First(),
                 VariantCount = p.Variants.Count(v => v.IsActive),
             })
             .ToListAsync(ct);
@@ -152,7 +160,7 @@ public sealed class ListProductsHandler(AppDbContext db)
                 SnakeCaseEnumConverter<LicenseType>.ToProvider(r.LicenseType),
                 r.Platforms, r.ImageUrl, r.Badge,
                 new CategoryRef(r.CategorySlug, r.CategoryName),
-                r.MinPriceVnd, r.CompareAtPriceVnd, r.VariantCount))
+                r.MinPriceVnd, r.CompareAtPriceVnd, r.VariantName, r.VariantCount))
             .ToList();
 
         return new PagedResult<ProductListItem>(items, page.Page, page.PageSize, total);

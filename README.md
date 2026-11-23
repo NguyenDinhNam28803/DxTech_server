@@ -84,13 +84,30 @@ cấm `http://` ngoài localhost — sai cấu hình thì API không khởi đ�
 | Endpoint | Mô tả |
 |---|---|
 | `GET /api/categories` | Cây danh mục đang hiển thị |
-| `GET /api/products?category=&platform=&licenseType=&minPrice=&maxPrice=&q=&sort=&page=&pageSize=` | Danh sách sản phẩm đang bán; `category` gồm danh mục con; `sort` = `newest` (mặc định) \| `price_asc` \| `price_desc` \| `relevance` (khi có `q`); `pageSize` mặc định 12, tối đa 100 |
+| `GET /api/products?category=&platform=&licenseType=&minPrice=&maxPrice=&q=&sort=&page=&pageSize=` | Danh sách sản phẩm đang bán (giá, giá gốc, tên gói đều của gói rẻ nhất); `category` gồm danh mục con; `sort` = `newest` (mặc định) \| `price_asc` \| `price_desc` \| `relevance` (khi có `q`); `pageSize` mặc định 12, tối đa 100 |
 | `GET /api/products/search?q=` | Tìm không dấu, khớp tiền tố, xếp theo độ liên quan; nhận cùng bộ lọc |
 | `GET /api/products/{slug}` | Chi tiết + gói đang bán + breadcrumb; sản phẩm ẩn/đã xoá ⇒ 404 `catalog.product_not_found` |
 
 Danh sách trả `{ items, page, pageSize, total, totalPages }`. Lỗi là ProblemDetails có `code`
 (`catalog.invalid_query` kèm `errors` theo từng tham số, `catalog.category_not_found`, `catalog.search_query_required`).
 Thiết kế và phân tích schema: [`docs/database/catalog-schema.md`](docs/database/catalog-schema.md).
+
+## Dữ liệu demo (PR-5, ADR-010)
+
+```bash
+# Máy dev
+dotnet run --project server/server.csproj -- --seed-demo --dry-run   # xem trước, không ghi
+dotnet run --project server/server.csproj -- --seed-demo
+
+# VPS (user deploy, trong ~/dxtechs-server) — chạy bằng image API đang chạy, role dxtechs_app
+C="docker compose -p dxtechs-server --env-file .env -f src/docker-compose.prod.yml"
+export API_TAG=$(docker inspect -f '{{.Config.Image}}' dxtechs-server-api-1 | cut -d: -f2)
+$C run --rm --no-deps api --seed-demo --dry-run
+$C run --rm --no-deps api --seed-demo
+```
+
+Chỉ thêm danh mục/sản phẩm còn thiếu (theo slug); không ghi đè chỉnh sửa của admin, không khôi phục sản phẩm đã xoá.
+Không bao giờ tự chạy khi API khởi động.
 
 ## Quy ước route
 

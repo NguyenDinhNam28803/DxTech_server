@@ -95,6 +95,14 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
 var app = builder.Build();
 
+// ADR-010: lệnh nạp dữ liệu demo — chạy rồi thoát, KHÔNG khởi động web server.
+//   dotnet server.dll --seed-demo [--dry-run]
+//   docker compose ... run --rm --no-deps api --seed-demo
+if (args.Contains("--seed-demo"))
+{
+    return await CatalogModule.SeedDemoAsync(app.Services, dryRun: args.Contains("--dry-run"), Console.Out);
+}
+
 // ---------------------------------------------------------------------------
 // HTTP pipeline
 // ---------------------------------------------------------------------------
@@ -139,6 +147,7 @@ app.MapHealthChecks("/api/health/ready", new HealthCheckOptions
 app.MapControllers();
 
 app.Run();
+return 0;
 
 // Cho phép project test dùng WebApplicationFactory<Program>.
 public partial class Program;

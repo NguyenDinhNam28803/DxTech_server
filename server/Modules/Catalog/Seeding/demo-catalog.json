@@ -1,0 +1,626 @@
+{
+  "source": "DXTechs client src/data/products.ts @ 0d1f89f — dữ liệu DEMO, không phải bảng giá thật",
+  "categories": [
+    {
+      "slug": "he-dieu-hanh",
+      "name": "Hệ điều hành",
+      "parentSlug": "software",
+      "sortOrder": 10
+    },
+    {
+      "slug": "van-phong",
+      "name": "Văn phòng",
+      "parentSlug": "software",
+      "sortOrder": 20
+    },
+    {
+      "slug": "thiet-ke",
+      "name": "Thiết kế",
+      "parentSlug": "software",
+      "sortOrder": 30
+    },
+    {
+      "slug": "bao-mat",
+      "name": "Bảo mật",
+      "parentSlug": "software",
+      "sortOrder": 40
+    },
+    {
+      "slug": "lap-trinh",
+      "name": "Lập trình",
+      "parentSlug": "software",
+      "sortOrder": 50
+    },
+    {
+      "slug": "cloud-vps",
+      "name": "Cloud VPS",
+      "parentSlug": "cloud",
+      "sortOrder": 10
+    },
+    {
+      "slug": "cpanel-hosting",
+      "name": "cPanel Hosting",
+      "parentSlug": "cloud",
+      "sortOrder": 20
+    },
+    {
+      "slug": "dedicated-server",
+      "name": "Dedicated Server",
+      "parentSlug": "cloud",
+      "sortOrder": 30
+    },
+    {
+      "slug": "ten-mien-vn",
+      "name": "Tên miền .VN",
+      "parentSlug": "domain",
+      "sortOrder": 10
+    },
+    {
+      "slug": "ten-mien-quoc-te",
+      "name": "Tên miền Quốc tế",
+      "parentSlug": "domain",
+      "sortOrder": 20
+    },
+    {
+      "slug": "ssl-doanh-nghiep",
+      "name": "SSL Doanh nghiệp",
+      "parentSlug": "ssl",
+      "sortOrder": 10
+    },
+    {
+      "slug": "ssl-wildcard",
+      "name": "SSL Wildcard",
+      "parentSlug": "ssl",
+      "sortOrder": 20
+    },
+    {
+      "slug": "google-workspace",
+      "name": "Google Workspace",
+      "parentSlug": "storage",
+      "sortOrder": 10
+    },
+    {
+      "slug": "onedrive-business",
+      "name": "OneDrive Business",
+      "parentSlug": "storage",
+      "sortOrder": 20
+    },
+    {
+      "slug": "synology-c2",
+      "name": "Synology C2",
+      "parentSlug": "backup",
+      "sortOrder": 10
+    },
+    {
+      "slug": "acronis-cloud",
+      "name": "Acronis Cloud",
+      "parentSlug": "backup",
+      "sortOrder": 20
+    }
+  ],
+  "products": [
+    {
+      "slug": "windows-11-pro-retail",
+      "name": "Windows 11 Pro Retail License",
+      "categorySlug": "he-dieu-hanh",
+      "brand": "Microsoft",
+      "shortDescription": "Bản quyền Windows 11 Pro chính hãng Microsoft, hỗ trợ nâng cấp từ Windows 10/11 Home.",
+      "licenseType": "perpetual",
+      "platforms": [
+        "windows"
+      ],
+      "features": [
+        "Kích hoạt trực tuyến bằng Product Key chính hãng 25 ký tự",
+        "Liên kết trực tiếp với Microsoft Account của bạn",
+        "Bảo hành kích hoạt trọn đời thiết bị",
+        "Đầy đủ tính năng BitLocker, Remote Desktop, Hyper-V"
+      ],
+      "imageUrl": "/products/windows-11.svg",
+      "badge": "Bán chạy nhất",
+      "variants": [
+        {
+          "sku": "WINDOWS-11-PRO-RETAIL",
+          "name": "Vĩnh viễn · 1 PC · Chuyển máy được",
+          "termMonths": null,
+          "seats": 1,
+          "priceVnd": 690000,
+          "compareAtPriceVnd": 1490000,
+          "deliveryType": "license_key",
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      "slug": "microsoft-365-family-1-year",
+      "name": "Microsoft 365 Family (Bản quyền 1 Năm)",
+      "categorySlug": "van-phong",
+      "brand": "Microsoft",
+      "shortDescription": "Trọn bộ ứng dụng Office cao cấp (Word, Excel, PowerPoint, Outlook) kèm 6TB OneDrive.",
+      "licenseType": "subscription",
+      "platforms": [
+        "windows",
+        "macos",
+        "ios",
+        "android"
+      ],
+      "features": [
+        "Bộ ứng dụng Office mới nhất tự động cập nhật tính năng",
+        "6TB lưu trữ OneDrive (1TB cho mỗi người dùng)",
+        "Sử dụng đồng thời tối đa 5 thiết bị mỗi người",
+        "Tích hợp bảo mật nâng cao Microsoft Defender"
+      ],
+      "imageUrl": "/products/office-365.svg",
+      "badge": "Phổ biến",
+      "variants": [
+        {
+          "sku": "MICROSOFT-365-FAMILY-1-YEAR",
+          "name": "12 tháng · 6 tài khoản · 6TB Cloud",
+          "termMonths": 12,
+          "seats": 6,
+          "priceVnd": 1350000,
+          "compareAtPriceVnd": 1990000,
+          "deliveryType": "license_key",
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      "slug": "jetbrains-all-products-pack",
+      "name": "JetBrains All Products Pack",
+      "categorySlug": "lap-trinh",
+      "brand": "JetBrains",
+      "shortDescription": "Gói trọn bộ 16 công cụ phát triển phần mềm hàng đầu thế giới (IntelliJ IDEA, WebStorm, PyCharm, Rider).",
+      "licenseType": "subscription",
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "Bao gồm 16 IDEs: IntelliJ Ultimate, WebStorm, PyCharm Pro, Rider, CLion...",
+        "Kích hoạt bằng tài khoản JetBrains Account cá nhân",
+        "Hỗ trợ toàn bộ plugin từ JetBrains Marketplace",
+        "Đi kèm giấy phép dự phòng vĩnh viễn (Perpetual Fallback)"
+      ],
+      "imageUrl": "/products/jetbrains.svg",
+      "badge": "Dành cho Dev",
+      "variants": [
+        {
+          "sku": "JETBRAINS-ALL-PRODUCTS-PACK",
+          "name": "12 tháng · Tài khoản chính chủ",
+          "termMonths": 12,
+          "seats": 1,
+          "priceVnd": 2490000,
+          "compareAtPriceVnd": 3890000,
+          "deliveryType": "account",
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      "slug": "adobe-creative-cloud-all-apps",
+      "name": "Adobe Creative Cloud All Apps (100GB)",
+      "categorySlug": "thiet-ke",
+      "brand": "Adobe",
+      "shortDescription": "Bộ hơn 20 ứng dụng sáng tạo đồ họa, video, 3D chuyên nghiệp (Photoshop, Illustrator, Premiere Pro).",
+      "licenseType": "subscription",
+      "platforms": [
+        "windows",
+        "macos"
+      ],
+      "features": [
+        "Toàn bộ hơn 20 ứng dụng: Photoshop, Illustrator, Premiere, After Effects, InDesign...",
+        "100GB lưu trữ đám mây Creative Cloud & Adobe Fonts bản quyền",
+        "Truy cập đầy đủ tính năng AI Generative Fill (Firefly)",
+        "Nâng cấp trực tiếp trên email Adobe chính chủ của bạn"
+      ],
+      "imageUrl": "/products/adobe-cc.svg",
+      "badge": "Sáng tạo Pro",
+      "variants": [
+        {
+          "sku": "ADOBE-CREATIVE-CLOUD-ALL-APPS",
+          "name": "12 tháng · 1 người dùng · 2 thiết bị",
+          "termMonths": 12,
+          "seats": 1,
+          "priceVnd": 1890000,
+          "compareAtPriceVnd": 3200000,
+          "deliveryType": "account",
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      "slug": "figma-professional-plan",
+      "name": "Figma Professional Team License",
+      "categorySlug": "thiet-ke",
+      "brand": "Figma",
+      "shortDescription": "Nền tảng thiết kế UI/UX và cộng tác trực tuyến chuẩn công nghiệp, không giới hạn file và lịch sử phiên bản.",
+      "licenseType": "subscription",
+      "platforms": [
+        "windows",
+        "macos",
+        "web"
+      ],
+      "features": [
+        "Không giới hạn số lượng tệp Figma và FigJam",
+        "Lịch sử phiên bản không giới hạn (Unlimited version history)",
+        "Chế độ xem mã Dev Mode cho lập trình viên",
+        "Thư viện thành phần dùng chung cho toàn bộ Team (Shared Team Libraries)"
+      ],
+      "imageUrl": "/products/figma.svg",
+      "badge": "UI/UX Lead",
+      "variants": [
+        {
+          "sku": "FIGMA-PROFESSIONAL-PLAN",
+          "name": "12 tháng · Không giới hạn dự án",
+          "termMonths": 12,
+          "seats": 1,
+          "priceVnd": 1250000,
+          "compareAtPriceVnd": 1950000,
+          "deliveryType": "account",
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      "slug": "github-copilot-enterprise",
+      "name": "GitHub Copilot Enterprise License",
+      "categorySlug": "lap-trinh",
+      "brand": "GitHub",
+      "shortDescription": "Trợ lý lập trình viên AI hàng đầu từ GitHub & OpenAI, tự động gợi ý code, chat gỡ lỗi và giải thích hệ thống.",
+      "licenseType": "subscription",
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "Tích hợp liền mạch trên VS Code, JetBrains IDEs, Visual Studio, Neovim",
+        "Tăng tốc độ viết code lên đến 55% theo đo lường thực tế",
+        "Copilot Chat thông minh, phân tích toàn bộ ngữ cảnh workspace",
+        "Cam kết bảo mật dữ liệu mã nguồn doanh nghiệp"
+      ],
+      "imageUrl": "/products/github-copilot.svg",
+      "badge": "AI Coding",
+      "variants": [
+        {
+          "sku": "GITHUB-COPILOT-ENTERPRISE",
+          "name": "12 tháng · 1 Developer",
+          "termMonths": 12,
+          "seats": 1,
+          "priceVnd": 1450000,
+          "compareAtPriceVnd": 2200000,
+          "deliveryType": "account",
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      "slug": "canva-pro-edu-business",
+      "name": "Canva Pro Enterprise Edition",
+      "categorySlug": "thiet-ke",
+      "brand": "Canva",
+      "shortDescription": "Công cụ thiết kế đồ họa, mạng xã hội, video và slide thông minh với hơn 100 triệu tài nguyên bản quyền.",
+      "licenseType": "subscription",
+      "platforms": [
+        "windows",
+        "macos",
+        "ios",
+        "android",
+        "web"
+      ],
+      "features": [
+        "Kho hơn 100+ triệu hình ảnh, video, đồ họa, âm thanh bản quyền",
+        "Bộ công cụ ma thuật AI: Xóa phông 1-click, mở rộng ảnh thông minh",
+        "Quản lý Bộ nhận diện thương hiệu (Brand Kit) với màu, logo, font",
+        "1TB dung lượng lưu trữ đám mây cho thiết kế"
+      ],
+      "imageUrl": "/products/canva.svg",
+      "badge": "Dễ dùng nhất",
+      "variants": [
+        {
+          "sku": "CANVA-PRO-EDU-BUSINESS",
+          "name": "12 tháng · Email cá nhân",
+          "termMonths": 12,
+          "seats": 1,
+          "priceVnd": 490000,
+          "compareAtPriceVnd": 950000,
+          "deliveryType": "account",
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      "slug": "chatgpt-plus-team",
+      "name": "ChatGPT Plus & Team (Model GPT-4o / o1)",
+      "categorySlug": "lap-trinh",
+      "brand": "OpenAI",
+      "shortDescription": "Tài khoản OpenAI ChatGPT Plus mở khóa mô hình GPT-4o, mô hình suy luận o1, DALL·E 3 và Advanced Data Analysis.",
+      "licenseType": "subscription",
+      "platforms": [
+        "windows",
+        "macos",
+        "ios",
+        "android",
+        "web"
+      ],
+      "features": [
+        "Truy cập ưu tiên không giới hạn mô hình GPT-4o và GPT-4o mini",
+        "Mở khóa các mô hình suy luận logic chuyên sâu o1 và o1-mini",
+        "Phân tích dữ liệu bảng tính, biểu đồ, tạo ảnh DALL-E 3",
+        "Khả năng tạo và sử dụng kho Custom GPTs chuyên biệt"
+      ],
+      "imageUrl": "/products/chatgpt-plus.svg",
+      "badge": "AI Tiên phong",
+      "variants": [
+        {
+          "sku": "CHATGPT-PLUS-TEAM",
+          "name": "12 tháng · 1 User",
+          "termMonths": 12,
+          "seats": 1,
+          "priceVnd": 1650000,
+          "compareAtPriceVnd": 2400000,
+          "deliveryType": "account",
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      "slug": "kaspersky-total-security-2025",
+      "name": "Kaspersky Total Security 2025 (3 Thiết bị)",
+      "categorySlug": "bao-mat",
+      "brand": "Kaspersky",
+      "shortDescription": "Giải pháp bảo mật mạng và chống virus hàng đầu thế giới, bảo vệ dữ liệu, thanh toán online và thiết bị gia đình.",
+      "licenseType": "subscription",
+      "platforms": [
+        "windows",
+        "macos",
+        "android"
+      ],
+      "features": [
+        "Chống mã độc tống tiền (Ransomware), Trojan, Spyware thời gian thực",
+        "Bảo vệ giao dịch ngân hàng trực tuyến Safe Money an toàn tuyệt đối",
+        "Tích hợp VPN bảo mật và trình quản lý mật khẩu Password Manager",
+        "Bảo vệ camera và micro chống nghe lén, theo dõi"
+      ],
+      "imageUrl": "/products/kaspersky.svg",
+      "badge": "Bảo mật số 1",
+      "variants": [
+        {
+          "sku": "KASPERSKY-TOTAL-SECURITY-2025",
+          "name": "12 tháng · 3 Thiết bị",
+          "termMonths": 12,
+          "seats": 3,
+          "priceVnd": 390000,
+          "compareAtPriceVnd": 650000,
+          "deliveryType": "license_key",
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      "slug": "nordvpn-dedicated-ip-2-years",
+      "name": "NordVPN Dedicated IP (Gói 2 Năm)",
+      "categorySlug": "bao-mat",
+      "brand": "NordVPN",
+      "shortDescription": "Dịch vụ mạng riêng ảo VPN bảo mật hàng đầu thế giới, kèm địa chỉ IP tĩnh chuyên dụng và mã hóa chuẩn quân sự.",
+      "licenseType": "subscription",
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "ios",
+        "android"
+      ],
+      "features": [
+        "Tốc độ kết nối siêu tốc hơn 6700+ máy chủ tại 111 quốc gia",
+        "Bao gồm 1 Dedicated IP tĩnh (Mỹ, Singapore hoặc Nhật Bản)",
+        "Tính năng Threat Protection chặn quảng cáo và trang web độc hại",
+        "Chính sách cam kết không lưu log (No-logs policy được kiểm toán độc lập)"
+      ],
+      "imageUrl": "/products/nordvpn.svg",
+      "badge": "Ưu đãi 50%",
+      "variants": [
+        {
+          "sku": "NORDVPN-DEDICATED-IP-2-YEARS",
+          "name": "24 tháng · 6 thiết bị cùng lúc",
+          "termMonths": 24,
+          "seats": 6,
+          "priceVnd": 1490000,
+          "compareAtPriceVnd": 2890000,
+          "deliveryType": "account",
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      "slug": "cloud-vps-nvme-ultra",
+      "name": "Cloud VPS NVMe Ultra Pro (Hà Nội / TP.HCM)",
+      "categorySlug": "cloud-vps",
+      "brand": "DXTechs Cloud",
+      "shortDescription": "Máy chủ ảo hiệu năng cao dùng chip AMD EPYC / Intel Xeon Gold thế hệ mới và ổ cứng NVMe Enterprise RAID 10.",
+      "licenseType": "service",
+      "platforms": [
+        "linux",
+        "windows"
+      ],
+      "features": [
+        "Datacenter chuẩn Tier 3 tại Viettel IDC / VNPT Data Center",
+        "Băng thông trong nước 1Gbps không giới hạn lưu lượng truyền tải",
+        "Ổ cứng Pure NVMe Enterprise tốc độ đọc ghi lên tới 3500MB/s",
+        "Tự động sao lưu hàng tuần, hỗ trợ cài đặt OS 1-click"
+      ],
+      "imageUrl": "/products/cloud-vps.svg",
+      "badge": "Tốc độ cao",
+      "variants": [
+        {
+          "sku": "CLOUD-VPS-NVME-ULTRA",
+          "name": "1 tháng · 4 vCPU · 8GB RAM · 160GB NVMe",
+          "termMonths": 1,
+          "seats": 1,
+          "priceVnd": 399000,
+          "compareAtPriceVnd": 550000,
+          "deliveryType": "manual",
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      "slug": "cpanel-business-hosting",
+      "name": "cPanel Business Web Hosting Pro",
+      "categorySlug": "cpanel-hosting",
+      "brand": "cPanel",
+      "shortDescription": "Gói hosting doanh nghiệp tối ưu cho WordPress và WooCommerce, trang bị LiteSpeed Web Server và LSCache.",
+      "licenseType": "service",
+      "platforms": [
+        "linux"
+      ],
+      "features": [
+        "Trang bị máy chủ web LiteSpeed tăng tốc website gấp 5 lần Apache",
+        "Dung lượng 30GB NVMe Storage, băng thông không giới hạn",
+        "Miễn phí chứng chỉ SSL Let's Encrypt trọn đời cho mọi tên miền",
+        "Tích hợp công cụ sao lưu dữ liệu tự động hàng ngày JetBackup"
+      ],
+      "imageUrl": "/products/hosting-cpanel.svg",
+      "badge": "Khuyên dùng",
+      "variants": [
+        {
+          "sku": "CPANEL-BUSINESS-HOSTING",
+          "name": "12 tháng · Không giới hạn website",
+          "termMonths": 12,
+          "seats": 1,
+          "priceVnd": 1190000,
+          "compareAtPriceVnd": 1690000,
+          "deliveryType": "manual",
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      "slug": "ten-mien-quoc-gia-vn",
+      "name": "Tên Miền Quốc Gia .VN (Chính chủ VNNIC)",
+      "categorySlug": "ten-mien-vn",
+      "brand": "VNNIC",
+      "shortDescription": "Tên miền cấp cao quốc gia Việt Nam, khẳng định uy tín thương hiệu và được pháp luật Việt Nam bảo hộ.",
+      "licenseType": "service",
+      "platforms": [],
+      "features": [
+        "Đăng ký trực tiếp với Trung tâm Internet Việt Nam (VNNIC)",
+        "Hệ thống máy chủ DNS Anycast tốc độ phản hồi cực nhanh",
+        "Bảo vệ tên miền chống chiếm đoạt với tính năng Registrar Lock",
+        "Hỗ trợ cấu hình bản ghi DNS, trỏ IP và tích hợp dịch vụ miễn phí"
+      ],
+      "imageUrl": "/products/domain-vn.svg",
+      "badge": "Uy tín Quốc gia",
+      "variants": [
+        {
+          "sku": "TEN-MIEN-QUOC-GIA-VN",
+          "name": "12 tháng · Gia hạn hàng năm",
+          "termMonths": 12,
+          "seats": 1,
+          "priceVnd": 550000,
+          "compareAtPriceVnd": 750000,
+          "deliveryType": "manual",
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      "slug": "sectigo-positivesll-wildcard",
+      "name": "Sectigo PositiveSSL Wildcard Certificate",
+      "categorySlug": "ssl-wildcard",
+      "brand": "Sectigo",
+      "shortDescription": "Chứng chỉ số SSL Wildcard bảo vệ tên miền chính và không giới hạn mọi subdomain (*.yourdomain.com).",
+      "licenseType": "service",
+      "platforms": [],
+      "features": [
+        "Bảo vệ tên miền chính và toàn bộ subdomain không giới hạn",
+        "Chuẩn mã hóa mạnh mẽ SHA-2 và 256-bit Encryption",
+        "Tương thích 99.9% các trình duyệt web và thiết bị di động",
+        "Bao gồm gói bảo hiểm trách nhiệm nhà cung cấp $10,000 USD"
+      ],
+      "imageUrl": "/products/ssl-sectigo.svg",
+      "badge": "Bảo mật SSL",
+      "variants": [
+        {
+          "sku": "SECTIGO-POSITIVESLL-WILDCARD",
+          "name": "12 tháng · Không giới hạn Subdomain",
+          "termMonths": 12,
+          "seats": 1,
+          "priceVnd": 1390000,
+          "compareAtPriceVnd": 1990000,
+          "deliveryType": "manual",
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      "slug": "google-workspace-enterprise",
+      "name": "Google Workspace Enterprise Plus",
+      "categorySlug": "google-workspace",
+      "brand": "Google",
+      "shortDescription": "Bộ công cụ năng suất doanh nghiệp từ Google: Email theo tên miền công ty, Google Drive 2TB, Google Meet 500 người.",
+      "licenseType": "service",
+      "platforms": [
+        "windows",
+        "macos",
+        "ios",
+        "android",
+        "web"
+      ],
+      "features": [
+        "Địa chỉ Email doanh nghiệp chuyên nghiệp (name@company.com)",
+        "2TB dung lượng lưu trữ đám mây Google Drive an toàn",
+        "Họp trực tuyến Google Meet tối đa 500 người kèm ghi âm cuộc họp",
+        "Bảo vệ dữ liệu nâng cao, chống rò rỉ DLP và vault lưu trữ pháp lý"
+      ],
+      "imageUrl": "/products/google-workspace.svg",
+      "badge": "Doanh nghiệp",
+      "variants": [
+        {
+          "sku": "GOOGLE-WORKSPACE-ENTERPRISE",
+          "name": "12 tháng · 1 Tài khoản",
+          "termMonths": 12,
+          "seats": 1,
+          "priceVnd": 1890000,
+          "compareAtPriceVnd": 2600000,
+          "deliveryType": "account",
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      "slug": "synology-c2-backup-cloud",
+      "name": "Synology C2 Backup for Business (2TB)",
+      "categorySlug": "synology-c2",
+      "brand": "Synology",
+      "shortDescription": "Giải pháp sao lưu đám mây chuyên nghiệp cho máy tính, máy chủ vật lý, máy ảo Hyper-V/VMware và Microsoft 365.",
+      "licenseType": "service",
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "Sao lưu toàn bộ hệ thống Bare-Metal Backup phục hồi thảm họa tức thì",
+        "Mã hóa đầu cuối End-to-End Encryption chuẩn quân đội AES-256",
+        "Công nghệ chống trùng lặp toàn cầu giúp tiết kiệm dung lượng",
+        "Trung tâm dữ liệu đạt chuẩn bảo mật quốc tế ISO 27001 và SOC 2"
+      ],
+      "imageUrl": "/products/synology-c2.svg",
+      "badge": "Chống mất dữ liệu",
+      "variants": [
+        {
+          "sku": "SYNOLOGY-C2-BACKUP-CLOUD",
+          "name": "12 tháng · 2TB Cloud Storage",
+          "termMonths": 12,
+          "seats": 1,
+          "priceVnd": 1590000,
+          "compareAtPriceVnd": 2290000,
+          "deliveryType": "manual",
+          "isDefault": true
+        }
+      ]
+    }
+  ]
+}
