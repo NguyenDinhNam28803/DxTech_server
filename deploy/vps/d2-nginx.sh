@@ -23,7 +23,12 @@ say "Thay đổi sẽ áp dụng"
 set +e
 preview="$(python3 "$here/d2-nginx.py" "$f")"; rc=$?
 set -e
-[ "$rc" -eq 3 ] && { ok "D2 đã được áp dụng từ trước — không sửa gì"; exit 0; }
+if [ "$rc" -eq 3 ]; then
+  ok "D2 đã được áp dụng từ trước — không sửa gì"
+  printf '  %-46s %s (mong đợi 404)\n' "https://dxtechs.com/api/health" \
+    "$(curl -s -o /dev/null -w '%{http_code}' --resolve dxtechs.com:443:127.0.0.1 https://dxtechs.com/api/health)"
+  exit 0
+fi
 [ "$rc" -eq 0 ] || die "Cấu hình Nginx khác dự kiến (xem thông báo ở trên) — không sửa gì."
 diff -u "$f" - <<< "$preview" | sed 's/^/  /' || true
 
@@ -38,6 +43,9 @@ else
 fi
 
 say "Kiểm tra sau"
+# Reload của Nginx là bất đồng bộ: worker cũ còn phục vụ thêm một nhịp ⇒ đợi rồi mới kiểm tra
+# (sự cố 21/11/2026: kiểm tra ngay sau reload vẫn thấy 200 từ worker cũ).
+sleep 2
 code() { curl -s -o /dev/null -w '%{http_code}' --resolve "$1:443:127.0.0.1" "https://$1$2"; }
 printf '  %-46s %s (mong đợi 404)\n' "https://dxtechs.com/api/health" "$(code dxtechs.com /api/health)"
 printf '  %-46s %s (mong đợi 200)\n' "https://api.dxtechs.com/api/health/ready" "$(code api.dxtechs.com /api/health/ready)"

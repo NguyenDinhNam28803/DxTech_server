@@ -1,6 +1,6 @@
 # ADR-008: Tìm kiếm full-text tiếng Việt không dấu; cây danh mục adjacency list
 
-- **Trạng thái:** Một phần — PR-3 (`catalog.f_unaccent`, `search_vector` generated + GIN, `parent_id`); truy vấn tìm kiếm và cây danh mục ở PR-4
+- **Trạng thái:** Đã áp dụng — PR-3 (schema, `f_unaccent`, GIN); PR-4 (truy vấn tìm kiếm, CTE cây danh mục)
 - **Ngày:** 2026-11-18
 
 ## Bối cảnh

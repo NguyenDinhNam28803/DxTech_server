@@ -54,8 +54,10 @@ internal static class ArchitectureRules
             .ToList();
 
     /// <summary>
-    /// Trong module, chỉ Contracts, Api (controller phải public để MVC tìm thấy) và lớp đăng ký
-    /// <c>*Module</c> được để public; Domain, Persistence, Features phải là internal.
+    /// Trong module, chỉ Contracts, Api (controller phải public để MVC tìm thấy), Features (handler, query, response —
+    /// controller public nhận/trả các kiểu này nên C# bắt buộc chúng public) và lớp đăng ký <c>*Module</c>
+    /// được để public; Domain và Persistence phải là internal. Module khác vẫn chỉ được dùng Contracts
+    /// (<see cref="CrossModuleViolations"/>).
     /// </summary>
     public static IReadOnlyList<string> PublicSurfaceViolations(Assembly assembly, string rootNamespace)
     {
@@ -66,7 +68,9 @@ internal static class ArchitectureRules
             {
                 string module = ModuleOf(t, modulesPrefix)!;
                 string ns = t.Namespace!;
-                bool allowedNamespace = ns.StartsWith($"{modulesPrefix}{module}.Contracts") || ns.StartsWith($"{modulesPrefix}{module}.Api");
+                bool allowedNamespace = ns.StartsWith($"{modulesPrefix}{module}.Contracts")
+                    || ns.StartsWith($"{modulesPrefix}{module}.Api")
+                    || ns.StartsWith($"{modulesPrefix}{module}.Features");
                 bool isRegistration = ns == $"{modulesPrefix}{module}" && t.Name.EndsWith("Module");
                 return !allowedNamespace && !isRegistration;
             })

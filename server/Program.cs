@@ -44,7 +44,11 @@ builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
 // Module nghiệp vụ (ADR-001): mỗi module tự đăng ký service của mình.
 builder.Services.AddCatalogModule(builder.Configuration);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+    // Trả tiếng Việt dạng UTF-8 thay vì \uXXXX: payload nhỏ hơn ~2 lần với dữ liệu có dấu, đọc log dễ hơn.
+    // Encoder này vẫn escape ký tự nhạy cảm với HTML (< > & ' ").
+    options.JsonSerializerOptions.Encoder =
+        System.Text.Encodings.Web.JavaScriptEncoder.Create(System.Text.Unicode.UnicodeRanges.All));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

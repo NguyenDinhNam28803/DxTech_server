@@ -18,6 +18,9 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
 
         // Nạp mọi cấu hình entity của các module trong assembly.
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+
+        // Hàm SQL do migration tạo, dùng được trong LINQ (không sinh migration).
+        server.Modules.Catalog.Persistence.CatalogDbFunctions.Register(modelBuilder);
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
