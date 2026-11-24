@@ -7,6 +7,7 @@ using server.Infrastructure.Options;
 using server.Infrastructure.Persistence;
 using server.Infrastructure.Persistence.Interceptors;
 using server.Modules.Catalog;
+using server.Modules.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,7 @@ builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
 
 // Module nghiệp vụ (ADR-001): mỗi module tự đăng ký service của mình.
 builder.Services.AddCatalogModule(builder.Configuration);
+builder.Services.AddIdentityModule(builder.Configuration);
 
 builder.Services.AddControllers().AddJsonOptions(options =>
     // Trả tiếng Việt dạng UTF-8 thay vì \uXXXX: payload nhỏ hơn ~2 lần với dữ liệu có dấu, đọc log dễ hơn.
@@ -101,6 +103,14 @@ var app = builder.Build();
 if (args.Contains("--seed-demo"))
 {
     return await CatalogModule.SeedDemoAsync(app.Services, dryRun: args.Contains("--dry-run"), Console.Out);
+}
+
+// ADR-012: tạo tài khoản admin — chạy rồi thoát. Mật khẩu đọc từ stdin, không bao giờ qua tham số.
+//   docker compose ... run --rm --no-deps api --create-admin admin@dxtechs.com --name "Nguyễn Văn A"
+if (args.Contains("--create-admin"))
+{
+    return await IdentityModule.CreateAdminAsync(
+        app.Services, args, Console.In, Console.Out, interactive: !Console.IsInputRedirected);
 }
 
 // ---------------------------------------------------------------------------

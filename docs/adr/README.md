@@ -16,7 +16,7 @@ Chi tiết so sánh và sơ đồ: tài liệu "DXTechs — Thiết kế Server 
 | [009](009-database-roles.md) | Tách role database: owner (migrate) và app (API) | Đã áp dụng (PR-2) |
 | [010](010-demo-seed-on-demand.md) | Dữ liệu demo chạy theo lệnh | Đã áp dụng — PR-5 (`--seed-demo`, chỉ thêm cái còn thiếu) |
 | [011](011-api-subdomain.md) | API trên subdomain riêng `api.dxtechs.com` | Đã áp dụng — hạ tầng 20/11/2026; CORS ở PR-C1 |
-| [012](012-authentication.md) | Xác thực: JWT 15 phút trong bộ nhớ + refresh token xoay vòng (cookie HttpOnly), PBKDF2, rate limit, phân quyền an toàn mặc định | **Đề xuất** — chờ duyệt; PR-7, PR-8 |
+| [012](012-authentication.md) | Xác thực: JWT 15 phút trong bộ nhớ + refresh token xoay vòng (cookie HttpOnly), PBKDF2, rate limit, phân quyền an toàn mặc định | Đã chấp nhận (PR #10) — PR-7: schema `identity` + `--create-admin`; PR-8: API (chưa) |
 
 ## Thêm ADR mới
 Tạo file `NNN-ten-ngan.md` theo cùng khuôn. Không sửa nội dung một ADR đã chấp nhận: muốn đổi thì viết ADR mới và ghi "Thay thế ADR-NNN".

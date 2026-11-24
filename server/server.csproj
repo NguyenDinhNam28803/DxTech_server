@@ -21,6 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- ADR-012: JwtBearer ở PR-8; PR-7 chỉ cần PasswordHasher<T> từ Identity.Core. Gói của Microsoft, ghim bản. -->
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.34" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

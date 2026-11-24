@@ -142,6 +142,19 @@ if [ "${DB_ROLES_RUN_MIGRATIONS:-0}" = 1 ]; then
     "INSERT INTO catalog.products (id, category_id, slug, name, license_type) SELECT gen_random_uuid(), id, 'roles-test', 'Phần mềm Đồ hoạ', 'perpetual' FROM catalog.categories WHERE slug = 'software';
      SELECT 1 / count(*)::int FROM catalog.products WHERE search_vector @@ to_tsquery('simple', catalog.f_unaccent('phan & mem & do & hoa'));
      DELETE FROM catalog.products WHERE slug = 'roles-test'"
+  # PR-7 (ADR-012): schema identity + citext do roles.sql (superuser) tạo trước migration.
+  expect_value "schema identity thuộc dxtechs_owner" "dxtechs_owner" \
+    "SELECT pg_get_userbyid(nspowner) FROM pg_namespace WHERE nspname = 'identity'"
+  expect_ok "app tạo user; email trùng khác hoa thường bị UNIQUE (citext) chặn" dxtechs_app "$new_app_pw" \
+    "INSERT INTO identity.users (id, email, password_hash, full_name, role, status, failed_login_count, security_stamp)
+       VALUES (gen_random_uuid(), 'Roles.Test@DXTechs.com', repeat('h', 40), 'Roles Test', 'customer', 'active', 0, gen_random_uuid());
+     DO \$\$ BEGIN
+       INSERT INTO identity.users (id, email, password_hash, full_name, role, status, failed_login_count, security_stamp)
+         VALUES (gen_random_uuid(), 'roles.test@dxtechs.com', repeat('h', 40), 'Roles Test', 'customer', 'active', 0, gen_random_uuid());
+       RAISE EXCEPTION 'citext không chặn email trùng';
+     EXCEPTION WHEN unique_violation THEN NULL; END \$\$;
+     DELETE FROM identity.users WHERE email = 'roles.test@dxtechs.com'"
+  expect_denied "app xoá bảng identity" dxtechs_app "$new_app_pw" "DROP TABLE identity.refresh_tokens"
   expect_denied "app tạo bảng trong catalog" dxtechs_app "$new_app_pw" "CREATE TABLE catalog.hack (id int)"
   expect_denied "app xoá bảng catalog" dxtechs_app "$new_app_pw" "DROP TABLE catalog.product_variants"
   expect_denied "app ghi lịch sử migration" dxtechs_app "$new_app_pw" \
