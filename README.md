@@ -109,6 +109,22 @@ $C run --rm --no-deps api --seed-demo
 Chỉ thêm danh mục/sản phẩm còn thiếu (theo slug); không ghi đè chỉnh sửa của admin, không khôi phục sản phẩm đã xoá.
 Không bao giờ tự chạy khi API khởi động.
 
+## Tạo tài khoản admin (`--create-admin`, ADR-012)
+
+Không có mật khẩu mặc định. Mật khẩu **nhập từ bàn phím** (ẩn ký tự, hỏi 2 lần) — không bao giờ đưa vào tham số
+dòng lệnh (lộ trong shell history và `ps`). Email đã có tài khoản ⇒ lỗi, không tự nâng quyền.
+
+```bash
+# VPS (user deploy, trong ~/dxtechs-server) — biến C và API_TAG như mục trên
+$C run --rm --no-deps api --create-admin admin@dxtechs.com --name "Nguyễn Đình Nam"
+# Mật khẩu admin (≥ 10 ký tự): ********
+# Nhập lại mật khẩu: ********
+# create-admin: đã tạo admin admin@dxtechs.com (id 01a2…).
+```
+
+Quy tắc mật khẩu (NIST SP 800-63B): 10–128 ký tự, cho phép dấu tiếng Việt và khoảng trắng, không bắt buộc ký tự
+đặc biệt; từ chối mật khẩu phổ biến và mật khẩu chứa phần trước `@` của email. Mã thoát: 0 thành công, 1 lỗi, 2 sai cú pháp.
+
 ## Quy ước route
 
 Mọi controller dùng tiền tố `api/`, ví dụ `[Route("api/[controller]")]`. Nginx trên VPS chỉ chuyển

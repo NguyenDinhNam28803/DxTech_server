@@ -1,6 +1,7 @@
 # ADR-012: Xác thực & phân quyền (Phase 2)
 
-- **Trạng thái:** Đề xuất — chờ Backend Lead duyệt (dự kiến 25/11/2026); triển khai ở PR-7 (schema) và PR-8 (API)
+- **Trạng thái:** Đã chấp nhận — Backend Lead duyệt khi merge PR #10 (23/11/2026). PR-7: schema `identity`, `citext`,
+  `--create-admin` (đã áp dụng); PR-8: API xác thực (chưa)
 - **Ngày:** 2026-11-23
 - **Liên quan:** ADR-006 (id, thời gian), ADR-009 (role DB), ADR-011 (API trên `api.dxtechs.com`, cookie cùng site);
   thiết kế bảng: *Thiết kế toàn bộ Database v1.0*, mục 6 (`identity.users`, `identity.refresh_tokens`)

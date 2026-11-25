@@ -70,6 +70,8 @@ REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 
 -- unaccent: tìm kiếm tiếng Việt không dấu (ADR-008, dùng từ PR-3). Tạo bằng superuser.
 CREATE EXTENSION IF NOT EXISTS unaccent SCHEMA public;
+-- citext: email/mã coupon không phân biệt hoa thường (ADR-012, PR-7). Tạo bằng superuser trước khi migrate chạy.
+CREATE EXTENSION IF NOT EXISTS citext SCHEMA public;
 
 -- 4. Chuyển quyền sở hữu đối tượng có sẵn (ví dụ __EFMigrationsHistory do superuser tạo) --------
 -- Bỏ qua: schema hệ thống, schema public (đã thuộc pg_database_owner), đối tượng của extension,
