@@ -581,7 +581,7 @@ namespace server.Infrastructure.Persistence.Migrations
                     b.HasOne("server.Modules.Identity.Domain.RefreshToken", null)
                         .WithMany()
                         .HasForeignKey("ReplacedById")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .HasConstraintName("fk_refresh_tokens_refresh_tokens_replaced_by_id");
 
                     b.HasOne("server.Modules.Identity.Domain.User", "User")

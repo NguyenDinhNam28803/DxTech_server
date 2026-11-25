@@ -33,10 +33,12 @@ internal sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refre
             .HasForeignKey(t => t.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        // SET NULL (PR-8): token trong một họ trỏ vào nhau; RESTRICT làm hỏng việc xoá tài khoản (CASCADE nhiều dòng)
+        // và job dọn token theo lô.
         builder.HasOne<RefreshToken>()
             .WithMany()
             .HasForeignKey(t => t.ReplacedById)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.SetNull);
 
         // POST /api/auth/refresh tra theo hash.
         builder.HasIndex(t => t.TokenHash).IsUnique().HasDatabaseName("ux_refresh_tokens_token_hash");

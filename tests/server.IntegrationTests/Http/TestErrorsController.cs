@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using server.Infrastructure.Http;
 using server.Shared.Results;
@@ -9,6 +10,7 @@ namespace server.IntegrationTests.Http;
 /// controller thật sẽ dùng (<see cref="ResultHttpExtensions"/>), để kiểm tra response HTTP thật.
 /// </summary>
 [ApiController]
+[AllowAnonymous]
 [Route("api/__test")]
 public sealed class TestErrorsController : ControllerBase
 {

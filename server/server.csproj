@@ -18,10 +18,13 @@
     <!-- Dữ liệu demo của catalog (ADR-010), đọc bằng GetManifestResourceStream — không phụ thuộc thư mục chạy. -->
     <EmbeddedResource Include="Modules/Catalog/Seeding/demo-catalog.json" LogicalName="server.Modules.Catalog.Seeding.demo-catalog.json" />
     <Content Remove="Modules/Catalog/Seeding/demo-catalog.json" />
+    <!-- Mật khẩu phổ biến (ADR-012 §2), đọc một lần khi khởi động. -->
+    <EmbeddedResource Include="Modules/Identity/Domain/common-passwords.txt" LogicalName="server.Modules.Identity.Domain.common-passwords.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- ADR-012: JwtBearer ở PR-8; PR-7 chỉ cần PasswordHasher<T> từ Identity.Core. Gói của Microsoft, ghim bản. -->
+    <!-- ADR-012: JwtBearer (xác thực access token) + Identity.Core (chỉ PasswordHasher<T>). Gói của Microsoft, ghim bản. -->
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.34" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.34" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

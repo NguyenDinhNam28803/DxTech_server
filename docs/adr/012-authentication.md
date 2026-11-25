@@ -1,7 +1,7 @@
 # ADR-012: Xác thực & phân quyền (Phase 2)
 
-- **Trạng thái:** Đã chấp nhận — Backend Lead duyệt khi merge PR #10 (23/11/2026). PR-7: schema `identity`, `citext`,
-  `--create-admin` (đã áp dụng); PR-8: API xác thực (chưa)
+- **Trạng thái:** Đã áp dụng — duyệt khi merge PR #10 (23/11/2026). PR-7: schema `identity`, `citext`, `--create-admin`;
+  PR-8: API xác thực, policy Admin, rate limit, job dọn token (xem “Ghi chú triển khai” cuối file)
 - **Ngày:** 2026-11-23
 - **Liên quan:** ADR-006 (id, thời gian), ADR-009 (role DB), ADR-011 (API trên `api.dxtechs.com`, cookie cùng site);
   thiết kế bảng: *Thiết kế toàn bộ Database v1.0*, mục 6 (`identity.users`, `identity.refresh_tokens`)
@@ -123,3 +123,22 @@ Ghim đúng phiên bản; bản 8.0.x mới nhất tại 23/11/2026 (gồm các 
 7. DB không có mật khẩu/refresh token dạng rõ; log không chứa token (test bắt log).
 8. Rate limit: request thứ 11 trong một phút tới `/login` ⇒ 429 có `Retry-After`; IP lấy đúng sau Nginx.
 9. API không khởi động khi thiếu khoá ký hoặc khoá < 32 byte.
+
+## Ghi chú triển khai (PR-8, 25/11/2026)
+Khác so với bản đề xuất, có lý do:
+- **An toàn mặc định bằng `AuthorizeFilter` toàn cục cho MVC** thay vì `FallbackPolicy`: FallbackPolicy áp cả cho URL
+  không tồn tại ⇒ trả 401 thay vì 404, gây nhầm cho client. Hiệu quả bảo vệ như nhau cho mọi controller; test kiến
+  trúc bắt buộc mỗi controller ghi rõ `[Authorize]`/`[AllowAnonymous]`.
+- **`POST /api/me/logout-all`** (thay cho `/api/auth/logout-all`): endpoint dùng Bearer nằm cùng nhóm “tài khoản của tôi”;
+  `/api/auth/*` chỉ còn các endpoint công khai/dùng cookie.
+- **`PUT /api/me/password` trả 200 + phiên mới** (thay vì 204): mọi phiên bị thu hồi, thiết bị đang dùng nhận access
+  token + cookie mới ngay — không bị đăng xuất sau khi đổi mật khẩu.
+- **FK `refresh_tokens.replaced_by_id` → `ON DELETE SET NULL`** (migration `Identity_RefreshTokenReplacedBySetNull`):
+  với RESTRICT, xoá tài khoản đã từng refresh (CASCADE nhiều token trỏ vào nhau) và job dọn token theo lô bị lỗi.
+- **Mã 423** cho tài khoản tạm khoá: thêm `ErrorType.Locked` vào shared kernel + tiêu đề ProblemDetails.
+- **Danh sách mật khẩu phổ biến**: 2.311 mục dài ≥ 10 ký tự lọc từ 100.000 mật khẩu phổ biến (SecLists, MIT) + mẫu
+  tiếng Việt — mật khẩu ngắn hơn đã bị quy tắc độ dài chặn nên không cần lưu.
+- **Rate limit**: giới hạn toàn cục ghép (phút + giờ) chỉ áp lên `/api/auth/*` và `/api/me/*`, phân theo IP sau
+  `UseForwardedHeaders`. Số liệu cấu hình được qua `Auth:RateLimits:*`.
+- **Triển khai**: `docker-compose.prod.yml` dùng `${AUTH_SIGNING_KEY:?…}` ⇒ thiếu khoá thì `compose up` dừng ngay khi đọc
+  cấu hình, trước khi migrate/thay container — API cũ tiếp tục chạy.

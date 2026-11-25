@@ -21,6 +21,8 @@ public class ApiFactory : WebApplicationFactory<Program>
             ? fromEnv
             : DefaultConnectionString;
 
+    public const string TestSigningKey = "integration-test-signing-key-0123456789abcdef";
+
     /// <summary>Ghi đè chuỗi kết nối; <c>null</c> = dùng <see cref="ConnectionString"/>.</summary>
     protected virtual string? ConnectionStringOverride => null;
 
@@ -29,6 +31,15 @@ public class ApiFactory : WebApplicationFactory<Program>
         // "Testing": không Swagger, không HTTPS redirect, không đọc appsettings.Development.json.
         builder.UseEnvironment("Testing");
         builder.UseSetting("ConnectionStrings:DefaultConnection", ConnectionStringOverride ?? ConnectionString);
+        // ADR-012: khoá ký chỉ dùng trong test; nới giới hạn tần suất để các test không chặn nhau
+        // (test riêng cho 429 dùng factory với giới hạn nhỏ). Kiểm tra admin trong DB không cache.
+        builder.UseSetting("Auth:SigningKeys:0", TestSigningKey);
+        builder.UseSetting("Auth:AdminCheckCacheSeconds", "0");
+        builder.UseSetting("Auth:RateLimits:LoginPerMinute", "10000");
+        builder.UseSetting("Auth:RateLimits:LoginPerHour", "10000");
+        builder.UseSetting("Auth:RateLimits:RegisterPerHour", "10000");
+        builder.UseSetting("Auth:RateLimits:RefreshPerMinute", "10000");
+        builder.UseSetting("Auth:RateLimits:OtherPerMinute", "10000");
 
         builder.ConfigureTestServices(services =>
         {

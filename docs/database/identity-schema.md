@@ -1,6 +1,6 @@
 # Schema `identity` — tài khoản & phiên đăng nhập
 
-- **Cập nhật:** 24/11/2026 (PR-7) · **Migration:** `20261124233715_Identity_Initial`
+- **Cập nhật:** 25/11/2026 (PR-8) · **Migration:** `20261124233715_Identity_Initial`, `20261125004043_Identity_RefreshTokenReplacedBySetNull`
 - **SQL đầy đủ:** [`docs/migrations/20261124233715_Identity_Initial.sql`](../migrations/20261124233715_Identity_Initial.sql)
 - **Quyết định:** ADR-012 (xác thực), ADR-006 (id, thời gian), ADR-009 (role DB); thiết kế: *Thiết kế toàn bộ Database v1.0*, mục 6
 
@@ -13,7 +13,7 @@ id                 uuid PK (v7)   ◄──────────┐   id     
 email              citext UNIQUE              └── user_id             uuid FK ON DELETE CASCADE
 email_confirmed_at timestamptz NULL              token_hash          bytea(32) UNIQUE  — SHA-256, không lưu token gốc
 password_hash      text           — PBKDF2       family_id           uuid      — cả chuỗi xoay vòng từ 1 lần đăng nhập
-full_name          text (1–100)                  replaced_by_id      uuid FK → refresh_tokens.id NULL
+full_name          text (1–100)                  replaced_by_id      uuid FK → refresh_tokens.id NULL, ON DELETE SET NULL (PR-8)
 phone              text NULL  ^\+?[0-9]{8,15}$   expires_at          timestamptz — trượt 14 ngày
 company_name       text NULL (1–200)             session_expires_at  timestamptz — tuyệt đối 30 ngày (ADR-012)
 tax_code           text NULL  10 | 13 số          revoked_at / revoked_reason      — cùng NULL hoặc cùng có

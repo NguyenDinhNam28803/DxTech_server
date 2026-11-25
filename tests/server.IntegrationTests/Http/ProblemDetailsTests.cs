@@ -15,6 +15,7 @@ public class ProblemDetailsTests(ApiFactory factory) : IClassFixture<ApiFactory>
     [InlineData("NotFound", HttpStatusCode.NotFound)]
     [InlineData("Conflict", HttpStatusCode.Conflict)]
     [InlineData("BusinessRule", HttpStatusCode.UnprocessableEntity)]
+    [InlineData("Locked", HttpStatusCode.Locked)]
     public async Task Business_errors_map_to_status_and_problem_details(string type, HttpStatusCode expected)
     {
         HttpResponseMessage response = await _client.GetAsync($"/api/__test/errors/{type}");

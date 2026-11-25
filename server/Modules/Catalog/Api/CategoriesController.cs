@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using server.Infrastructure.Http;
 using server.Modules.Catalog.Features.Categories;
@@ -5,6 +6,7 @@ using server.Modules.Catalog.Features.Categories;
 namespace server.Modules.Catalog.Api;
 
 [ApiController]
+[AllowAnonymous]
 [Route("api/categories")]
 public sealed class CategoriesController(GetCategoryTreeHandler getTree) : ControllerBase
 {

@@ -18,6 +18,8 @@ public enum ErrorType
     Conflict,
     /// <summary>422 — vi phạm quy tắc nghiệp vụ: hết key, coupon hết hạn, chuyển trạng thái sai.</summary>
     BusinessRule,
+    /// <summary>423 — tài nguyên đang bị khoá tạm (tài khoản bị khoá sau nhiều lần đăng nhập sai — ADR-012).</summary>
+    Locked,
 }
 
 /// <summary>
@@ -43,4 +45,6 @@ public sealed record Error(
     public static Error Conflict(string code, string message) => new(code, message, ErrorType.Conflict);
 
     public static Error BusinessRule(string code, string message) => new(code, message, ErrorType.BusinessRule);
+
+    public static Error Locked(string code, string message) => new(code, message, ErrorType.Locked);
 }

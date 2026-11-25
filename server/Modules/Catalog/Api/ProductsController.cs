@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using server.Infrastructure.Http;
 using server.Modules.Catalog.Features.Products;
@@ -7,6 +8,7 @@ namespace server.Modules.Catalog.Api;
 
 /// <summary>Controller mỏng (ADR-003): chỉ nhận tham số, gọi handler, đổi Result sang HTTP.</summary>
 [ApiController]
+[AllowAnonymous]
 [Route("api/products")]
 public sealed class ProductsController(ListProductsHandler list, GetProductBySlugHandler getBySlug) : ControllerBase
 {
