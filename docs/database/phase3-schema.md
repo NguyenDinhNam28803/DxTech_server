@@ -1,6 +1,6 @@
 # Thiết kế chi tiết Phase 3 — schema `sales`, `payments`, `inventory`
 
-- **Trạng thái:** Đề xuất — chờ Backend Lead duyệt trước PR-9 (migration)
+- **Trạng thái:** Đã duyệt (26/11/2026) · DDL chi tiết + quyền DB: `docs/design/pr-09-10-phase3-schema-and-cart-quote.md`
 - **Ngày:** 26/11/2026 · **Thay cho:** *Thiết kế toàn bộ Database v1.0* mục 7–9 (phần Phase 3)
 - **Quyết định:** ADR-013 (thanh toán), ADR-014 (mã hoá license key), ADR-006 (id, tiền, thời gian), ADR-007 (concurrency),
   ADR-009 (role DB), ADR-012 (xác thực, rate limit)
@@ -162,8 +162,8 @@ CHECK `inserted + duplicate + invalid = total`. Không lưu file gốc (chứa k
 | xmin | xid | concurrency token | |
 | created_at | timestamptz | | Thứ tự FIFO |
 
-CHECK `ck_license_keys_assignment`: `(status IN ('reserved','delivered')) = (order_item_id IS NOT NULL)`,
-`(status = 'delivered') = (delivered_at IS NOT NULL)`.
+Ràng buộc trạng thái viết theo từng trạng thái (key `revoked` sau khi giao vẫn giữ `order_item_id`) — xem DDL ở tài liệu
+thiết kế PR-9 mục A4.
 Index: `ux_license_keys_key_hash`; `ix_license_keys_available (variant_id, created_at) WHERE status = 'available'` — cấp FIFO và
 đếm tồn kho; `ix_license_keys_order_item (order_item_id) WHERE order_item_id IS NOT NULL`.
 
@@ -187,7 +187,8 @@ Giữ key khi tạo đơn mở ra khả năng tạo nhiều đơn rồi bỏ đ�
 
 ## 5. Quyền DB (bổ sung `roles.sql` / migration)
 
-Mặc định `dxtechs_app` có SELECT, INSERT, UPDATE, DELETE trên bảng mới (ADR-009, default privileges). Migration Phase 3 thu hồi bớt:
+Mặc định `dxtechs_app` có SELECT, INSERT, UPDATE, DELETE trên bảng mới (ADR-009, default privileges). Thu hồi bớt ở **cả migration
+lẫn `roles.sql`** — `roles.sql` chạy lại mỗi lần deploy và cấp lại quyền (chi tiết: thiết kế PR-9 mục A5):
 
 | Bảng | Quyền app |
 |---|---|
