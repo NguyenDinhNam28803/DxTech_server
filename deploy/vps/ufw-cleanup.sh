@@ -6,6 +6,7 @@ require_root
 say "Kiểm tra"
 port="$(sshd_value port)"
 [ "$port" = 24700 ] || die "sshd đang dùng cổng '$port' (mong đợi đúng 24700) — dừng."
+ufw status | grep -q "^Status: active" || die "ufw đang TẮT — không có rule nào để xoá. Bật ufw bằng: bash ufw-enable.sh"
 ss -tln | awk '{print $4}' | grep -qE '(^|:)22$' && die "Vẫn có tiến trình nghe cổng 22 — dừng."
 ufw status | grep -qE '^24700(/tcp)?[[:space:]]+(ALLOW|LIMIT)' || die "ufw chưa mở 24700 — dừng, xoá 22 lúc này sẽ tự khoá."
 ok "SSH chỉ nghe 24700, ufw đã mở 24700"

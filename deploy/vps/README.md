@@ -16,7 +16,8 @@ bash audit.sh            # CHỈ ĐỌC — chụp hiện trạng, chạy trư�
 | 3 | `ssh-hardening.sh` | Tắt đăng nhập SSH bằng mật khẩu | Reload sshd, phiên đang mở giữ nguyên | `ssh-hardening.sh --rollback` |
 | 4 | `fail2ban.sh` | Chặn IP dò SSH (5 lần sai/10 phút ⇒ 1 giờ) | Không | `systemctl disable --now fail2ban` |
 | 5 | `auto-updates.sh` | Tự cài bản vá bảo mật; không tự reboot/restart Docker | Không | `rm /etc/apt/apt.conf.d/52dxtechs-unattended` + sửa `20auto-upgrades` về `"0"` |
-| 6 | `ufw-cleanup.sh` | Xoá rule mở cổng 22 | Không | `ufw allow 22/tcp` |
+| 6 | `ufw-cleanup.sh` | Xoá rule mở cổng 22 (chỉ khi ufw đang bật) | Không | `ufw allow 22/tcp` |
+| 6b | `ufw-enable.sh` | Bật ufw: chỉ mở 24700, 80, 443; **tự tắt sau 5 phút** nếu không `--confirm` | Chặn mọi cổng vào khác | `ufw-enable.sh --rollback` |
 | 7 | `webdeploy.sh '<public key>'` | User riêng cho CI client, không có Docker | Cần đổi secret repo client | `webdeploy.sh --rollback` |
 
 **Backup** chạy bằng user `deploy` (không phải root) — xem [`backup/README.md`](backup/README.md):
