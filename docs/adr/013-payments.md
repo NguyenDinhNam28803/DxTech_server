@@ -1,6 +1,7 @@
 # ADR-013: Nhận thanh toán — chuyển khoản VietQR qua dịch vụ đối soát, webhook idempotent
 
-- **Trạng thái:** Đề xuất — chờ Backend Lead duyệt + công ty chọn tài khoản ngân hàng/nhà cung cấp
+- **Trạng thái:** Đã duyệt (26/11/2026) — nhà cung cấp cụ thể (SePay/payOS) chốt khi công ty chọn tài khoản ngân hàng;
+  thiết kế bảng: `docs/database/phase3-schema.md`
 - **Ngày:** 2026-11-25
 - **Liên quan:** ADR-002 (một DB, transaction chung), ADR-006 (tiền bigint VND), ADR-012 (Origin, rate limit);
   *Thiết kế toàn bộ Database v1.0* mục 7–8, 11; spike `docs/spikes/2026-11-25-payment-gateways.md`
@@ -75,7 +76,8 @@ như `AUTH_SIGNING_KEY`. Thông tin tài khoản nhận tiền (ngân hàng, s�
 | Tin `Return URL` (trình duyệt quay về) để xác nhận đơn | Trình duyệt có thể giả; chỉ webhook có chữ ký mới làm thay đổi trạng thái tiền |
 
 ## Hệ quả
-- Sửa thiết kế DB v1.0: định dạng `orders.code`; `payments.order_id` cho phép NULL (tiền chưa khớp đơn);
+- Sửa thiết kế DB v1.0: định dạng `orders.code`; `payments.order_id` cho phép NULL (tiền chưa khớp đơn); cờ `matched`
+  chi tiết hoá thành `match_status` (xem `phase3-schema.md` mục 3.5);
   thêm chuyển đổi `cancelled → paid` (late payment) vào máy trạng thái.
 - Hoàn tiền là thao tác ngoài hệ thống (chuyển khoản của công ty), hệ thống chỉ ghi nhận (`refunds`, Phase 4).
 - Kiểm thử bắt buộc (PR-11): chữ ký sai/thiếu/timestamp cũ ⇒ 401 + inbox `signature_valid=false`; webhook ×10 ⇒ 1 payment;

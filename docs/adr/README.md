@@ -17,8 +17,8 @@ Chi tiết so sánh và sơ đồ: tài liệu "DXTechs — Thiết kế Server 
 | [010](010-demo-seed-on-demand.md) | Dữ liệu demo chạy theo lệnh | Đã áp dụng — PR-5 (`--seed-demo`, chỉ thêm cái còn thiếu) |
 | [011](011-api-subdomain.md) | API trên subdomain riêng `api.dxtechs.com` | Đã áp dụng — hạ tầng 20/11/2026; CORS ở PR-C1 |
 | [012](012-authentication.md) | Xác thực: JWT 15 phút trong bộ nhớ + refresh token xoay vòng (cookie HttpOnly), PBKDF2, rate limit, phân quyền an toàn mặc định | Đã áp dụng — PR-7 (schema `identity`, `--create-admin`), PR-8 (API xác thực, policy Admin, rate limit) |
-| [013](013-payments.md) | Thanh toán: chuyển khoản VietQR qua dịch vụ đối soát (SePay đầu tiên), webhook idempotent, mã đơn không dấu | **Đề xuất** — spike 25/11; chờ chọn tài khoản/nhà cung cấp |
-| [014](014-license-key-encryption.md) | License key: AES-256-GCM (AAD theo gói), HMAC chống trùng, xoay khoá, sao lưu khoá riêng | **Đề xuất** |
+| [013](013-payments.md) | Thanh toán: chuyển khoản VietQR qua dịch vụ đối soát (SePay đầu tiên), webhook idempotent, mã đơn không dấu | **Đã duyệt** 26/11 — chờ chọn nhà cung cấp cụ thể |
+| [014](014-license-key-encryption.md) | License key: AES-256-GCM (AAD theo gói), HMAC chống trùng, xoay khoá, sao lưu khoá riêng | **Đã duyệt** 26/11 |
 
 ## Thêm ADR mới
 Tạo file `NNN-ten-ngan.md` theo cùng khuôn. Không sửa nội dung một ADR đã chấp nhận: muốn đổi thì viết ADR mới và ghi "Thay thế ADR-NNN".

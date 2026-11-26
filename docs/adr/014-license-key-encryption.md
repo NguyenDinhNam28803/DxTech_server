@@ -1,6 +1,6 @@
 # ADR-014: Mã hoá license key trong database
 
-- **Trạng thái:** Đề xuất — chờ Backend Lead duyệt
+- **Trạng thái:** Đã duyệt (26/11/2026) — thiết kế bảng: `docs/database/phase3-schema.md` mục 3.7
 - **Ngày:** 2026-11-25
 - **Liên quan:** ADR-009 (role DB), ADR-013 (cấp key sau thanh toán); *Thiết kế toàn bộ Database v1.0* mục 9
   (`inventory.license_keys`), 13.3 (sao lưu khoá); backup mã hoá (`deploy/vps/backup/`)
@@ -19,7 +19,7 @@ toán, (3) xoay khoá được, (4) chỉ dùng thư viện có sẵn của .NET
 | Chống trùng | `key_hash` = **HMAC-SHA256**(key chuẩn hoá, `LICENSE_HMAC_KEY`) + UNIQUE. Chuẩn hoá: bỏ khoảng trắng và `-`, chữ hoa. HMAC (không phải SHA thường) để kẻ có dump không thử ngược được key ngắn bằng từ điển |
 | Hiển thị trong admin | `key_hint` = 4 ký tự cuối; giải mã đầy đủ chỉ khi giao cho khách hoặc admin bấm “xem” (ghi audit, Phase 4) |
 | Ai giải mã | Chỉ module Inventory, qua `ILicenseKeyProtector`; key rõ không bao giờ ghi log, không nằm trong `audit_logs.diff` |
-| Giao cho khách | Key rõ chỉ trả trong `GET /api/me/orders/{code}` của chính chủ đơn và trong email sau thanh toán |
+| Giao cho khách | Key rõ chỉ trả trong `GET /api/orders/{code}` (chỉ chủ đơn, khi đơn `fulfilled`) và trong email sau thanh toán |
 
 ### Xoay khoá
 1. Thêm `LICENSE_ENC_KEY_V2` vào `.env`, đặt `License:CurrentVersion=2`, deploy ⇒ key mới nhập dùng V2, key cũ vẫn giải mã bằng V1.
