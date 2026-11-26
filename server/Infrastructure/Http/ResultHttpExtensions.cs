@@ -21,6 +21,7 @@ public static class ResultHttpExtensions
         ErrorType.NotFound => StatusCodes.Status404NotFound,
         ErrorType.Conflict => StatusCodes.Status409Conflict,
         ErrorType.BusinessRule => StatusCodes.Status422UnprocessableEntity,
+        ErrorType.Locked => StatusCodes.Status423Locked,
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, "ErrorType chưa được ánh xạ sang HTTP."),
     };
 

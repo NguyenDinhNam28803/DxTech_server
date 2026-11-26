@@ -26,6 +26,37 @@ public class ModuleBoundaryTests
     {
         Assert.Empty(ArchitectureRules.PublicSurfaceViolations(ServerAssembly, "server"));
     }
+
+    /// <summary>
+    /// ADR-012 §5: mọi controller phải ghi rõ [Authorize] hoặc [AllowAnonymous] (ở class hoặc từng action public).
+    /// Mặc định đã yêu cầu đăng nhập (AuthorizeFilter toàn cục) — quy tắc này bắt người viết quyết định có chủ đích.
+    /// </summary>
+    [Fact]
+    public void Every_controller_action_declares_its_authorization()
+    {
+        static bool HasAuth(MemberInfo m) => m.GetCustomAttributes(inherit: true)
+            .Any(a => a.GetType().Name is "AuthorizeAttribute" or "AllowAnonymousAttribute");
+
+        static bool IsController(Type t)
+        {
+            for (Type? b = t.BaseType; b is not null; b = b.BaseType)
+            {
+                if (b.Name == "ControllerBase") return true;
+            }
+
+            return false;
+        }
+
+        List<string> missing = ServerAssembly.GetTypes()
+            .Where(t => t is { IsClass: true, IsAbstract: false } && IsController(t) && !HasAuth(t))
+            .SelectMany(t => t.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                .Where(m => !m.IsSpecialName && !HasAuth(m))
+                .Select(m => $"{t.FullName}.{m.Name}"))
+            .ToList();
+
+        Assert.Empty(missing);
+        Assert.Contains(ServerAssembly.GetTypes(), t => t.Name == "AuthController"); // quy tắc thực sự quét được controller
+    }
 }
 
 /// <summary>

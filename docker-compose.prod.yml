@@ -5,6 +5,7 @@
 #   POSTGRES_DB=...
 #   DB_OWNER_PASSWORD=...   role dxtechs_owner (migrate)  — generate: openssl rand -hex 24
 #   DB_APP_PASSWORD=...     role dxtechs_app   (api)      — generate: openssl rand -hex 24
+#   AUTH_SIGNING_KEY=...    JWT signing key    (api)      — generate: openssl rand -base64 48   (ADR-012)
 # Hex passwords on purpose: they go into connection strings without any escaping.
 # API_TAG is set by CI to the short commit SHA, so every deploy leaves a tagged
 # image behind that can be started again for a rollback (see .github/workflows/ci-cd.yml).
@@ -88,6 +89,10 @@ services:
       ASPNETCORE_ENVIRONMENT: Production
       # App role: SELECT/INSERT/UPDATE/DELETE only. A bug or SQL injection cannot DROP/ALTER tables.
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=dxtechs_app;Password=${DB_APP_PASSWORD}
+      # ADR-012: JWT signing key. Missing ⇒ `docker compose up` fails BEFORE any container is replaced (old API keeps running).
+      Auth__SigningKeys__0: ${AUTH_SIGNING_KEY:?set in .env (openssl rand -base64 48)}
+      # Only during key rotation: the previous key, so tokens signed with it stay valid for their last 15 minutes.
+      Auth__SigningKeys__1: ${AUTH_SIGNING_KEY_PREVIOUS:-}
     ports:
       - "127.0.0.1:8080:8080"   # only Nginx on the VPS can reach it; required by the forwarded-headers setup in Program.cs
 

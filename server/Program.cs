@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using server.Infrastructure.Http;
 using server.Infrastructure.Options;
@@ -46,7 +47,10 @@ builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
 builder.Services.AddCatalogModule(builder.Configuration);
 builder.Services.AddIdentityModule(builder.Configuration);
 
-builder.Services.AddControllers().AddJsonOptions(options =>
+// An toàn mặc định (ADR-012 §5): mọi action MVC yêu cầu đăng nhập, trừ khi ghi [AllowAnonymous] rõ ràng
+// (test kiến trúc bắt buộc mỗi controller ghi rõ). Dùng filter thay cho FallbackPolicy để URL không tồn tại vẫn
+// trả 404 thay vì 401.
+builder.Services.AddControllers(options => options.Filters.Add(new AuthorizeFilter())).AddJsonOptions(options =>
     // Trả tiếng Việt dạng UTF-8 thay vì \uXXXX: payload nhỏ hơn ~2 lần với dữ liệu có dấu, đọc log dễ hơn.
     // Encoder này vẫn escape ký tự nhạy cảm với HTML (< > & ' ").
     options.JsonSerializerOptions.Encoder =
@@ -56,6 +60,13 @@ builder.Services.AddSwaggerGen();
 
 // Lỗi không bắt được -> trả về RFC 7807 ProblemDetails thay vì trang lỗi/stack trace.
 builder.Services.AddProblemDetails();
+// 423 (tài khoản tạm khoá — ADR-012) không có sẵn tiêu đề/đường dẫn mặc định trong ASP.NET Core.
+builder.Services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options =>
+    options.ClientErrorMapping[StatusCodes.Status423Locked] = new Microsoft.AspNetCore.Mvc.ClientErrorData
+    {
+        Title = "Locked",
+        Link = "https://www.rfc-editor.org/rfc/rfc4918#section-11.3",
+    });
 
 // CORS (ADR-011): web https://dxtechs.com gọi API https://api.dxtechs.com — khác origin.
 // Chỉ các origin liệt kê trong cấu hình "Cors:AllowedOrigins" được gọi, có gửi kèm cookie.
@@ -131,6 +142,9 @@ app.UseCors();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 
+// Giới hạn tần suất cho /api/auth/* và /api/me/* theo IP thật (ADR-012 §3) — sau UseForwardedHeaders.
+app.UseRateLimiter();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -144,6 +158,7 @@ if (app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 // Liveness: process còn sống, không chạm DB (dùng cho uptime monitor).

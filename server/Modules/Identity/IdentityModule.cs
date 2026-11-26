@@ -1,13 +1,20 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using server.Infrastructure.Options;
+using server.Infrastructure.Persistence;
+using server.Modules.Identity.Auth;
 using server.Modules.Identity.Domain;
 using server.Modules.Identity.Features.Admin;
+using server.Modules.Identity.Features.Auth;
+using server.Modules.Identity.Jobs;
 using server.Shared.Results;
 
 namespace server.Modules.Identity;
 
 /// <summary>
 /// Module Identity: tài khoản, mật khẩu, phiên đăng nhập — schema PostgreSQL <c>identity</c> (ADR-012).
-/// Bố cục giống Catalog (xem <c>CatalogModule</c>). PR-7: bảng + lệnh <c>--create-admin</c>. PR-8: API xác thực.
+/// Bố cục giống Catalog (xem <c>CatalogModule</c>), thêm <c>Auth/</c> (JWT, refresh token, policy, rate limit — internal)
+/// và <c>Jobs/</c> (dọn token). PR-7: bảng + <c>--create-admin</c>. PR-8: API xác thực.
 /// </summary>
 public static class IdentityModule
 {
@@ -15,14 +22,24 @@ public static class IdentityModule
 
     public static IServiceCollection AddIdentityModule(this IServiceCollection services, IConfiguration configuration)
     {
-        _ = configuration;
-
         // Chỉ dùng PasswordHasher của ASP.NET Core Identity (PBKDF2-HMAC-SHA512, salt, có phiên bản) —
         // không dùng AddIdentity/EF stores (ADR-012, phương án đã loại).
         services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
-        services.AddScoped(sp => new CreateAdminHandler(
-            sp.GetRequiredService<server.Infrastructure.Persistence.AppDbContext>(),
-            sp.GetRequiredService<IPasswordHasher<User>>()));
+        AuthSetup.AddAuth(services, configuration);
+
+        // Handler có constructor internal (nhận kiểu internal của module) ⇒ đăng ký tường minh.
+        services.AddScoped(sp => new CreateAdminHandler(sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<IPasswordHasher<User>>()));
+        services.AddScoped(sp => new RegisterHandler(
+            sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<IPasswordHasher<User>>(), sp.GetRequiredService<SessionService>()));
+        services.AddScoped(sp => new LoginHandler(
+            sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<IPasswordHasher<User>>(), sp.GetRequiredService<SessionService>(),
+            sp.GetRequiredService<IOptions<AuthOptions>>(), sp.GetRequiredService<TimeProvider>()));
+        services.AddScoped(sp => new SessionHandler(sp.GetRequiredService<SessionService>()));
+        services.AddScoped(sp => new AccountHandler(
+            sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<IPasswordHasher<User>>(), sp.GetRequiredService<SessionService>()));
+
+        services.AddSingleton<RefreshTokenCleanup>();
+        services.AddHostedService(sp => sp.GetRequiredService<RefreshTokenCleanup>());
         return services;
     }
 

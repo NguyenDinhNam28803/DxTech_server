@@ -109,6 +109,23 @@ $C run --rm --no-deps api --seed-demo
 Chỉ thêm danh mục/sản phẩm còn thiếu (theo slug); không ghi đè chỉnh sửa của admin, không khôi phục sản phẩm đã xoá.
 Không bao giờ tự chạy khi API khởi động.
 
+## Xác thực (ADR-012, PR-8)
+
+| Method · Path | Xác thực | Kết quả |
+|---|---|---|
+| `POST /api/auth/register` `{email, password, fullName}` | — | 201 `{accessToken, tokenType, expiresAt, user}` + cookie `__Secure-dxt_rt` |
+| `POST /api/auth/login` `{email, password}` | — | 200 như trên · 401 `auth.invalid_credentials` · 423 `auth.locked` |
+| `POST /api/auth/refresh` | cookie + header `Origin` | 200 token mới + cookie mới · 401 · 409 `auth.refresh_conflict` (thử lại) |
+| `POST /api/auth/logout` | cookie + `Origin` | 204, xoá cookie |
+| `GET /api/me` | Bearer | hồ sơ |
+| `PUT /api/me/password` `{currentPassword, newPassword}` | Bearer | 200 phiên mới; mọi phiên khác bị thu hồi |
+| `POST /api/me/logout-all` | Bearer | 204 |
+| `GET /api/admin/ping` | Bearer, policy Admin | 200 / 403 |
+
+Client gọi `/api/auth/*` với `credentials: 'include'`. Access token sống 15 phút, giữ trong bộ nhớ (không `localStorage`).
+Production cần `AUTH_SIGNING_KEY` trong `~/dxtechs-server/.env` (tạo: `openssl rand -base64 48`) — thiếu thì deploy dừng
+trước khi thay container. Xoay khoá: chuyển khoá cũ sang `AUTH_SIGNING_KEY_PREVIOUS`, đặt khoá mới, deploy; sau 15 phút xoá khoá cũ.
+
 ## Tạo tài khoản admin (`--create-admin`, ADR-012)
 
 Không có mật khẩu mặc định. Mật khẩu **nhập từ bàn phím** (ẩn ký tự, hỏi 2 lần) — không bao giờ đưa vào tham số
