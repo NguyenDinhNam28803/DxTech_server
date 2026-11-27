@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using server.Infrastructure.Persistence;
 using server.Infrastructure.Persistence.Conversions;
 using server.Modules.Catalog.Domain;
+using server.Modules.Inventory.Contracts;
 using server.Shared.Results;
 
 namespace server.Modules.Catalog.Features.Products;
@@ -15,7 +16,8 @@ public sealed record ProductVariantItem(
     long PriceVnd,
     long? CompareAtPriceVnd,
     string DeliveryType,
-    bool IsDefault);
+    bool IsDefault,
+    bool InStock);
 
 /// <summary>Trang chi tiết sản phẩm (<c>GET /api/products/{slug}</c>). Breadcrumb đi từ danh mục gốc tới danh mục của sản phẩm.</summary>
 public sealed record ProductDetail(
@@ -33,8 +35,17 @@ public sealed record ProductDetail(
     IReadOnlyList<CategoryRef> Breadcrumb,
     IReadOnlyList<ProductVariantItem> Variants);
 
-public sealed class GetProductBySlugHandler(AppDbContext db)
+public sealed class GetProductBySlugHandler
 {
+    private readonly AppDbContext db;
+    private readonly IStockQuery stock;
+
+    internal GetProductBySlugHandler(AppDbContext db, IStockQuery stock)
+    {
+        this.db = db;
+        this.stock = stock;
+    }
+
     public async Task<Result<ProductDetail>> HandleAsync(string slug, CancellationToken ct)
     {
         var product = await ProductListing.Listed(db)
@@ -71,6 +82,10 @@ public sealed class GetProductBySlugHandler(AppDbContext db)
             .Select(r => new CategoryRef(r.Slug, r.Name))
             .ToListAsync(ct);
 
+        // license_key: còn ≥ 1 key trong kho (PR-10); account/manual: luôn còn (không cần kho).
+        Guid[] keyed = product.Variants.Where(v => v.DeliveryType == DeliveryType.LicenseKey).Select(v => v.Id).ToArray();
+        IReadOnlyDictionary<Guid, int> available = await stock.CountAvailableAsync(keyed, 1, ct);
+
         return new ProductDetail(
             product.Id, product.Slug, product.Name, product.ShortDescription, product.Description, product.Brand,
             SnakeCaseEnumConverter<LicenseType>.ToProvider(product.LicenseType),
@@ -78,7 +93,8 @@ public sealed class GetProductBySlugHandler(AppDbContext db)
             breadcrumb,
             product.Variants.Select(v => new ProductVariantItem(
                     v.Id, v.Sku, v.Name, v.TermMonths, v.Seats, v.PriceVnd, v.CompareAtPriceVnd,
-                    SnakeCaseEnumConverter<DeliveryType>.ToProvider(v.DeliveryType), v.IsDefault))
+                    SnakeCaseEnumConverter<DeliveryType>.ToProvider(v.DeliveryType), v.IsDefault,
+                    v.DeliveryType != DeliveryType.LicenseKey || available.ContainsKey(v.Id)))
                 .ToList());
     }
 

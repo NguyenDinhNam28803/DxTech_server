@@ -40,6 +40,7 @@ public class ApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("Auth:RateLimits:RegisterPerHour", "10000");
         builder.UseSetting("Auth:RateLimits:RefreshPerMinute", "10000");
         builder.UseSetting("Auth:RateLimits:OtherPerMinute", "10000");
+        builder.UseSetting("Auth:RateLimits:CartQuotePerMinute", "10000");
 
         builder.ConfigureTestServices(services =>
         {

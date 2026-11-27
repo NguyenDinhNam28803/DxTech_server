@@ -7,4 +7,10 @@ namespace server.Modules.Inventory;
 public static class InventoryModule
 {
     public const string Schema = "inventory";
+
+    public static IServiceCollection AddInventoryModule(this IServiceCollection services)
+    {
+        services.AddScoped<Contracts.IStockQuery, Features.StockQuery>();
+        return services;
+    }
 }

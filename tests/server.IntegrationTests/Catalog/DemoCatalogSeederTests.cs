@@ -134,7 +134,7 @@ public class DemoCatalogSeederTests : IAsyncLifetime
         var software = await new ListProductsHandler(db).HandleAsync(new ListProductsQuery { Category = "software", PageSize = 50 }, default);
         var design = await new ListProductsHandler(db).HandleAsync(new ListProductsQuery { Category = "thiet-ke" }, default);
         var search = await new ListProductsHandler(db).HandleAsync(new ListProductsQuery { Q = "kaspersky" }, default);
-        var windows = await new GetProductBySlugHandler(db).HandleAsync("windows-11-pro-retail", default);
+        var windows = await new GetProductBySlugHandler(db, new server.Modules.Inventory.Features.StockQuery(db)).HandleAsync("windows-11-pro-retail", default);
 
         Assert.Equal(10, software.Value.Total);           // 10 sản phẩm phần mềm, qua các danh mục con
         Assert.Equal(3, design.Value.Total);              // Adobe, Figma, Canva
