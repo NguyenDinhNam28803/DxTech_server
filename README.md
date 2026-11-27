@@ -180,7 +180,7 @@ GET trả `Cache-Control: public, max-age=60` ⇒ bài mới đăng hiện trên
 | Method · Path | Kết quả |
 |---|---|
 | `GET /api/content/topics?type=solution` | Cây chủ đề + các trang cấp 1 (ý chính, ghi chú nổi bật, hạng mục con) — đủ để web dựng menu, không cần gọi từng trang |
-| `GET /api/content/posts?type=news&topic=&q=&cursor=&limit=&sort=` | Mới nhất trước + `nextCursor`; `topic` gồm chủ đề con; `q` tìm không dấu cả chữ trong khối; `sort=order` theo thứ tự biên tập |
+| `GET /api/content/posts?type=news&topic=&q=&cursor=&limit=&sort=&include=` | Mới nhất trước + `nextCursor`; `topic` gồm chủ đề con; `q` tìm không dấu cả chữ trong khối; `sort=order` theo thứ tự biên tập; `include=blocks` kèm khối nội dung (thẻ thuật ngữ, sách, tài liệu) |
 | `GET /api/content/posts/{type}/{slug}` | Chi tiết: khối nội dung, ý chính, breadcrumb, trang cha/con, ảnh. Slug cũ ⇒ **301**. Trang cha chưa đăng ⇒ hạng mục con cũng 404 |
 | `GET /api/content/featured?type=training&limit=6` | Bài nổi bật (thẻ trang chủ) |
 | `GET /api/content/courses/{slug}/sessions` | Lịch khai giảng còn mở/đã đủ chỗ từ hôm nay (giờ Việt Nam) |

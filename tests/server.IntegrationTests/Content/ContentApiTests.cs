@@ -117,6 +117,13 @@ public class ContentApiTests(ApiFactory factory) : IClassFixture<ApiFactory>, IA
 
         Assert.Equal([hit.Slug], await ListSlugsAsync($"/api/content/posts?type=glossary&q=dien+toan+{word}"));
         Assert.Equal([hit.Slug], await ListSlugsAsync($"/api/content/posts?type=glossary&q=ĐIỆN+{word[..5]}")); // gõ dở, có dấu, hoa
+
+        // include=blocks: thẻ kèm khối nội dung (web dựng thẻ thuật ngữ không cần gọi chi tiết); mặc định không kèm.
+        JsonElement withBlocks = await factory.CreateClient().GetFromJsonAsync<JsonElement>($"/api/content/posts?type=glossary&q={word}&include=blocks");
+        Assert.Contains(word, withBlocks.GetProperty("items")[0].GetProperty("blocks")[0].GetProperty("spans")[0].GetProperty("text").GetString());
+        JsonElement plain = await factory.CreateClient().GetFromJsonAsync<JsonElement>($"/api/content/posts?type=glossary&q={word}");
+        Assert.Equal(JsonValueKind.Null, plain.GetProperty("items")[0].GetProperty("blocks").ValueKind);
+        Assert.Equal(HttpStatusCode.BadRequest, (await factory.CreateClient().GetAsync("/api/content/posts?type=glossary&include=everything")).StatusCode);
     }
 
     [Fact]

@@ -31,8 +31,10 @@ public sealed record CoverImage(string Url, string? Alt);
 
 public sealed record TopicRef(string Slug, string Name, string? Path);
 
+/// <summary>Thẻ bài. <see cref="Blocks"/>/<see cref="KeyPoints"/> chỉ có khi gọi danh sách với <c>include=blocks</c> (thẻ thuật ngữ, sách, tài liệu).</summary>
 public sealed record PostSummary(string Type, string Slug, string Title, string? Excerpt, string? Label,
-    DateTimeOffset PublishedAt, short? ReadingMinutes, CoverImage? Cover, TopicRef? Topic, string? Path);
+    DateTimeOffset PublishedAt, short? ReadingMinutes, CoverImage? Cover, TopicRef? Topic, string? Path,
+    JsonElement? Blocks = null, IReadOnlyList<string>? KeyPoints = null);
 
 public sealed record PostPage(IReadOnlyList<PostSummary> Items, string? NextCursor);
 
@@ -67,6 +69,9 @@ public sealed class ListPostsQuery
     public string? Cursor { get; init; }
 
     public int Limit { get; init; } = 20;
+
+    /// <summary><c>blocks</c> ⇒ mỗi thẻ kèm khối nội dung + ý chính (cho danh sách ngắn hiển thị đầy đủ, ví dụ thuật ngữ). Tối đa 100 thẻ như thường.</summary>
+    public string? Include { get; init; }
 }
 
 /// <summary>
@@ -182,6 +187,12 @@ public sealed class PublicContentHandler
             }
         }
 
+        bool withBlocks = query.Include == "blocks";
+        if (query.Include is not null && !withBlocks)
+        {
+            errors["include"] = ["Chỉ hỗ trợ include=blocks."];
+        }
+
         if (errors.Count > 0)
         {
             return Error.Validation("content.invalid_query", "Tham số không hợp lệ.", errors);
@@ -222,6 +233,7 @@ public sealed class PublicContentHandler
         {
             p.Id, p.Slug, p.Title, p.Excerpt, p.Label, p.PublishedAt, p.ReadingMinutes, p.CoverImageUrl, p.CoverImageAlt,
             p.CoverMediaId, p.TopicId, ParentSlug = _db.Set<Post>().Where(x => x.Id == p.ParentId).Select(x => x.Slug).FirstOrDefault(),
+            Blocks = withBlocks ? p.Blocks : null, KeyPoints = withBlocks ? p.KeyPoints : null,
         }).ToListAsync(ct);
 
         Dictionary<Guid, MediaRef> media = await MediaAsync(rows.Where(r => r.CoverMediaId != null).Select(r => r.CoverMediaId!.Value), ct);
@@ -231,7 +243,8 @@ public sealed class PublicContentHandler
             return new PostSummary(query.Type!, r.Slug, r.Title, r.Excerpt, r.Label, r.PublishedAt!.Value, r.ReadingMinutes,
                 Cover(r.CoverMediaId, r.CoverImageUrl, r.CoverImageAlt, media),
                 r.TopicId is { } t2 ? topics.Ref(t2, type) : null,
-                WebPaths.Post(type, r.Slug, chain, r.ParentSlug));
+                WebPaths.Post(type, r.Slug, chain, r.ParentSlug),
+                r.Blocks is null ? null : ParseBlocks(r.Blocks), r.KeyPoints);
         }).ToList();
 
         string? next = sort == "newest" && rows.Count > limit
@@ -350,6 +363,12 @@ public sealed class PublicContentHandler
     }
 
     // ---------- Hỗ trợ ----------
+
+    private static JsonElement ParseBlocks(string json)
+    {
+        using JsonDocument doc = JsonDocument.Parse(json);
+        return doc.RootElement.Clone();
+    }
 
     /// <summary>Chữ của khối callout đầu tiên (nối các đoạn chữ), null nếu không có.</summary>
     internal static string? FirstCallout(string blocks)
