@@ -21,10 +21,16 @@ namespace server.IntegrationTests.Phase3;
 /// Đặt / xem / huỷ đơn, job hết hạn, nhập key (PR-11) trên PostgreSQL thật qua HTTP như web gọi.
 /// Mỗi test tạo gói + key riêng ⇒ chạy độc lập, chạy lại được.
 /// </summary>
-public class OrdersApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
+public class OrdersApiTests(ApiFactory factory) : IClassFixture<ApiFactory>, IAsyncLifetime
 {
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
     private const string Password = "Ngựa vằn chạy 42 vòng";
+
+    // Lớp này tự ghi dữ liệu (gói, key) trước khi gọi API ⇒ phải chờ migration. Thiếu dòng này, trên database
+    // trống (CI) lớp chạy trước các lớp khác sẽ gặp "relation catalog.categories does not exist".
+    public Task InitializeAsync() => TestDatabase.EnsureMigratedAsync();
+
+    public Task DisposeAsync() => Task.CompletedTask;
 
     // ---------- Hỗ trợ ----------
 
