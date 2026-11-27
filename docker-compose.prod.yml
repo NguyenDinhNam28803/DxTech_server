@@ -113,6 +113,12 @@ services:
       Payments__Sepay__WebhookSecret: ${PAYMENTS_SEPAY_WEBHOOK_SECRET:-}
       # ADR-015 (CT-2): consent text version shown on the lead form. Empty ⇒ POST /api/content/leads returns 422 until legal approves the text.
       Content__Leads__ConsentVersion: ${CONTENT_LEADS_CONSENT_VERSION:-}
+      # ADR-015 (CT-3b): uploaded images (already stripped of EXIF/GPS). Nginx serves the same host directory at https://dxtechs.com/media/.
+      Content__MediaRoot: /var/lib/dxtechs/media
+    volumes:
+      # Host dir must be writable by the container user (uid 1654 "app") — deploy/vps/ct3-media.sh creates it.
+      # Missing/unwritable ⇒ only image upload fails (422 content.media_unavailable); the API keeps running.
+      - ${CONTENT_MEDIA_DIR:-/var/www/dxtechs/media}:/var/lib/dxtechs/media
     ports:
       - "127.0.0.1:8080:8080"   # only Nginx on the VPS can reach it; required by the forwarded-headers setup in Program.cs
 

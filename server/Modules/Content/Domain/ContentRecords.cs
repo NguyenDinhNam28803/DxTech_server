@@ -74,9 +74,11 @@ internal sealed class MediaFile : ISoftDeletable
         Sha256 = null!;
     }
 
-    public MediaFile(string contentType, string extension, long bytes, int width, int height, byte[] sha256, Guid uploadedBy, Guid? id = null)
+    public MediaFile(string contentType, string extension, long bytes, int width, int height, byte[] sha256, Guid uploadedBy,
+        DateTimeOffset createdAt, Guid? id = null)
     {
         Id = id ?? UuidV7.NewGuid();
+        CreatedAt = createdAt; // quyết định thư mục yyyy/mm của file ⇒ đặt ở code, không để DB tự điền
         FileName = $"{Id:N}.{extension}";
         ContentType = contentType;
         Bytes = bytes;
@@ -107,6 +109,9 @@ internal sealed class MediaFile : ISoftDeletable
     public DateTimeOffset CreatedAt { get; private set; }
 
     public DateTimeOffset? DeletedAt { get; set; }
+
+    /// <summary>Đường dẫn tương đối trong thư mục media và sau <c>/media/</c> trên web: <c>yyyy/mm/&lt;id&gt;.ext</c>.</summary>
+    public string RelativePath => $"{CreatedAt.UtcDateTime:yyyy}/{CreatedAt.UtcDateTime:MM}/{FileName}";
 }
 
 /// <summary>Lịch khai giảng của một bài <c>training</c>.</summary>

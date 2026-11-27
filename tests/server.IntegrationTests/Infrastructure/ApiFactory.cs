@@ -25,6 +25,9 @@ public class ApiFactory : WebApplicationFactory<Program>
     public const string TestLicenseKey = "dGVzdC1vbmx5LWxpY2Vuc2UtZW5jcnlwdGlvbi1rZXk=";
     public const string TestSepaySecret = "test-only-sepay-webhook-secret";
     public const string TestConsentVersion = "test-consent-v1";
+
+    /// <summary>Thư mục ảnh của test (mỗi lần chạy một thư mục).</summary>
+    public static readonly string MediaRoot = Path.Combine(Path.GetTempPath(), $"dxtechs-media-{Environment.ProcessId}");
     public const string TestHmacKey = "dGVzdC1vbmx5LWxpY2Vuc2UtaG1hYy1rZXktMDAwMDA=";
 
     /// <summary>Ghi đè chuỗi kết nối; <c>null</c> = dùng <see cref="ConnectionString"/>.</summary>
@@ -51,6 +54,8 @@ public class ApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("Auth:RateLimits:LeadsPerHour", "10000");
         // ADR-015 (CT-2): văn bản đồng ý giả để mở form lead (test riêng kiểm tra trường hợp chưa cấu hình).
         builder.UseSetting("Content:Leads:ConsentVersion", TestConsentVersion);
+        // CT-3b: ảnh ghi vào thư mục tạm của máy chạy test.
+        builder.UseSetting("Content:MediaRoot", MediaRoot);
         // ADR-014: khoá license chỉ dùng trong test. ADR-013: tài khoản nhận tiền giả để mở đặt hàng.
         builder.UseSetting("License:CurrentVersion", "1");
         builder.UseSetting("License:EncryptionKeys:1", TestLicenseKey);

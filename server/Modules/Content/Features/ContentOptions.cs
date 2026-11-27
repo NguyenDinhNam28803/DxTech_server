@@ -15,6 +15,13 @@ public sealed class ContentOptions
     [Required]
     public string MediaBaseUrl { get; set; } = "/media/";
 
+    /// <summary>
+    /// Thư mục lưu ảnh trong container (compose mount <c>/var/www/dxtechs/media</c> của VPS vào đây; Nginx phục vụ trực tiếp).
+    /// Không ghi được ⇒ tải ảnh trả 422 <c>content.media_unavailable</c>, phần còn lại của API vẫn chạy.
+    /// </summary>
+    [Required]
+    public string MediaRoot { get; set; } = "/var/lib/dxtechs/media";
+
     public LeadOptions Leads { get; set; } = new();
 }
 

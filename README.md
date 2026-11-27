@@ -212,6 +212,17 @@ Chống ghi đè: GET trả `ETag`; mọi thao tác sửa bài/chủ đề gửi
 
 Job `ContentMaintenance` mỗi ngày: giữ 50 revision/bài; ẩn danh hoá lead quá 24 tháng (xoá tên, liên hệ, nội dung, IP).
 
+**Ảnh (CT-3b)**: `POST /api/admin/content/media` (multipart `file`, `alt`) · `GET …/media?cursor=` · `DELETE …/media/{id}`.
+Chỉ JPEG/PNG/WebP **theo nội dung file** (không tin đuôi/Content-Type), ≤ 5 MB, ≤ 6000×6000 px. Metadata (EXIF, GPS, XMP, IPTC,
+comment) bị bỏ trước khi lưu — **ảnh điện thoại mất thông tin xoay**, cần xoay đúng trước khi tải. Ảnh trùng nội dung ⇒ 200 trả ảnh đã có.
+Ảnh đang được bài dùng ⇒ xoá bị chặn (409). Lần đầu trên VPS (root, sau khi deploy CT-3b):
+
+```bash
+cd /home/deploy/dxtechs-server/src/deploy/vps && bash ct3-media.sh
+# Mong đợi: ảnh thử 200 + image/png + nosniff · .svg 404 · /media/ 404 · /sitemap.xml 200 · / 200
+```
+Ảnh được sao lưu cùng DB (tar mã hoá GPG ra kho ngoài) khi backup có `OFFSITE`.
+
 ## Đơn hàng & giỏ hàng (Phase 3: PR-10, PR-11)
 
 | Method · Path | Xác thực | Kết quả |

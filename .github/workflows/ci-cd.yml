@@ -74,10 +74,11 @@ jobs:
           DB_ROLES_PSQL_IMAGE: postgres:15
         run: .github/scripts/test-db-roles.sh
 
-      - name: VPS ops scripts (syntax + D2 Nginx edit + backup)
+      - name: VPS ops scripts (syntax + D2/CT-3b Nginx edits + backup)
         run: |
           for f in deploy/vps/*.sh deploy/vps/backup/*.sh deploy/vps/tests/*.sh; do bash -n "$f"; done
           deploy/vps/tests/test-d2-nginx.sh
+          deploy/vps/tests/test-ct3-nginx.sh
           python3 deploy/vps/tests/test_s3put.py
           deploy/vps/tests/test-backup.sh
 
