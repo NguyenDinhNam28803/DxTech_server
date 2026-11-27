@@ -191,6 +191,27 @@ GET trả `Cache-Control: public, max-age=60` ⇒ bài mới đăng hiện trên
 văn bản đồng ý (NĐ 13/2023), đặt mã phiên bản (ví dụ `2026-12-v1`) — mỗi lead lưu kèm phiên bản + thời điểm đồng ý. Lọc bot rẻ:
 trường bẫy `website` và `elapsedMs` < 3 giây ⇒ trả 202 nhưng không ghi.
 
+## API quản trị nội dung (ADR-015, CT-3a)
+
+Policy `content`: **editor hoặc admin** đang hoạt động (editor không vào được API đơn hàng/thanh toán/người dùng).
+Chống ghi đè: GET trả `ETag`; mọi thao tác sửa bài/chủ đề gửi `If-Match: <ETag>` — thiếu ⇒ 400 `content.if_match_required`,
+đã có người sửa ⇒ 409 `content.edit_conflict` (tải lại rồi sửa tiếp).
+
+| Method · Path | Ghi chú |
+|---|---|
+| `GET /api/admin/content/posts?type=&status=&topicId=&q=&cursor=` · `GET …/posts/{id}` | Gồm cả nháp; sửa gần nhất trước |
+| `POST /api/admin/content/posts` `{type, slug, content}` | Tạo **nháp** + revision đầu. Slug cố định (đổi bằng thao tác riêng) |
+| `PUT …/posts/{id}` | Lưu nội dung (khối được kiểm theo danh sách trắng, ảnh phải tồn tại) ⇒ revision mới |
+| `POST …/{id}/publish` `{publishedAt?}` · `…/unpublish` · `…/archive` | `publishedAt` tương lai = hẹn giờ |
+| `PUT …/{id}/slug` `{slug}` | Slug cũ ⇒ 301 trên web; đổi về slug cũ thì lấy lại URL |
+| `GET …/{id}/revisions` · `POST …/{id}/revisions/{rev}/restore` | 50 bản gần nhất; khôi phục cũng tạo một bản mới |
+| `DELETE …/posts/{id}` | Xoá mềm; trang còn hạng mục con ⇒ 409 |
+| `GET/POST /api/admin/content/topics` · `PUT/DELETE …/topics/{id}` | Chặn vòng cha–con; chủ đề còn bài/chủ đề con ⇒ 409 (tắt thay vì xoá) |
+| `GET/POST /api/admin/content/courses/{postId}/sessions` · `PUT …/sessions/{id}` | Lịch khai giảng |
+| `GET /api/admin/content/leads?status=&cursor=` · `PUT …/leads/{id}` `{status, note}` | Hàng chờ đăng ký tư vấn |
+
+Job `ContentMaintenance` mỗi ngày: giữ 50 revision/bài; ẩn danh hoá lead quá 24 tháng (xoá tên, liên hệ, nội dung, IP).
+
 ## Đơn hàng & giỏ hàng (Phase 3: PR-10, PR-11)
 
 | Method · Path | Xác thực | Kết quả |

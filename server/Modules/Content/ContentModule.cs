@@ -1,7 +1,9 @@
 using Microsoft.Extensions.Options;
 using server.Infrastructure.Persistence;
 using server.Modules.Content.Features;
+using server.Modules.Content.Features.Admin;
 using server.Modules.Content.Features.Public;
+using server.Modules.Content.Jobs;
 using server.Modules.Content.Seeding;
 
 namespace server.Modules.Content;
@@ -30,7 +32,12 @@ public static class ContentModule
         services.AddScoped(sp => new SitemapHandler(
             sp.GetRequiredService<PublicContentHandler>(), sp.GetRequiredService<Catalog.Contracts.IProductSitemap>(),
             sp.GetRequiredService<IOptions<ContentOptions>>()));
+        services.AddScoped(sp => new AdminPostsHandler(sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<TimeProvider>()));
+        services.AddScoped(sp => new AdminContentHandler(sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<TimeProvider>()));
         services.AddScoped<ContentSeeder>();
+
+        services.AddSingleton<ContentMaintenance>();
+        services.AddHostedService(sp => sp.GetRequiredService<ContentMaintenance>());
         return services;
     }
 

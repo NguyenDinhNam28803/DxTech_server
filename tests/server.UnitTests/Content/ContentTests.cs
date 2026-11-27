@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using server.Modules.Content.Domain;
 using server.Modules.Content.Features;
+using server.Modules.Content.Features.Admin;
 using server.Modules.Content.Features.Public;
 using server.Modules.Content.Persistence;
 using server.Modules.Content.Seeding;
@@ -214,5 +215,22 @@ public class ContentTests
     {
         Assert.Equal("leads", server.Modules.Identity.Auth.AuthSetup.LimitGroup(new Microsoft.AspNetCore.Http.PathString("/api/content/leads")));
         Assert.Null(server.Modules.Identity.Auth.AuthSetup.LimitGroup(new Microsoft.AspNetCore.Http.PathString("/api/content/posts")));
+    }
+
+    [Theory]
+    [InlineData("\"12345\"", true, 12345u)]
+    [InlineData("12345", false, 0u)]
+    [InlineData("W/\"12\"", false, 0u)]
+    [InlineData("\"-1\"", false, 0u)]
+    [InlineData("\"\"", false, 0u)]
+    [InlineData(null, false, 0u)]
+    public void If_match_accepts_only_the_strong_etag_the_api_sent(string? header, bool ok, uint version)
+    {
+        Assert.Equal(ok, AdminPostsHandler.TryParseETag(header, out uint v));
+        Assert.Equal(version, v);
+        if (ok)
+        {
+            Assert.Equal(header, AdminPostsHandler.ETag(v));
+        }
     }
 }
