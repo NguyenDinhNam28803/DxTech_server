@@ -16,7 +16,7 @@ namespace server.Modules.Identity.Auth;
 internal static class AuthPolicies
 {
     /// <summary>Admin đang hoạt động — kiểm tra lại DB (ADR-012 §5).</summary>
-    public const string Admin = "admin";
+    public const string Admin = Contracts.Policies.Admin;
 }
 
 /// <summary>Đăng ký xác thực, phân quyền, giới hạn tần suất cho module Identity (ADR-012).</summary>

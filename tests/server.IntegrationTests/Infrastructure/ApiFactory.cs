@@ -23,6 +23,7 @@ public class ApiFactory : WebApplicationFactory<Program>
 
     public const string TestSigningKey = "integration-test-signing-key-0123456789abcdef";
     public const string TestLicenseKey = "dGVzdC1vbmx5LWxpY2Vuc2UtZW5jcnlwdGlvbi1rZXk=";
+    public const string TestSepaySecret = "test-only-sepay-webhook-secret";
     public const string TestHmacKey = "dGVzdC1vbmx5LWxpY2Vuc2UtaG1hYy1rZXktMDAwMDA=";
 
     /// <summary>Ghi đè chuỗi kết nối; <c>null</c> = dùng <see cref="ConnectionString"/>.</summary>
@@ -54,6 +55,9 @@ public class ApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("Payments:BankTransfer:BankName", "Vietcombank");
         builder.UseSetting("Payments:BankTransfer:AccountNumber", "0011001234567");
         builder.UseSetting("Payments:BankTransfer:AccountName", "CONG TY DXTECHS");
+        // ADR-013 (PR-12): secret webhook giả; TestServer không có IP nguồn ⇒ tắt danh sách IP (test riêng bật lại).
+        builder.UseSetting("Payments:Sepay:WebhookSecret", TestSepaySecret);
+        builder.UseSetting("Payments:Sepay:CheckIps", "false");
 
         builder.ConfigureTestServices(services =>
         {

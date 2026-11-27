@@ -36,6 +36,8 @@ public static class SalesModule
             sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<IKeyReservation>(), sp.GetRequiredService<IPaymentInstructions>(),
             sp.GetRequiredService<TimeProvider>()));
         services.AddScoped(sp => new ListMyOrdersHandler(sp.GetRequiredService<AppDbContext>()));
+        services.AddScoped<Contracts.IOrderPayments>(sp => new OrderPayments(
+            sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<IKeyReservation>(), sp.GetRequiredService<ILogger<OrderPayments>>()));
 
         services.AddSingleton<OrderExpiry>();
         services.AddHostedService(sp => sp.GetRequiredService<OrderExpiry>());
