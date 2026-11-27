@@ -36,6 +36,8 @@ public class ApiFactory : WebApplicationFactory<Program>
         // ADR-012: khoá ký chỉ dùng trong test; nới giới hạn tần suất để các test không chặn nhau
         // (test riêng cho 429 dùng factory với giới hạn nhỏ). Kiểm tra admin trong DB không cache.
         builder.UseSetting("Auth:SigningKeys:0", TestSigningKey);
+        // Log SQL của EF ở mức Information làm log CI dài > 5.000 dòng ⇒ GitHub cắt mất dòng báo test đỏ. Chỉ giữ cảnh báo.
+        builder.UseSetting("Logging:LogLevel:Microsoft.EntityFrameworkCore", "Warning");
         builder.UseSetting("Auth:AdminCheckCacheSeconds", "0");
         builder.UseSetting("Auth:RateLimits:LoginPerMinute", "10000");
         builder.UseSetting("Auth:RateLimits:LoginPerHour", "10000");
