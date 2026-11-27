@@ -1,5 +1,7 @@
 using System.Text.RegularExpressions;
 using server.Modules.Content.Domain;
+using server.Modules.Content.Features;
+using server.Modules.Content.Features.Public;
 using server.Modules.Content.Persistence;
 using server.Modules.Content.Seeding;
 using server.Modules.Identity.Domain;
@@ -173,5 +175,44 @@ public class ContentTests
 
         Assert.Contains(Norm(ContentPrivileges.Sql), Norm(rolesSql));
         Assert.Contains(Norm(ContentSql.Functions), Norm(migration));
+    }
+
+    [Theory]
+    [InlineData("News", "bao-mat", null, "dich-vu", "/tin-tuc/bao-mat")]
+    [InlineData("Solution", "phat-trien-phan-mem", null, "dich-vu", "/giai-phap/dich-vu/phat-trien-phan-mem")]
+    [InlineData("Solution", "tich-hop-api", "phat-trien-phan-mem", "dich-vu", "/giai-phap/dich-vu/phat-trien-phan-mem/tich-hop-api")]
+    [InlineData("Training", "kaizen", null, "dao-tao", "/giai-phap/dao-tao/kaizen")]
+    [InlineData("Page", "chinh-sach-bao-mat", null, null, "/chinh-sach-bao-mat")]
+    [InlineData("Glossary", "api", null, null, null)]
+    [InlineData("Resource", "clean-code", null, "tai-lieu", null)]
+    [InlineData("Solution", "mo-coi", null, null, null)]
+    public void Web_paths_match_the_live_router(string type, string slug, string? parent, string? topic, string? expected)
+        => Assert.Equal(expected, WebPaths.Post(Enum.Parse<PostType>(type), slug, topic is null ? [] : [topic], parent));
+
+    [Fact]
+    public void Topic_paths_cover_solution_training_and_resource_trees()
+    {
+        Assert.Equal("/giai-phap/dich-vu", WebPaths.Topic(PostType.Solution, ["dich-vu"]));
+        Assert.Equal("/tai-nguyen/tai-lieu/sach", WebPaths.Topic(PostType.Resource, ["tai-lieu", "sach"]));
+        Assert.Null(WebPaths.Topic(PostType.Glossary, ["x"]));
+    }
+
+    [Fact]
+    public void Cursor_round_trips_and_rejects_garbage()
+    {
+        var at = new DateTimeOffset(2026, 11, 27, 6, 0, 0, 123, TimeSpan.Zero);
+        Guid id = Guid.NewGuid();
+        Assert.True(PublicContentHandler.TryDecodeCursor(PublicContentHandler.EncodeCursor(at, id), out var v));
+        Assert.Equal((at, id), v);
+        Assert.False(PublicContentHandler.TryDecodeCursor("not-base64!", out _));
+        Assert.False(PublicContentHandler.TryDecodeCursor(Convert.ToBase64String("-1|abc"u8.ToArray()), out _));
+        Assert.False(PublicContentHandler.TryDecodeCursor(Convert.ToBase64String("123"u8.ToArray()), out _));
+    }
+
+    [Fact]
+    public void Lead_form_has_its_own_rate_limit_group()
+    {
+        Assert.Equal("leads", server.Modules.Identity.Auth.AuthSetup.LimitGroup(new Microsoft.AspNetCore.Http.PathString("/api/content/leads")));
+        Assert.Null(server.Modules.Identity.Auth.AuthSetup.LimitGroup(new Microsoft.AspNetCore.Http.PathString("/api/content/posts")));
     }
 }

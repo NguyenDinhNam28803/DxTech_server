@@ -1,11 +1,11 @@
 using System.Text.RegularExpressions;
 
-namespace server.Modules.Catalog.Features.Products;
+namespace server.Shared.Text;
 
 /// <summary>
 /// Đổi chuỗi người dùng gõ thành biểu thức <c>tsquery</c> an toàn: chỉ giữ chữ và số (mọi ký tự đặc biệt của
 /// tsquery như <c>&amp; | ! : * ( ) '</c> bị loại), mỗi từ khớp theo tiền tố (<c>:*</c>, để gõ dở "phan me" vẫn ra
-/// "phần mềm"), các từ nối bằng AND. Bỏ dấu tiếng Việt làm ở SQL bằng <c>catalog.f_unaccent</c> để khớp đúng
+/// "phần mềm"), các từ nối bằng AND. Bỏ dấu tiếng Việt làm ở SQL bằng hàm f_unaccent của module (catalog, content) để khớp đúng
 /// cách cột <c>search_vector</c> được tạo.
 /// </summary>
 public static partial class SearchText

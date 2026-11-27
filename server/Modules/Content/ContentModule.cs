@@ -1,3 +1,7 @@
+using Microsoft.Extensions.Options;
+using server.Infrastructure.Persistence;
+using server.Modules.Content.Features;
+using server.Modules.Content.Features.Public;
 using server.Modules.Content.Seeding;
 
 namespace server.Modules.Content;
@@ -13,7 +17,19 @@ public static class ContentModule
 
     public static IServiceCollection AddContentModule(this IServiceCollection services, IConfiguration configuration)
     {
-        _ = configuration;
+        services.AddOptions<ContentOptions>()
+            .Bind(configuration.GetSection(ContentOptions.SectionName))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        // Handler có constructor internal ⇒ đăng ký tường minh (như các module khác).
+        services.AddScoped(sp => new PublicContentHandler(
+            sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<TimeProvider>(), sp.GetRequiredService<IOptions<ContentOptions>>()));
+        services.AddScoped(sp => new SubmitLeadHandler(
+            sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<TimeProvider>(), sp.GetRequiredService<IOptions<ContentOptions>>()));
+        services.AddScoped(sp => new SitemapHandler(
+            sp.GetRequiredService<PublicContentHandler>(), sp.GetRequiredService<Catalog.Contracts.IProductSitemap>(),
+            sp.GetRequiredService<IOptions<ContentOptions>>()));
         services.AddScoped<ContentSeeder>();
         return services;
     }

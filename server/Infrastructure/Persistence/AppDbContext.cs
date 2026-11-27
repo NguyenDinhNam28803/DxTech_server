@@ -23,6 +23,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
 
         // Hàm SQL do migration tạo, dùng được trong LINQ (không sinh migration).
         server.Modules.Catalog.Persistence.CatalogDbFunctions.Register(modelBuilder);
+        server.Modules.Content.Persistence.ContentDbFunctions.Register(modelBuilder);
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

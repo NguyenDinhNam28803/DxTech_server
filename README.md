@@ -172,6 +172,25 @@ Dữ liệu nằm trong `server/Modules/Content/Seeding/content-seed.json`, sinh
 `node --experimental-strip-types --no-warnings tools/content-export/export-content.mjs <repo-client> > server/Modules/Content/Seeding/content-seed.json`.
 Ảnh bìa vẫn là URL ngoài (`cover_image_url`) cho tới CT-3 (nhập vào thư viện ảnh). Web chưa đọc từ API cho tới CT-C1.
 
+## API nội dung công khai (ADR-015, CT-2)
+
+Chỉ bài **đã đăng** (`status = published` và `published_at <= now`) — bản nháp, lưu trữ, hẹn giờ chưa tới giờ đều 404.
+GET trả `Cache-Control: public, max-age=60` ⇒ bài mới đăng hiện trên web sau tối đa 1 phút. `type`: `news · solution · training · resource · glossary · page`.
+
+| Method · Path | Kết quả |
+|---|---|
+| `GET /api/content/topics?type=solution` | Cây chủ đề + các trang cấp 1 của từng chủ đề, kèm `path` trên web |
+| `GET /api/content/posts?type=news&topic=&q=&cursor=&limit=&sort=` | Mới nhất trước + `nextCursor`; `topic` gồm chủ đề con; `q` tìm không dấu cả chữ trong khối; `sort=order` theo thứ tự biên tập |
+| `GET /api/content/posts/{type}/{slug}` | Chi tiết: khối nội dung, ý chính, breadcrumb, trang cha/con, ảnh. Slug cũ ⇒ **301**. Trang cha chưa đăng ⇒ hạng mục con cũng 404 |
+| `GET /api/content/featured?type=training&limit=6` | Bài nổi bật (thẻ trang chủ) |
+| `GET /api/content/courses/{slug}/sessions` | Lịch khai giảng còn mở/đã đủ chỗ từ hôm nay (giờ Việt Nam) |
+| `POST /api/content/leads` | Đăng ký tư vấn/khoá học: 202 · 400 thiếu/sai · 422 chưa mở · 429 quá 5 lần/giờ/IP |
+| `GET /api/content/sitemap.xml` | Trang tĩnh + bài có trang riêng + chủ đề + sản phẩm đang bán |
+
+**Form lead đóng mặc định**: `CONTENT_LEADS_CONSENT_VERSION` trong `.env` trống ⇒ 422 `content.leads_unavailable`. Khi pháp chế duyệt
+văn bản đồng ý (NĐ 13/2023), đặt mã phiên bản (ví dụ `2026-12-v1`) — mỗi lead lưu kèm phiên bản + thời điểm đồng ý. Lọc bot rẻ:
+trường bẫy `website` và `elapsedMs` < 3 giây ⇒ trả 202 nhưng không ghi.
+
 ## Đơn hàng & giỏ hàng (Phase 3: PR-10, PR-11)
 
 | Method · Path | Xác thực | Kết quả |

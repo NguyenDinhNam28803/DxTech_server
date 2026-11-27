@@ -111,6 +111,8 @@ services:
       Payments__BankTransfer__AccountName: ${PAYMENTS_ACCOUNT_NAME:-}
       # ADR-013 (PR-12): SePay webhook HMAC secret (SePay dashboard → Webhooks → Secret Key). Empty ⇒ webhook endpoint returns 404.
       Payments__Sepay__WebhookSecret: ${PAYMENTS_SEPAY_WEBHOOK_SECRET:-}
+      # ADR-015 (CT-2): consent text version shown on the lead form. Empty ⇒ POST /api/content/leads returns 422 until legal approves the text.
+      Content__Leads__ConsentVersion: ${CONTENT_LEADS_CONSENT_VERSION:-}
     ports:
       - "127.0.0.1:8080:8080"   # only Nginx on the VPS can reach it; required by the forwarded-headers setup in Program.cs
 

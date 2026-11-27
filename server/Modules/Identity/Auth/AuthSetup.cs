@@ -100,6 +100,7 @@ internal static class AuthSetup
         if (path.StartsWithSegments("/api/auth") || path.StartsWithSegments("/api/me")) return "auth";
         if (path.Equals("/api/cart/quote", StringComparison.OrdinalIgnoreCase)) return "cart";
         if (path.Equals("/api/orders", StringComparison.OrdinalIgnoreCase)) return "orders";
+        if (path.Equals("/api/content/leads", StringComparison.OrdinalIgnoreCase)) return "leads";
         return null;
     }
 
@@ -132,6 +133,7 @@ internal static class AuthSetup
                 "login" => limits.LoginPerHour,
                 "register" => limits.RegisterPerHour,
                 "orders" => limits.OrdersPerHour,
+                "leads" => limits.LeadsPerHour,
                 _ => 0,
             };
             return permits == 0

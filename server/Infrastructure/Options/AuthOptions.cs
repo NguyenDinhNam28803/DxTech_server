@@ -99,4 +99,7 @@ public sealed class AuthRateLimits
 
     /// <summary>Tất cả request tới /api/orders (đặt hàng) mỗi IP mỗi giờ (PR-11, chống giữ kho).</summary>
     public int OrdersPerHour { get; set; } = 10;
+
+    /// <summary>Form đăng ký tư vấn/khoá học công khai (ADR-015 §6): 5 lần/giờ/IP.</summary>
+    public int LeadsPerHour { get; set; } = 5;
 }
