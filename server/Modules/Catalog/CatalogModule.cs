@@ -27,8 +27,11 @@ public static class CatalogModule
 
         services.AddScoped<GetCategoryTreeHandler>();
         services.AddScoped<ListProductsHandler>();
-        services.AddScoped<GetProductBySlugHandler>();
+        services.AddScoped(sp => new GetProductBySlugHandler(
+            sp.GetRequiredService<Infrastructure.Persistence.AppDbContext>(),
+            sp.GetRequiredService<Inventory.Contracts.IStockQuery>()));
         services.AddScoped<DemoCatalogSeeder>();
+        services.AddScoped<Contracts.IVariantPricing, VariantPricing>();
         return services;
     }
 

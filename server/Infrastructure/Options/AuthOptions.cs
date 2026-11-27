@@ -93,4 +93,7 @@ public sealed class AuthRateLimits
     public int RegisterPerHour { get; set; } = 5;
     public int RefreshPerMinute { get; set; } = 60;
     public int OtherPerMinute { get; set; } = 30;
+
+    /// <summary>POST /api/cart/quote (PR-10) — giỏ hàng gọi lại mỗi khi đổi số lượng.</summary>
+    public int CartQuotePerMinute { get; set; } = 60;
 }

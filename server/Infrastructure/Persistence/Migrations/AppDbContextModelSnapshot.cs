@@ -541,6 +541,654 @@ namespace server.Infrastructure.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("server.Modules.Inventory.Domain.ImportBatch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<int>("DuplicateRows")
+                        .HasColumnType("integer")
+                        .HasColumnName("duplicate_rows");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("file_name");
+
+                    b.Property<Guid?>("ImportedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("imported_by");
+
+                    b.Property<int>("InsertedRows")
+                        .HasColumnType("integer")
+                        .HasColumnName("inserted_rows");
+
+                    b.Property<int>("InvalidRows")
+                        .HasColumnType("integer")
+                        .HasColumnName("invalid_rows");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("text")
+                        .HasColumnName("note");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("source");
+
+                    b.Property<int>("TotalRows")
+                        .HasColumnType("integer")
+                        .HasColumnName("total_rows");
+
+                    b.Property<Guid>("VariantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("variant_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_import_batches");
+
+                    b.HasIndex("ImportedBy")
+                        .HasDatabaseName("ix_import_batches_imported_by")
+                        .HasFilter("imported_by IS NOT NULL");
+
+                    b.HasIndex("VariantId", "CreatedAt")
+                        .IsDescending(false, true)
+                        .HasDatabaseName("ix_import_batches_variant_created");
+
+                    b.ToTable("import_batches", "inventory", t =>
+                        {
+                            t.HasCheckConstraint("ck_import_batches_counts", "total_rows >= 0 AND inserted_rows >= 0 AND duplicate_rows >= 0 AND invalid_rows >= 0 AND inserted_rows + duplicate_rows + invalid_rows = total_rows");
+
+                            t.HasCheckConstraint("ck_import_batches_importer", "source <> 'admin' OR imported_by IS NOT NULL");
+
+                            t.HasCheckConstraint("ck_import_batches_source", "source IN ('cli', 'admin')");
+
+                            t.HasCheckConstraint("ck_import_batches_texts", "char_length(file_name) BETWEEN 1 AND 255 AND (note IS NULL OR char_length(note) <= 500)");
+                        });
+                });
+
+            modelBuilder.Entity("server.Modules.Inventory.Domain.LicenseKey", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("BatchId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("batch_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateTimeOffset?>("DeliveredAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("delivered_at");
+
+                    b.Property<byte[]>("KeyEncrypted")
+                        .IsRequired()
+                        .HasColumnType("bytea")
+                        .HasColumnName("key_encrypted");
+
+                    b.Property<byte[]>("KeyHash")
+                        .IsRequired()
+                        .HasColumnType("bytea")
+                        .HasColumnName("key_hash");
+
+                    b.Property<string>("KeyHint")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("key_hint");
+
+                    b.Property<short>("KeyVersion")
+                        .HasColumnType("smallint")
+                        .HasColumnName("key_version");
+
+                    b.Property<Guid?>("OrderItemId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("order_item_id");
+
+                    b.Property<DateTimeOffset?>("ReservedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("reserved_at");
+
+                    b.Property<string>("RevokedReason")
+                        .HasColumnType("text")
+                        .HasColumnName("revoked_reason");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.Property<Guid>("VariantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("variant_id");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_license_keys");
+
+                    b.HasIndex("BatchId")
+                        .HasDatabaseName("ix_license_keys_batch_id");
+
+                    b.HasIndex("KeyHash")
+                        .IsUnique()
+                        .HasDatabaseName("ux_license_keys_key_hash");
+
+                    b.HasIndex("OrderItemId")
+                        .HasDatabaseName("ix_license_keys_order_item")
+                        .HasFilter("order_item_id IS NOT NULL");
+
+                    b.HasIndex("VariantId", "CreatedAt")
+                        .HasDatabaseName("ix_license_keys_available")
+                        .HasFilter("status = 'available'");
+
+                    b.ToTable("license_keys", "inventory", t =>
+                        {
+                            t.HasCheckConstraint("ck_license_keys_assigned", "status NOT IN ('reserved', 'delivered') OR (order_item_id IS NOT NULL AND reserved_at IS NOT NULL)");
+
+                            t.HasCheckConstraint("ck_license_keys_available", "status <> 'available' OR (order_item_id IS NULL AND reserved_at IS NULL AND delivered_at IS NULL)");
+
+                            t.HasCheckConstraint("ck_license_keys_ciphertext", "octet_length(key_encrypted) >= 29");
+
+                            t.HasCheckConstraint("ck_license_keys_delivered", "status <> 'delivered' OR delivered_at IS NOT NULL");
+
+                            t.HasCheckConstraint("ck_license_keys_hash_len", "octet_length(key_hash) = 32");
+
+                            t.HasCheckConstraint("ck_license_keys_hint", "char_length(key_hint) BETWEEN 1 AND 8");
+
+                            t.HasCheckConstraint("ck_license_keys_revoked", "(status = 'revoked') = (revoked_reason IS NOT NULL)");
+
+                            t.HasCheckConstraint("ck_license_keys_status", "status IN ('available', 'reserved', 'delivered', 'revoked')");
+
+                            t.HasCheckConstraint("ck_license_keys_version", "key_version > 0");
+                        });
+                });
+
+            modelBuilder.Entity("server.Modules.Payments.Domain.Payment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<long>("AmountVnd")
+                        .HasColumnType("bigint")
+                        .HasColumnName("amount_vnd");
+
+                    b.Property<string>("BankReference")
+                        .HasColumnType("text")
+                        .HasColumnName("bank_reference");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("MatchStatus")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("match_status");
+
+                    b.Property<Guid?>("OrderId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("order_id");
+
+                    b.Property<DateTimeOffset>("PaidAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("paid_at");
+
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("provider");
+
+                    b.Property<string>("ProviderTxnId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("provider_txn_id");
+
+                    b.Property<string>("ResolutionNote")
+                        .HasColumnType("text")
+                        .HasColumnName("resolution_note");
+
+                    b.Property<DateTimeOffset?>("ResolvedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("resolved_at");
+
+                    b.Property<Guid?>("ResolvedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("resolved_by");
+
+                    b.Property<string>("TransferContent")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("transfer_content");
+
+                    b.Property<Guid?>("WebhookEventId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("webhook_event_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_payments");
+
+                    b.HasIndex("CreatedAt")
+                        .HasDatabaseName("ix_payments_unresolved")
+                        .HasFilter("match_status <> 'matched' AND resolved_at IS NULL");
+
+                    b.HasIndex("OrderId")
+                        .HasDatabaseName("ix_payments_order_id")
+                        .HasFilter("order_id IS NOT NULL");
+
+                    b.HasIndex("ResolvedBy")
+                        .HasDatabaseName("ix_payments_resolved_by")
+                        .HasFilter("resolved_by IS NOT NULL");
+
+                    b.HasIndex("WebhookEventId")
+                        .IsUnique()
+                        .HasDatabaseName("ux_payments_webhook_event_id")
+                        .HasFilter("webhook_event_id IS NOT NULL");
+
+                    b.HasIndex("Provider", "ProviderTxnId")
+                        .IsUnique()
+                        .HasDatabaseName("ux_payments_provider_txn");
+
+                    b.ToTable("payments", "payments", t =>
+                        {
+                            t.HasCheckConstraint("ck_payments_amount", "amount_vnd > 0");
+
+                            t.HasCheckConstraint("ck_payments_match_status", "match_status IN ('matched', 'underpaid', 'overpaid', 'no_order_code', 'unknown_order', 'order_not_payable', 'late_no_stock')");
+
+                            t.HasCheckConstraint("ck_payments_order_link", "(order_id IS NULL) = (match_status IN ('no_order_code', 'unknown_order'))");
+
+                            t.HasCheckConstraint("ck_payments_provider", "provider IN ('sepay', 'payos', 'manual')");
+
+                            t.HasCheckConstraint("ck_payments_resolved", "(resolved_at IS NULL) = (resolved_by IS NULL)");
+
+                            t.HasCheckConstraint("ck_payments_texts", "char_length(provider_txn_id) BETWEEN 1 AND 200 AND char_length(transfer_content) <= 500 AND (bank_reference IS NULL OR char_length(bank_reference) <= 100) AND (resolution_note IS NULL OR char_length(resolution_note) <= 1000)");
+                        });
+                });
+
+            modelBuilder.Entity("server.Modules.Payments.Domain.WebhookEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("Attempts")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("attempts");
+
+                    b.Property<string>("EventKey")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("event_key");
+
+                    b.Property<string>("Headers")
+                        .HasColumnType("jsonb")
+                        .HasColumnName("headers");
+
+                    b.Property<string>("LastError")
+                        .HasColumnType("text")
+                        .HasColumnName("last_error");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("payload");
+
+                    b.Property<DateTimeOffset?>("ProcessedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("processed_at");
+
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("provider");
+
+                    b.Property<DateTimeOffset>("ReceivedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("received_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<IPAddress>("RemoteIp")
+                        .HasColumnType("inet")
+                        .HasColumnName("remote_ip");
+
+                    b.Property<bool>("SignatureValid")
+                        .HasColumnType("boolean")
+                        .HasColumnName("signature_valid");
+
+                    b.HasKey("Id")
+                        .HasName("pk_webhook_events");
+
+                    b.HasIndex("Provider", "EventKey")
+                        .IsUnique()
+                        .HasDatabaseName("ux_webhook_events_provider_key");
+
+                    b.HasIndex(new[] { "ReceivedAt" }, "ix_webhook_events_received_at")
+                        .HasDatabaseName("ix_webhook_events_received_at");
+
+                    b.HasIndex(new[] { "ReceivedAt" }, "ix_webhook_events_unprocessed")
+                        .HasDatabaseName("ix_webhook_events_unprocessed")
+                        .HasFilter("processed_at IS NULL AND signature_valid");
+
+                    b.ToTable("webhook_events", "payments", t =>
+                        {
+                            t.HasCheckConstraint("ck_webhook_events_attempts", "attempts >= 0");
+
+                            t.HasCheckConstraint("ck_webhook_events_event_key", "char_length(event_key) BETWEEN 1 AND 200");
+
+                            t.HasCheckConstraint("ck_webhook_events_headers", "headers IS NULL OR jsonb_typeof(headers) = 'object'");
+
+                            t.HasCheckConstraint("ck_webhook_events_payload", "jsonb_typeof(payload) IN ('object', 'array')");
+
+                            t.HasCheckConstraint("ck_webhook_events_processed", "processed_at IS NULL OR signature_valid");
+
+                            t.HasCheckConstraint("ck_webhook_events_provider", "provider IN ('sepay', 'payos', 'manual')");
+                        });
+                });
+
+            modelBuilder.Entity("server.Modules.Sales.Domain.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CancelReason")
+                        .HasColumnType("text")
+                        .HasColumnName("cancel_reason");
+
+                    b.Property<DateTimeOffset?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("cancelled_at");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("code");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("CustomerEmail")
+                        .IsRequired()
+                        .HasColumnType("citext")
+                        .HasColumnName("customer_email");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("customer_name");
+
+                    b.Property<long>("DiscountVnd")
+                        .HasColumnType("bigint")
+                        .HasColumnName("discount_vnd");
+
+                    b.Property<DateTimeOffset>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<DateTimeOffset?>("FulfilledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("fulfilled_at");
+
+                    b.Property<Guid>("IdempotencyKey")
+                        .HasColumnType("uuid")
+                        .HasColumnName("idempotency_key");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("text")
+                        .HasColumnName("note");
+
+                    b.Property<DateTimeOffset?>("PaidAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("paid_at");
+
+                    b.Property<DateTimeOffset?>("RefundedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("refunded_at");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.Property<long>("SubtotalVnd")
+                        .HasColumnType("bigint")
+                        .HasColumnName("subtotal_vnd");
+
+                    b.Property<long>("TotalVnd")
+                        .HasColumnType("bigint")
+                        .HasColumnName("total_vnd");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<string>("VatInfo")
+                        .HasColumnType("jsonb")
+                        .HasColumnName("vat_info");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_orders");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("ux_orders_code");
+
+                    b.HasIndex("ExpiresAt")
+                        .HasDatabaseName("ix_orders_pending_expires")
+                        .HasFilter("status = 'pending_payment'");
+
+                    b.HasIndex("UserId", "CreatedAt")
+                        .IsDescending(false, true)
+                        .HasDatabaseName("ix_orders_user_created");
+
+                    b.HasIndex("UserId", "IdempotencyKey")
+                        .IsUnique()
+                        .HasDatabaseName("ux_orders_user_idempotency");
+
+                    b.HasIndex("Status", "CreatedAt", "Id")
+                        .IsDescending(false, true, true)
+                        .HasDatabaseName("ix_orders_status_created");
+
+                    b.ToTable("orders", "sales", t =>
+                        {
+                            t.HasCheckConstraint("ck_orders_amounts", "subtotal_vnd >= 0 AND discount_vnd >= 0 AND discount_vnd <= subtotal_vnd AND total_vnd = subtotal_vnd - discount_vnd AND total_vnd > 0");
+
+                            t.HasCheckConstraint("ck_orders_cancel_reason", "cancel_reason IS NULL OR cancel_reason IN ('expired', 'customer', 'admin')");
+
+                            t.HasCheckConstraint("ck_orders_cancelled", "(status = 'cancelled') = (cancelled_at IS NOT NULL AND cancel_reason IS NOT NULL)");
+
+                            t.HasCheckConstraint("ck_orders_code", "code ~ '^DX[0-9A-HJKMNP-TV-Z]{8}$'");
+
+                            t.HasCheckConstraint("ck_orders_customer_email", "char_length(customer_email) BETWEEN 3 AND 254");
+
+                            t.HasCheckConstraint("ck_orders_customer_name", "char_length(customer_name) BETWEEN 1 AND 100");
+
+                            t.HasCheckConstraint("ck_orders_expires", "expires_at > created_at");
+
+                            t.HasCheckConstraint("ck_orders_fulfilled_at", "status <> 'fulfilled' OR fulfilled_at IS NOT NULL");
+
+                            t.HasCheckConstraint("ck_orders_note", "note IS NULL OR char_length(note) <= 1000");
+
+                            t.HasCheckConstraint("ck_orders_paid_at", "status NOT IN ('paid', 'fulfilled', 'refunded') OR paid_at IS NOT NULL");
+
+                            t.HasCheckConstraint("ck_orders_refunded_at", "(status = 'refunded') = (refunded_at IS NOT NULL)");
+
+                            t.HasCheckConstraint("ck_orders_status", "status IN ('pending_payment', 'paid', 'fulfilled', 'cancelled', 'refunded')");
+
+                            t.HasCheckConstraint("ck_orders_vat_info", "vat_info IS NULL OR jsonb_typeof(vat_info) = 'object'");
+                        });
+                });
+
+            modelBuilder.Entity("server.Modules.Sales.Domain.OrderItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("DeliveryType")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("delivery_type");
+
+                    b.Property<DateTimeOffset?>("FulfilledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("fulfilled_at");
+
+                    b.Property<long>("LineTotalVnd")
+                        .HasColumnType("bigint")
+                        .HasColumnName("line_total_vnd");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("order_id");
+
+                    b.Property<string>("ProductNameSnapshot")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("product_name_snapshot");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
+
+                    b.Property<string>("SkuSnapshot")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("sku_snapshot");
+
+                    b.Property<long>("UnitPriceVnd")
+                        .HasColumnType("bigint")
+                        .HasColumnName("unit_price_vnd");
+
+                    b.Property<Guid>("VariantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("variant_id");
+
+                    b.Property<string>("VariantNameSnapshot")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("variant_name_snapshot");
+
+                    b.HasKey("Id")
+                        .HasName("pk_order_items");
+
+                    b.HasIndex("VariantId")
+                        .HasDatabaseName("ix_order_items_variant_id");
+
+                    b.HasIndex("OrderId", "VariantId")
+                        .IsUnique()
+                        .HasDatabaseName("ux_order_items_order_variant");
+
+                    b.ToTable("order_items", "sales", t =>
+                        {
+                            t.HasCheckConstraint("ck_order_items_delivery_type", "delivery_type IN ('license_key', 'account', 'manual')");
+
+                            t.HasCheckConstraint("ck_order_items_line_total", "line_total_vnd = unit_price_vnd * quantity");
+
+                            t.HasCheckConstraint("ck_order_items_price", "unit_price_vnd >= 0");
+
+                            t.HasCheckConstraint("ck_order_items_quantity", "quantity BETWEEN 1 AND 20");
+
+                            t.HasCheckConstraint("ck_order_items_snapshots", "char_length(product_name_snapshot) BETWEEN 1 AND 200 AND char_length(variant_name_snapshot) BETWEEN 1 AND 200 AND char_length(sku_snapshot) BETWEEN 1 AND 64");
+                        });
+                });
+
+            modelBuilder.Entity("server.Modules.Sales.Domain.OrderStatusHistory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("ActorType")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("actor_type");
+
+                    b.Property<Guid?>("ActorUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("actor_user_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("FromStatus")
+                        .HasColumnType("text")
+                        .HasColumnName("from_status");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("order_id");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("text")
+                        .HasColumnName("reason");
+
+                    b.Property<string>("ToStatus")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("to_status");
+
+                    b.HasKey("Id")
+                        .HasName("pk_order_status_history");
+
+                    b.HasIndex("OrderId", "Id")
+                        .HasDatabaseName("ix_order_status_history_order_id");
+
+                    b.ToTable("order_status_history", "sales", t =>
+                        {
+                            t.HasCheckConstraint("ck_order_status_history_actor_type", "actor_type IN ('customer', 'admin', 'system', 'webhook')");
+
+                            t.HasCheckConstraint("ck_order_status_history_reason", "reason IS NULL OR char_length(reason) <= 200");
+
+                            t.HasCheckConstraint("ck_order_status_history_statuses", "to_status IN ('pending_payment', 'paid', 'fulfilled', 'cancelled', 'refunded') AND (from_status IS NULL OR from_status IN ('pending_payment', 'paid', 'fulfilled', 'cancelled', 'refunded'))");
+
+                            t.HasCheckConstraint("ck_order_status_history_transition", "from_status IS DISTINCT FROM to_status");
+                        });
+                });
+
             modelBuilder.Entity("server.Modules.Catalog.Domain.Category", b =>
                 {
                     b.HasOne("server.Modules.Catalog.Domain.Category", "Parent")
@@ -594,6 +1242,103 @@ namespace server.Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("server.Modules.Inventory.Domain.ImportBatch", b =>
+                {
+                    b.HasOne("server.Modules.Identity.Domain.User", null)
+                        .WithMany()
+                        .HasForeignKey("ImportedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_import_batches_users_imported_by");
+
+                    b.HasOne("server.Modules.Catalog.Domain.ProductVariant", null)
+                        .WithMany()
+                        .HasForeignKey("VariantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_import_batches_product_variants_variant_id");
+                });
+
+            modelBuilder.Entity("server.Modules.Inventory.Domain.LicenseKey", b =>
+                {
+                    b.HasOne("server.Modules.Inventory.Domain.ImportBatch", null)
+                        .WithMany()
+                        .HasForeignKey("BatchId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_license_keys_import_batches_batch_id");
+
+                    b.HasOne("server.Modules.Sales.Domain.OrderItem", null)
+                        .WithMany()
+                        .HasForeignKey("OrderItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_license_keys_order_items_order_item_id");
+
+                    b.HasOne("server.Modules.Catalog.Domain.ProductVariant", null)
+                        .WithMany()
+                        .HasForeignKey("VariantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_license_keys_product_variants_variant_id");
+                });
+
+            modelBuilder.Entity("server.Modules.Payments.Domain.Payment", b =>
+                {
+                    b.HasOne("server.Modules.Sales.Domain.Order", null)
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_payments_orders_order_id");
+
+                    b.HasOne("server.Modules.Identity.Domain.User", null)
+                        .WithMany()
+                        .HasForeignKey("ResolvedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_payments_users_resolved_by");
+
+                    b.HasOne("server.Modules.Payments.Domain.WebhookEvent", null)
+                        .WithMany()
+                        .HasForeignKey("WebhookEventId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_payments_webhook_events_webhook_event_id");
+                });
+
+            modelBuilder.Entity("server.Modules.Sales.Domain.Order", b =>
+                {
+                    b.HasOne("server.Modules.Identity.Domain.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_orders_users_user_id");
+                });
+
+            modelBuilder.Entity("server.Modules.Sales.Domain.OrderItem", b =>
+                {
+                    b.HasOne("server.Modules.Sales.Domain.Order", null)
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_order_items_orders_order_id");
+
+                    b.HasOne("server.Modules.Catalog.Domain.ProductVariant", null)
+                        .WithMany()
+                        .HasForeignKey("VariantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_order_items_product_variants_variant_id");
+                });
+
+            modelBuilder.Entity("server.Modules.Sales.Domain.OrderStatusHistory", b =>
+                {
+                    b.HasOne("server.Modules.Sales.Domain.Order", null)
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_order_status_history_orders_order_id");
+                });
+
             modelBuilder.Entity("server.Modules.Catalog.Domain.Category", b =>
                 {
                     b.Navigation("Children");
@@ -602,6 +1347,11 @@ namespace server.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("server.Modules.Catalog.Domain.Product", b =>
                 {
                     b.Navigation("Variants");
+                });
+
+            modelBuilder.Entity("server.Modules.Sales.Domain.Order", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

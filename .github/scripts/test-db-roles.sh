@@ -154,6 +154,44 @@ if [ "${DB_ROLES_RUN_MIGRATIONS:-0}" = 1 ]; then
        RAISE EXCEPTION 'citext không chặn email trùng';
      EXCEPTION WHEN unique_violation THEN NULL; END \$\$;
      DELETE FROM identity.users WHERE email = 'roles.test@dxtechs.com'"
+  # PR-9 (thiết kế mục A5): chứng từ Phase 3 không bị xoá; lịch sử + payment chỉ thêm; payment chỉ sửa cột xử lý lệch.
+  phase3_seed="
+    INSERT INTO identity.users (id, email, password_hash, full_name, role, status, failed_login_count, security_stamp)
+      VALUES ('00000000-0000-7000-8000-000000000001', 'p3@dxtechs.test', repeat('h', 40), 'P3', 'customer', 'active', 0, gen_random_uuid())
+      ON CONFLICT DO NOTHING;
+    INSERT INTO sales.orders (id, code, user_id, idempotency_key, status, customer_email, customer_name, subtotal_vnd, discount_vnd,
+                              total_vnd, expires_at, created_at, updated_at)
+      VALUES ('00000000-0000-7000-8000-000000000002', 'DX7K3QH9M2', '00000000-0000-7000-8000-000000000001', gen_random_uuid(),
+              'pending_payment', 'p3@dxtechs.test', 'P3', 1000, 0, 1000, now() + interval '30 minutes', now(), now())
+      ON CONFLICT DO NOTHING;
+    -- Đơn KHÔNG có dòng phụ thuộc: DELETE chỉ có thể bị chặn bởi quyền, không phải bởi khoá ngoại.
+    INSERT INTO sales.orders (id, code, user_id, idempotency_key, status, customer_email, customer_name, subtotal_vnd, discount_vnd,
+                              total_vnd, expires_at, created_at, updated_at)
+      VALUES ('00000000-0000-7000-8000-000000000004', 'DX7K3QH9M3', '00000000-0000-7000-8000-000000000001', gen_random_uuid(),
+              'pending_payment', 'p3@dxtechs.test', 'P3', 1000, 0, 1000, now() + interval '30 minutes', now(), now())
+      ON CONFLICT DO NOTHING;
+    INSERT INTO sales.order_status_history (order_id, to_status, actor_type) VALUES ('00000000-0000-7000-8000-000000000002', 'pending_payment', 'customer');
+    INSERT INTO payments.payments (id, order_id, provider, provider_txn_id, transfer_content, amount_vnd, match_status, paid_at)
+      VALUES ('00000000-0000-7000-8000-000000000003', '00000000-0000-7000-8000-000000000002', 'sepay', 'roles-test-1', 'DX7K3QH9M2', 1000, 'matched', now())
+      ON CONFLICT DO NOTHING"
+  expect_ok "app tạo đơn + lịch sử + payment (Phase 3)" dxtechs_app "$new_app_pw" "$phase3_seed"
+  phase3_checks() {
+    expect_denied "app xoá đơn hàng ($1)" dxtechs_app "$new_app_pw" "DELETE FROM sales.orders WHERE code = 'DX7K3QH9M3'"
+    expect_denied "app xoá license key ($1)" dxtechs_app "$new_app_pw" "DELETE FROM inventory.license_keys"
+    expect_denied "app sửa lịch sử trạng thái ($1)" dxtechs_app "$new_app_pw" "UPDATE sales.order_status_history SET reason = 'x'"
+    expect_denied "app xoá lịch sử trạng thái ($1)" dxtechs_app "$new_app_pw" "DELETE FROM sales.order_status_history"
+    expect_denied "app sửa số tiền payment ($1)" dxtechs_app "$new_app_pw" "UPDATE payments.payments SET amount_vnd = 1 WHERE provider_txn_id = 'roles-test-1'"
+    expect_denied "app xoá payment ($1)" dxtechs_app "$new_app_pw" "DELETE FROM payments.payments"
+    expect_ok "app ghi kết quả xử lý khoản lệch ($1)" dxtechs_app "$new_app_pw" \
+      "UPDATE payments.payments SET resolution_note = 'kiểm tra quyền' WHERE provider_txn_id = 'roles-test-1'"
+    expect_ok "app cập nhật trạng thái đơn ($1)" dxtechs_app "$new_app_pw" \
+      "UPDATE sales.orders SET note = 'kiểm tra quyền' WHERE code = 'DX7K3QH9M2'"
+    expect_ok "app dọn webhook cũ ($1)" dxtechs_app "$new_app_pw" "DELETE FROM payments.webhook_events WHERE received_at < now() - interval '180 days'"
+  }
+  phase3_checks "sau migration"
+  # db-roles chạy lại ở MỌI lần deploy và mục 5 cấp lại toàn bộ quyền ⇒ mục 5b phải thu hồi lại.
+  DB_APP_PASSWORD="$new_app_pw" run_roles
+  phase3_checks "sau khi chạy lại roles.sql"
   expect_denied "app xoá bảng identity" dxtechs_app "$new_app_pw" "DROP TABLE identity.refresh_tokens"
   expect_denied "app tạo bảng trong catalog" dxtechs_app "$new_app_pw" "CREATE TABLE catalog.hack (id int)"
   expect_denied "app xoá bảng catalog" dxtechs_app "$new_app_pw" "DROP TABLE catalog.product_variants"

@@ -9,6 +9,8 @@ using server.Infrastructure.Persistence;
 using server.Infrastructure.Persistence.Interceptors;
 using server.Modules.Catalog;
 using server.Modules.Identity;
+using server.Modules.Inventory;
+using server.Modules.Sales;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +48,8 @@ builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
 // Module nghiệp vụ (ADR-001): mỗi module tự đăng ký service của mình.
 builder.Services.AddCatalogModule(builder.Configuration);
 builder.Services.AddIdentityModule(builder.Configuration);
+builder.Services.AddInventoryModule();
+builder.Services.AddSalesModule();
 
 // An toàn mặc định (ADR-012 §5): mọi action MVC yêu cầu đăng nhập, trừ khi ghi [AllowAnonymous] rõ ràng
 // (test kiến trúc bắt buộc mỗi controller ghi rõ). Dùng filter thay cho FallbackPolicy để URL không tồn tại vẫn

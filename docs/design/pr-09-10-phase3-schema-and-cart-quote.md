@@ -1,6 +1,6 @@
 # Thiết kế triển khai PR-9 + PR-10 (Phase 3)
 
-- **Trạng thái:** Chờ Backend Lead duyệt · **Ngày:** 26/11/2026
+- **Trạng thái:** Đã duyệt (PR #13, 26/11/2026) · PR-9 đã triển khai 27/11 (mục A7) · PR-10 đã triển khai 27/11 (mục B6)
 - **Dựa trên:** `docs/database/phase3-schema.md` (đã duyệt 26/11), ADR-013, ADR-014, ADR-001/002/003 (module, DbContext),
   ADR-006 (id, tiền), ADR-007 (concurrency), ADR-009 (role DB), ADR-012 (rate limit)
 - **Phạm vi:** PR-9 = cấu trúc dữ liệu (chưa có API). PR-10 = API báo giá giỏ hàng + tồn kho trên trang sản phẩm.
@@ -252,6 +252,23 @@ REVOKE TRUNCATE ON ALL TABLES IN SCHEMA sales, payments, inventory FROM dxtechs_
 
 ---
 
+## A7. Ghi chú triển khai PR-9 (27/11/2026) — khác bản thiết kế
+
+| Điểm | Thiết kế | Triển khai | Lý do |
+|---|---|---|---|
+| `DEFAULT` cho `status`, `discount_vnd`, `key_version` | Có trong DDL | Không đặt ở DB; entity luôn gán giá trị | Cột enum/số có giá trị mặc định trùng giá trị CLR mặc định gây cảnh báo “sentinel” của EF; mọi đường ghi đều qua entity hoặc ghi tường minh |
+| `webhook_events.attempts` | `DEFAULT 0` | Giữ `DEFAULT 0` | Phát hiện khi viết test: INSERT tay thiếu cột này bị lỗi NOT NULL |
+| CHECK bổ sung | — | `ck_orders_customer_email` (3–254 ký tự), `ck_webhook_events_payload` (object/array), độ dài `bank_reference` (≤ 100) và `resolution_note` (≤ 1000), `ck_license_keys_available` thêm `delivered_at IS NULL` | Lớp phòng thủ cuối cho dữ liệu nhập tay / module sau |
+| Index bổ sung | — | `ix_payments_resolved_by`, `ix_import_batches_imported_by` (partial), `ix_license_keys_batch_id` | Index cho FK sang `identity.users` / lô nhập: tránh quét toàn bảng khi kiểm tra FK |
+| FK chéo module | Trong DDL | `HasOne<T>()` không navigation trong `Persistence/` | Domain của module không tham chiếu kiểu nội bộ module khác (test kiến trúc ADR-001) |
+| Quyền DB (A5) | Migration + `roles.sql` | `Phase3Privileges.Sql` dùng cho migration; `roles.sql` mục 5b chứa bản giống hệt, test đơn vị so sánh hai bản | Lệch hai bản ⇒ lần deploy thứ hai trả lại quyền DELETE |
+| Kiểm thử quyền | Chạy `roles.sql` 2 lần | Thêm: thử phá có chủ đích (bỏ mục 5b ⇒ 6 kiểm tra đỏ); ca “xoá đơn” dùng đơn không có dòng phụ thuộc | Ca “xoá đơn” ban đầu qua vì khoá ngoại chặn, không phải vì quyền — đã sửa |
+
+Kết quả: unit 106 → **131**, integration 162 → **225** (ràng buộc 45 ca, chuyển đổi hợp lệ 4 ca, index 14, EF, xmin, SKIP LOCKED),
+`test-db-roles.sh` +19 kiểm tra Phase 3. SQL review: `docs/migrations/20261127034854_Phase3_Sales_Payments_Inventory.sql`.
+
+---
+
 # Phần B — PR-10: Báo giá giỏ hàng + tồn kho
 
 ## B1. Mục tiêu
@@ -344,6 +361,19 @@ test đo với 2.000 sản phẩm + 50.000 key giả.
 | Rate limit | Lần 61 trong 1 phút ⇒ 429 + Retry-After |
 | `GET /api/products/{slug}` | Có `inStock` mỗi gói; client cũ đọc được (trường thêm) |
 | Arch test | Sales không tham chiếu entity `internal` của Catalog/Inventory |
+
+---
+
+## B6. Ghi chú triển khai PR-10 (27/11/2026)
+
+| Điểm | Triển khai |
+|---|---|
+| Ranh giới module | `Catalog.Contracts.IVariantPricing` (+ `DeliveryTypes`), `Inventory.Contracts.IStockQuery`; Sales và Catalog chỉ dùng Contracts — test kiến trúc xanh |
+| Đếm tồn | `unnest(ids) CROSS JOIN LATERAL (… LIMIT cap)`: mỗi gói đọc tối đa `cap` dòng của index một phần. Đo trên PostgreSQL thật, 50.000 key một gói, 20 gói: **0,08 ms**, Index Only Scan `ix_license_keys_available` |
+| `inStock` trang sản phẩm | Hỏi tồn với `cap = 1` (chỉ cần biết có/không) |
+| Rate limit | Nhóm `cart` trong bộ giới hạn chung (ADR-012): `Auth:RateLimits:CartQuotePerMinute` = 60 |
+| Lỗi theo trường | `items`, `items[i].variantId`, `items[i].quantity` — gộp trùng vượt 20 báo ở dòng xuất hiện đầu tiên |
+| Kiểm thử | Integration 225 → **240**: giá từ DB (bỏ qua giá client gửi), thiếu hàng/hết hàng/manual, không lộ tồn kho, gói ẩn/sản phẩm ẩn/id lạ, gộp dòng, 6 ca 400, > 20 dòng, `inStock`, 429 + `Retry-After` |
 
 ---
 
