@@ -96,4 +96,7 @@ public sealed class AuthRateLimits
 
     /// <summary>POST /api/cart/quote (PR-10) — giỏ hàng gọi lại mỗi khi đổi số lượng.</summary>
     public int CartQuotePerMinute { get; set; } = 60;
+
+    /// <summary>Tất cả request tới /api/orders (đặt hàng) mỗi IP mỗi giờ (PR-11, chống giữ kho).</summary>
+    public int OrdersPerHour { get; set; } = 10;
 }

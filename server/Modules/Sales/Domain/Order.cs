@@ -88,6 +88,19 @@ internal sealed class Order : IAuditable
 
     public DateTimeOffset UpdatedAt { get; set; }
 
+    /// <summary>Huỷ đơn đang chờ thanh toán (khách huỷ, admin huỷ, hết hạn). Key đang giữ do caller trả về kho.</summary>
+    public void Cancel(OrderCancelReason reason, DateTimeOffset now)
+    {
+        if (Status != OrderStatus.PendingPayment)
+        {
+            throw new InvalidOperationException("Chỉ huỷ được đơn đang chờ thanh toán.");
+        }
+
+        Status = OrderStatus.Cancelled;
+        CancelledAt = now;
+        CancelReason = reason;
+    }
+
     /// <summary>Thêm một dòng (mỗi gói một dòng) và tính lại tiền. Chỉ khi đơn còn chờ thanh toán.</summary>
     public OrderItem AddItem(
         Guid variantId, string productName, string variantName, string sku, ItemDeliveryType deliveryType, long unitPriceVnd, int quantity)

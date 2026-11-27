@@ -22,6 +22,8 @@ public class ApiFactory : WebApplicationFactory<Program>
             : DefaultConnectionString;
 
     public const string TestSigningKey = "integration-test-signing-key-0123456789abcdef";
+    public const string TestLicenseKey = "dGVzdC1vbmx5LWxpY2Vuc2UtZW5jcnlwdGlvbi1rZXk=";
+    public const string TestHmacKey = "dGVzdC1vbmx5LWxpY2Vuc2UtaG1hYy1rZXktMDAwMDA=";
 
     /// <summary>Ghi đè chuỗi kết nối; <c>null</c> = dùng <see cref="ConnectionString"/>.</summary>
     protected virtual string? ConnectionStringOverride => null;
@@ -34,6 +36,8 @@ public class ApiFactory : WebApplicationFactory<Program>
         // ADR-012: khoá ký chỉ dùng trong test; nới giới hạn tần suất để các test không chặn nhau
         // (test riêng cho 429 dùng factory với giới hạn nhỏ). Kiểm tra admin trong DB không cache.
         builder.UseSetting("Auth:SigningKeys:0", TestSigningKey);
+        // Log SQL của EF ở mức Information làm log CI dài > 5.000 dòng ⇒ GitHub cắt mất dòng báo test đỏ. Chỉ giữ cảnh báo.
+        builder.UseSetting("Logging:LogLevel:Microsoft.EntityFrameworkCore", "Warning");
         builder.UseSetting("Auth:AdminCheckCacheSeconds", "0");
         builder.UseSetting("Auth:RateLimits:LoginPerMinute", "10000");
         builder.UseSetting("Auth:RateLimits:LoginPerHour", "10000");
@@ -41,6 +45,15 @@ public class ApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("Auth:RateLimits:RefreshPerMinute", "10000");
         builder.UseSetting("Auth:RateLimits:OtherPerMinute", "10000");
         builder.UseSetting("Auth:RateLimits:CartQuotePerMinute", "10000");
+        builder.UseSetting("Auth:RateLimits:OrdersPerHour", "10000");
+        // ADR-014: khoá license chỉ dùng trong test. ADR-013: tài khoản nhận tiền giả để mở đặt hàng.
+        builder.UseSetting("License:CurrentVersion", "1");
+        builder.UseSetting("License:EncryptionKeys:1", TestLicenseKey);
+        builder.UseSetting("License:HmacKey", TestHmacKey);
+        builder.UseSetting("Payments:BankTransfer:BankBin", "970436");
+        builder.UseSetting("Payments:BankTransfer:BankName", "Vietcombank");
+        builder.UseSetting("Payments:BankTransfer:AccountNumber", "0011001234567");
+        builder.UseSetting("Payments:BankTransfer:AccountName", "CONG TY DXTECHS");
 
         builder.ConfigureTestServices(services =>
         {

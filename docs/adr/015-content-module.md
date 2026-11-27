@@ -1,6 +1,6 @@
 # ADR-015: Module Content — quản trị tin tức, giải pháp, đào tạo ngay trong hệ thống
 
-- **Trạng thái:** Đề xuất — chờ Backend Lead duyệt (phương án B, 27/11/2026)
+- **Trạng thái:** Đã duyệt (27/11/2026, phương án B)
 - **Ngày:** 2026-11-27
 - **Liên quan:** ADR-001 (modular monolith), ADR-002 (một DbContext), ADR-006 (id, thời gian), ADR-007 (xoá mềm, xmin),
   ADR-008 (tìm kiếm không dấu), ADR-009 (role DB), ADR-012 (role, policy); thiết kế: `docs/design/ct-content-module.md`
