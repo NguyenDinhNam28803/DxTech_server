@@ -117,6 +117,13 @@ public class ContentApiTests(ApiFactory factory) : IClassFixture<ApiFactory>, IA
 
         Assert.Equal([hit.Slug], await ListSlugsAsync($"/api/content/posts?type=glossary&q=dien+toan+{word}"));
         Assert.Equal([hit.Slug], await ListSlugsAsync($"/api/content/posts?type=glossary&q=ĐIỆN+{word[..5]}")); // gõ dở, có dấu, hoa
+
+        // include=blocks: thẻ kèm khối nội dung (web dựng thẻ thuật ngữ không cần gọi chi tiết); mặc định không kèm.
+        JsonElement withBlocks = await factory.CreateClient().GetFromJsonAsync<JsonElement>($"/api/content/posts?type=glossary&q={word}&include=blocks");
+        Assert.Contains(word, withBlocks.GetProperty("items")[0].GetProperty("blocks")[0].GetProperty("spans")[0].GetProperty("text").GetString());
+        JsonElement plain = await factory.CreateClient().GetFromJsonAsync<JsonElement>($"/api/content/posts?type=glossary&q={word}");
+        Assert.Equal(JsonValueKind.Null, plain.GetProperty("items")[0].GetProperty("blocks").ValueKind);
+        Assert.Equal(HttpStatusCode.BadRequest, (await factory.CreateClient().GetAsync("/api/content/posts?type=glossary&include=everything")).StatusCode);
     }
 
     [Fact]
@@ -124,7 +131,8 @@ public class ContentApiTests(ApiFactory factory) : IClassFixture<ApiFactory>, IA
     {
         Topic group = await TopicAsync(PostType.Solution);
         Topic hiddenGroup = await TopicAsync(PostType.Solution, active: false);
-        Post page = await PostAsync(PostType.Solution, group, "Trang giải pháp");
+        Post page = await PostAsync(PostType.Solution, group, "Trang giải pháp", keyPoints: ["Ý một", "Ý hai"],
+            blocks: """[{"id":"b1","type":"paragraph","spans":[{"text":"Mô tả"}]},{"id":"b2","type":"callout","tone":"info","spans":[{"text":"Đối tượng phù hợp: doanh nghiệp vừa"}]}]""");
         Post item = await PostAsync(PostType.Solution, group, "Hạng mục", parent: page);
         Post draftPage = await PostAsync(PostType.Solution, group, "Trang nháp", status: PostStatus.Draft);
         Post orphan = await PostAsync(PostType.Solution, group, "Con của nháp", parent: draftPage);
@@ -134,6 +142,12 @@ public class ContentApiTests(ApiFactory factory) : IClassFixture<ApiFactory>, IA
         JsonElement node = tree.RootElement.EnumerateArray().Single(t => t.GetProperty("slug").GetString() == group.Slug);
         Assert.Equal($"/giai-phap/{group.Slug}", node.GetProperty("path").GetString());
         Assert.Equal([page.Slug], node.GetProperty("pages").EnumerateArray().Select(p => p.GetProperty("slug").GetString()));
+        JsonElement pageNode = node.GetProperty("pages")[0];
+        // Hạng mục con đã đăng đi kèm trang (web dựng menu/thẻ không cần gọi chi tiết); con của trang nháp không lộ.
+        Assert.Equal([item.Slug], pageNode.GetProperty("children").EnumerateArray().Select(x => x.GetProperty("slug").GetString()));
+        Assert.Equal($"/giai-phap/{group.Slug}/{page.Slug}/{item.Slug}", pageNode.GetProperty("children")[0].GetProperty("path").GetString());
+        Assert.Equal(["Ý một", "Ý hai"], pageNode.GetProperty("keyPoints").EnumerateArray().Select(x => x.GetString()));
+        Assert.Equal("Đối tượng phù hợp: doanh nghiệp vừa", pageNode.GetProperty("callout").GetString());
         Assert.DoesNotContain(tree.RootElement.EnumerateArray(), t => t.GetProperty("slug").GetString() == hiddenGroup.Slug);
 
         using JsonDocument detail = JsonDocument.Parse(await c.GetStringAsync($"/api/content/posts/solution/{item.Slug}"));
@@ -272,7 +286,8 @@ public class ContentApiTests(ApiFactory factory) : IClassFixture<ApiFactory>, IA
     }
 
     private async Task<Post> PostAsync(PostType type, Topic topic, string title, PostStatus status = PostStatus.Published,
-        DateTimeOffset? publishedAt = null, bool deleted = false, Post? parent = null, bool featured = false, string? blocks = null)
+        DateTimeOffset? publishedAt = null, bool deleted = false, Post? parent = null, bool featured = false, string? blocks = null,
+        List<string>? keyPoints = null)
     {
         var post = new Post(type, TestDatabase.Unique("bai"), title, _author)
         {
@@ -280,6 +295,7 @@ public class ContentApiTests(ApiFactory factory) : IClassFixture<ApiFactory>, IA
             ParentId = parent?.Id,
             IsFeatured = featured,
             Blocks = blocks ?? """[{"id":"b1","type":"paragraph","spans":[{"text":"Nội dung"}]}]""",
+            KeyPoints = keyPoints ?? [],
             DeletedAt = deleted ? DateTimeOffset.UtcNow : null,
         };
         if (status == PostStatus.Published)

@@ -17,15 +17,24 @@ namespace server.Modules.Content.Features.Public;
 
 public sealed record PostLink(string Type, string Slug, string Title, string? Excerpt, string? Path);
 
+/// <summary>
+/// Trang cấp 1 của một chủ đề, đủ để web dựng menu + thẻ mà không phải gọi chi tiết từng trang (CT-C1):
+/// ý chính, ghi chú nổi bật (khối callout đầu tiên — ví dụ "Đối tượng phù hợp: …") và các hạng mục con đã đăng.
+/// </summary>
+public sealed record TopicPage(string Type, string Slug, string Title, string? Excerpt, string? Path,
+    IReadOnlyList<string> KeyPoints, string? Callout, IReadOnlyList<PostLink> Children);
+
 public sealed record TopicNode(string Slug, string Name, string? Description, string? ImageUrl, string? Path,
-    IReadOnlyList<TopicNode> Children, IReadOnlyList<PostLink> Pages);
+    IReadOnlyList<TopicNode> Children, IReadOnlyList<TopicPage> Pages);
 
 public sealed record CoverImage(string Url, string? Alt);
 
 public sealed record TopicRef(string Slug, string Name, string? Path);
 
+/// <summary>Thẻ bài. <see cref="Blocks"/>/<see cref="KeyPoints"/> chỉ có khi gọi danh sách với <c>include=blocks</c> (thẻ thuật ngữ, sách, tài liệu).</summary>
 public sealed record PostSummary(string Type, string Slug, string Title, string? Excerpt, string? Label,
-    DateTimeOffset PublishedAt, short? ReadingMinutes, CoverImage? Cover, TopicRef? Topic, string? Path);
+    DateTimeOffset PublishedAt, short? ReadingMinutes, CoverImage? Cover, TopicRef? Topic, string? Path,
+    JsonElement? Blocks = null, IReadOnlyList<string>? KeyPoints = null);
 
 public sealed record PostPage(IReadOnlyList<PostSummary> Items, string? NextCursor);
 
@@ -60,6 +69,9 @@ public sealed class ListPostsQuery
     public string? Cursor { get; init; }
 
     public int Limit { get; init; } = 20;
+
+    /// <summary><c>blocks</c> ⇒ mỗi thẻ kèm khối nội dung + ý chính (cho danh sách ngắn hiển thị đầy đủ, ví dụ thuật ngữ). Tối đa 100 thẻ như thường.</summary>
+    public string? Include { get; init; }
 }
 
 /// <summary>
@@ -120,16 +132,27 @@ public sealed class PublicContentHandler
         var pages = (await Visible()
                 .Where(p => p.PostType == type && p.ParentId == null && p.TopicId != null)
                 .OrderBy(p => p.SortOrder).ThenBy(p => p.Title)
-                .Select(p => new { p.TopicId, p.Slug, p.Title, p.Excerpt })
+                .Select(p => new { p.Id, p.TopicId, p.Slug, p.Title, p.Excerpt, p.KeyPoints, p.Blocks })
                 .ToListAsync(ct))
             .ToLookup(p => p.TopicId!.Value);
+
+        // Hạng mục con đã đăng của mọi trang — một truy vấn cho cả cây (không N+1).
+        var children = (await Visible()
+                .Where(p => p.PostType == type && p.ParentId != null)
+                .OrderBy(p => p.SortOrder).ThenBy(p => p.Title)
+                .Select(p => new { ParentId = p.ParentId!.Value, p.Slug, p.Title, p.Excerpt })
+                .ToListAsync(ct))
+            .ToLookup(c => c.ParentId);
 
         TopicNode Node(Topic t)
         {
             IReadOnlyList<string> chain = topics.Chain(t.Id);
             return new TopicNode(t.Slug, t.Name, t.Description, t.ImageUrl, WebPaths.Topic(type, chain),
                 topics.ChildrenOf(t.Id).Select(Node).ToList(),
-                pages[t.Id].Select(p => new PostLink(typeValue!, p.Slug, p.Title, p.Excerpt, WebPaths.Post(type, p.Slug, chain, null))).ToList());
+                pages[t.Id].Select(p => new TopicPage(typeValue!, p.Slug, p.Title, p.Excerpt, WebPaths.Post(type, p.Slug, chain, null),
+                    p.KeyPoints, FirstCallout(p.Blocks),
+                    children[p.Id].Select(c => new PostLink(typeValue!, c.Slug, c.Title, c.Excerpt, WebPaths.Post(type, c.Slug, chain, p.Slug))).ToList()))
+                .ToList());
         }
 
         return topics.ChildrenOf(null).Select(Node).ToList();
@@ -162,6 +185,12 @@ public sealed class PublicContentHandler
             {
                 after = c;
             }
+        }
+
+        bool withBlocks = query.Include == "blocks";
+        if (query.Include is not null && !withBlocks)
+        {
+            errors["include"] = ["Chỉ hỗ trợ include=blocks."];
         }
 
         if (errors.Count > 0)
@@ -204,6 +233,7 @@ public sealed class PublicContentHandler
         {
             p.Id, p.Slug, p.Title, p.Excerpt, p.Label, p.PublishedAt, p.ReadingMinutes, p.CoverImageUrl, p.CoverImageAlt,
             p.CoverMediaId, p.TopicId, ParentSlug = _db.Set<Post>().Where(x => x.Id == p.ParentId).Select(x => x.Slug).FirstOrDefault(),
+            Blocks = withBlocks ? p.Blocks : null, KeyPoints = withBlocks ? p.KeyPoints : null,
         }).ToListAsync(ct);
 
         Dictionary<Guid, MediaRef> media = await MediaAsync(rows.Where(r => r.CoverMediaId != null).Select(r => r.CoverMediaId!.Value), ct);
@@ -213,7 +243,8 @@ public sealed class PublicContentHandler
             return new PostSummary(query.Type!, r.Slug, r.Title, r.Excerpt, r.Label, r.PublishedAt!.Value, r.ReadingMinutes,
                 Cover(r.CoverMediaId, r.CoverImageUrl, r.CoverImageAlt, media),
                 r.TopicId is { } t2 ? topics.Ref(t2, type) : null,
-                WebPaths.Post(type, r.Slug, chain, r.ParentSlug));
+                WebPaths.Post(type, r.Slug, chain, r.ParentSlug),
+                r.Blocks is null ? null : ParseBlocks(r.Blocks), r.KeyPoints);
         }).ToList();
 
         string? next = sort == "newest" && rows.Count > limit
@@ -332,6 +363,27 @@ public sealed class PublicContentHandler
     }
 
     // ---------- Hỗ trợ ----------
+
+    private static JsonElement ParseBlocks(string json)
+    {
+        using JsonDocument doc = JsonDocument.Parse(json);
+        return doc.RootElement.Clone();
+    }
+
+    /// <summary>Chữ của khối callout đầu tiên (nối các đoạn chữ), null nếu không có.</summary>
+    internal static string? FirstCallout(string blocks)
+    {
+        using JsonDocument doc = JsonDocument.Parse(blocks);
+        foreach (JsonElement b in doc.RootElement.EnumerateArray())
+        {
+            if (b.TryGetProperty("type", out JsonElement type) && type.GetString() == "callout" && b.TryGetProperty("spans", out JsonElement spans))
+            {
+                return string.Concat(spans.EnumerateArray().Select(s => s.TryGetProperty("text", out JsonElement t) ? t.GetString() : ""));
+            }
+        }
+
+        return null;
+    }
 
     private async Task<Dictionary<Guid, MediaRef>> MediaAsync(IEnumerable<Guid> ids, CancellationToken ct)
     {
