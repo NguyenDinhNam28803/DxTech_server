@@ -15,7 +15,7 @@ public sealed record UserProfile(
     DateTimeOffset CreatedAt)
 {
     internal static UserProfile From(User u) => new(
-        u.Id, u.Email, u.FullName, u.Role == UserRole.Admin ? "admin" : "customer",
+        u.Id, u.Email, u.FullName, UserRoles.Name(u.Role),
         u.Phone, u.CompanyName, u.TaxCode, u.EmailConfirmedAt is not null, u.CreatedAt);
 }
 

@@ -83,3 +83,23 @@ Lệnh `--seed-content` đọc bản xuất JSON của `articles.ts`, `solutions
 - Nginx: thêm `location /media/` và `/sitemap.xml` (script có kiểm tra + quay lại như `d2-nginx.sh`).
 - Backup: thư mục media cần sao lưu cùng DB (script backup mở rộng, mã hoá như dump).
 - Web: các trang tin tức/giải pháp/đào tạo/tài nguyên đọc API; URL giữ nguyên.
+
+## Ghi chú triển khai (CT-1, 27/11/2026)
+- Migration `Content_Initial`: 7 bảng theo thiết kế CT mục 1 + CHECK `ck_users_role` thêm `editor`. Rollback (Down) hạ editor về customer
+  (xoay security stamp) trước khi khôi phục CHECK cũ.
+- **Bổ sung so với thiết kế** (giữ đúng URL 3 cấp đang chạy `/giai-phap/<nhóm>/<trang>/<hạng-mục>`):
+  `posts.parent_id` (bài con của bài — hạng mục nằm dưới trang giải pháp); `posts.cover_image_url` + `cover_image_alt`,
+  `topics.image_url` (ảnh ngoài của dữ liệu cũ, CT-3 nhập vào `media`). Ánh xạ: nhóm giải pháp = chủ đề cấp 1; trang (Phát triển phần mềm…)
+  = bài `solution`; hạng mục = bài con. Nhóm "Đào Tạo" = chủ đề `training`, mỗi khoá = bài `training`. Sách/tài liệu = bài `resource`;
+  thuật ngữ = bài `glossary`. Bỏ số "lượt tải" và dung lượng file trên trang tài liệu (số minh hoạ, không phải dữ liệu thật).
+- Slug giải pháp sinh bằng đúng hàm `solutionSlug` của client lúc xuất (một lần) rồi cố định trong DB. Trùng slug chỉ xảy ra khác loại
+  (`quan-ly-san-xuat` là trang giải pháp và cũng là khoá đào tạo) — UNIQUE `(post_type, slug)` cho phép.
+- Tìm kiếm: `content.f_unaccent` (module không dùng hàm của `catalog`) + `content.f_blocks_text(jsonb)` IMMUTABLE trích chữ trong khối
+  bằng `jsonb_path_query` ⇒ tìm "doi chieu phien ban windows" ra bài có câu đó trong một mục danh sách.
+- Kiểm khối `ContentBlocks` làm ngay ở CT-1 (seed dùng): danh sách trắng loại khối + trường, `href` chỉ `/…` (không `//`) hoặc `https://`
+  không có user:pass, tổng chữ ≤ 50.000.
+- Quyền DB (`ContentPrivileges` = roles.sql mục 5c): bài/chủ đề/ảnh/lead không DELETE; revision không UPDATE. Thử phá (bỏ mục 5c) ⇒ 4 kiểm tra
+  "sau khi chạy lại roles.sql" đỏ.
+- Policy `content` (editor | admin) dùng chung handler với `admin`: role trong DB + trạng thái + security stamp. Thử phá (bỏ so stamp) ⇒ test
+  "nâng lại admin, token cũ vẫn bị từ chối" đỏ.
+

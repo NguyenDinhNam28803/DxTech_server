@@ -91,7 +91,7 @@ public class RefreshTokenTests
     [Fact]
     public void Enum_check_sql_matches_adr_values()
     {
-        Assert.Equal("role IN ('customer', 'admin')", SnakeCaseEnumConverter<UserRole>.CheckSql("role"));
+        Assert.Equal("role IN ('customer', 'editor', 'admin')", SnakeCaseEnumConverter<UserRole>.CheckSql("role")); // editor: ADR-015 §4
         Assert.Equal("r IN ('rotated', 'logout', 'reuse_detected', 'password_changed', 'admin')",
             SnakeCaseEnumConverter<RefreshTokenRevokedReason>.CheckSql("r"));
     }

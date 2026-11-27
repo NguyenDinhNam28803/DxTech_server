@@ -142,6 +142,36 @@ $C run --rm --no-deps api --create-admin admin@dxtechs.com --name "Nguyễn Đì
 Quy tắc mật khẩu (NIST SP 800-63B): 10–128 ký tự, cho phép dấu tiếng Việt và khoảng trắng, không bắt buộc ký tự
 đặc biệt; từ chối mật khẩu phổ biến và mật khẩu chứa phần trước `@` của email. Mã thoát: 0 thành công, 1 lỗi, 2 sai cú pháp.
 
+## Biên tập viên (`--set-role`, ADR-015 §4)
+
+Role: `customer` (tự đăng ký) · `editor` (quản lý nội dung, **không** thấy đơn hàng/thanh toán/key/người dùng) · `admin`.
+Người được cấp quyền **tự đăng ký tài khoản trước** trên web (mật khẩu chỉ họ biết), sau đó admin chạy:
+
+```bash
+$C run --rm --no-deps api --set-role bientap@dxtechs.com editor
+# set-role: bientap@dxtechs.com customer → editor (token cũ hết quyền ngay; lần làm mới phiên kế tiếp nhận role mới).
+$C run --rm --no-deps api --set-role bientap@dxtechs.com customer   # thu hồi quyền
+```
+
+Đổi role xoay security stamp ⇒ token đang dùng mất quyền admin/content ngay (không chờ 15 phút). Không hạ được admin
+đang hoạt động cuối cùng. Mã thoát: 0 thành công (kể cả không đổi gì), 1 lỗi, 2 sai cú pháp.
+
+## Nội dung web (`--seed-content`, ADR-015, CT-1)
+
+Nạp tin tức, giải pháp, đào tạo, tài nguyên, thuật ngữ đang gắn cứng ở web vào schema `content` — **giữ nguyên slug**
+(URL không đổi), bài được đăng ngay, tác giả = admin tạo sớm nhất (chạy `--create-admin` trước). Chạy lại chỉ thêm cái
+còn thiếu: không ghi đè bài biên tập viên đã sửa, không hồi sinh bài đã xoá. Một transaction: lỗi ⇒ không ghi gì.
+
+```bash
+$C run --rm --no-deps api --seed-content --dry-run   # xem trước con số, không ghi
+$C run --rm --no-deps api --seed-content
+# seed-content từ DXTechs@1c90ff8: chủ đề +9 (bỏ qua 0), bài +119 (bỏ qua 0), tác giả admin@dxtechs.com
+```
+
+Dữ liệu nằm trong `server/Modules/Content/Seeding/content-seed.json`, sinh lại từ repo client bằng
+`node --experimental-strip-types --no-warnings tools/content-export/export-content.mjs <repo-client> > server/Modules/Content/Seeding/content-seed.json`.
+Ảnh bìa vẫn là URL ngoài (`cover_image_url`) cho tới CT-3 (nhập vào thư viện ảnh). Web chưa đọc từ API cho tới CT-C1.
+
 ## Đơn hàng & giỏ hàng (Phase 3: PR-10, PR-11)
 
 | Method · Path | Xác thực | Kết quả |

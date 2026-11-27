@@ -1,0 +1,4228 @@
+{
+ "version": 1,
+ "source": "DXTechs@1c90ff8",
+ "topics": [
+  {
+   "key": "solution:dich-vu",
+   "postType": "solution",
+   "parentKey": null,
+   "slug": "dich-vu",
+   "name": "Dịch vụ",
+   "description": "Đội ngũ công nghệ đồng hành từ ý tưởng, thiết kế đến vận hành và tăng trưởng.",
+   "imageUrl": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1400&q=85",
+   "sortOrder": 0
+  },
+  {
+   "key": "solution:tu-van-trien-khai",
+   "postType": "solution",
+   "parentKey": null,
+   "slug": "tu-van-trien-khai",
+   "name": "Tư vấn triển khai",
+   "description": "Tư vấn, triển khai và bảo trì hệ thống theo sát quy trình vận hành thực tế.",
+   "imageUrl": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1400&q=85",
+   "sortOrder": 1
+  },
+  {
+   "key": "training:dao-tao",
+   "postType": "training",
+   "parentKey": null,
+   "slug": "dao-tao",
+   "name": "Đào Tạo",
+   "description": "Chương trình đào tạo thực tiễn giúp doanh nghiệp nâng cao năng lực quản trị, vận hành, cải tiến và ứng dụng AI.",
+   "imageUrl": "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1400&q=85",
+   "sortOrder": 2
+  },
+  {
+   "key": "resource:tai-lieu",
+   "postType": "resource",
+   "parentKey": null,
+   "slug": "tai-lieu",
+   "name": "Tài Liệu",
+   "description": "Sách tham khảo và tài nguyên tải về phục vụ học tập, vận hành và phát triển sản phẩm số.",
+   "imageUrl": "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?auto=format&fit=crop&w=960&q=80",
+   "sortOrder": 0
+  },
+  {
+   "key": "resource:tai-lieu/sach",
+   "postType": "resource",
+   "parentKey": "resource:tai-lieu",
+   "slug": "sach",
+   "name": "Sách",
+   "description": "Tuyển chọn đầu sách về công nghệ, sản phẩm và chuyển đổi số.",
+   "imageUrl": null,
+   "sortOrder": 0
+  },
+  {
+   "key": "resource:tai-lieu/download",
+   "postType": "resource",
+   "parentKey": "resource:tai-lieu",
+   "slug": "download",
+   "name": "Download",
+   "description": "Tài liệu và hướng dẫn hữu ích từ các nguồn chính thức.",
+   "imageUrl": null,
+   "sortOrder": 1
+  },
+  {
+   "key": "resource:goc-nhin",
+   "postType": "resource",
+   "parentKey": null,
+   "slug": "goc-nhin",
+   "name": "Góc nhìn",
+   "description": "Cập nhật tin tức và giải thích những thuật ngữ công nghệ thường gặp.",
+   "imageUrl": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=960&q=80",
+   "sortOrder": 1
+  },
+  {
+   "key": "resource:goc-nhin/tin-tuc",
+   "postType": "resource",
+   "parentKey": "resource:goc-nhin",
+   "slug": "tin-tuc",
+   "name": "Tin Tức",
+   "description": "Bài viết, hướng dẫn và cập nhật kiến thức số.",
+   "imageUrl": null,
+   "sortOrder": 0
+  },
+  {
+   "key": "resource:goc-nhin/thuat-ngu-cntt",
+   "postType": "resource",
+   "parentKey": "resource:goc-nhin",
+   "slug": "thuat-ngu-cntt",
+   "name": "Thuật Ngữ CNTT",
+   "description": "Giải nghĩa ngắn gọn các khái niệm công nghệ thông tin.",
+   "imageUrl": null,
+   "sortOrder": 1
+  }
+ ],
+ "posts": [
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": null,
+   "slug": "phat-trien-phan-mem",
+   "title": "Phát triển phần mềm",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "heading",
+     "level": 2,
+     "text": "Hạng mục"
+    },
+    {
+     "id": "b2",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Thiết kế và phát triển website, Web App"
+       }
+      ],
+      [
+       {
+        "text": "Phát triển ứng dụng di động trên iOS và Android"
+       }
+      ],
+      [
+       {
+        "text": "Xây dựng phần mềm quản lý doanh nghiệp ERP, CRM, MRP, HRM"
+       }
+      ],
+      [
+       {
+        "text": "Phát triển hệ thống quản lý theo yêu cầu"
+       }
+      ],
+      [
+       {
+        "text": "Tích hợp API và kết nối các nền tảng phần mềm"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "phat-trien-phan-mem",
+   "slug": "thiet-ke-va-phat-trien-website-web-app",
+   "title": "Thiết kế và phát triển website, Web App",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Thiết kế và phát triển website, Web App."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "phat-trien-phan-mem",
+   "slug": "phat-trien-ung-dung-di-dong-tren-ios-va-android",
+   "title": "Phát triển ứng dụng di động trên iOS và Android",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Phát triển ứng dụng di động trên iOS và Android."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "phat-trien-phan-mem",
+   "slug": "xay-dung-phan-mem-quan-ly-doanh-nghiep-erp-crm-mrp-hrm",
+   "title": "Xây dựng phần mềm quản lý doanh nghiệp ERP, CRM, MRP, HRM",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Xây dựng phần mềm quản lý doanh nghiệp ERP, CRM, MRP, HRM."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "phat-trien-phan-mem",
+   "slug": "phat-trien-he-thong-quan-ly-theo-yeu-cau",
+   "title": "Phát triển hệ thống quản lý theo yêu cầu",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Phát triển hệ thống quản lý theo yêu cầu."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "phat-trien-phan-mem",
+   "slug": "tich-hop-api-va-ket-noi-cac-nen-tang-phan-mem",
+   "title": "Tích hợp API và kết nối các nền tảng phần mềm",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 4,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tích hợp API và kết nối các nền tảng phần mềm."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": null,
+   "slug": "thiet-ke-ui-ux",
+   "title": "Thiết kế UI/UX",
+   "excerpt": "Nghiên cứu nhu cầu người dùng và chuyển hóa thành giao diện số trực quan, dễ sử dụng trên nhiều thiết bị.",
+   "label": null,
+   "keyPoints": [
+    "Khảo sát hành vi và nhu cầu người dùng",
+    "Thiết kế luồng thao tác, wireframe và prototype",
+    "Xây dựng giao diện nhất quán với thương hiệu"
+   ],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Nghiên cứu nhu cầu người dùng và chuyển hóa thành giao diện số trực quan, dễ sử dụng trên nhiều thiết bị."
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Hạng mục"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Thiết kế giao diện website và ứng dụng di động"
+       }
+      ],
+      [
+       {
+        "text": "Nghiên cứu hành vi và nhu cầu người dùng"
+       }
+      ],
+      [
+       {
+        "text": "Xây dựng wireframe, prototype và thiết kế tương tác"
+       }
+      ],
+      [
+       {
+        "text": "Tối ưu trải nghiệm người dùng trên các nền tảng số"
+       }
+      ],
+      [
+       {
+        "text": "Thiết kế giao diện hiện đại, thân thiện và nhất quán với thương hiệu"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "thiet-ke-ui-ux",
+   "slug": "thiet-ke-giao-dien-website-va-ung-dung-di-dong",
+   "title": "Thiết kế giao diện website và ứng dụng di động",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Thiết kế giao diện website và ứng dụng di động."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "thiet-ke-ui-ux",
+   "slug": "nghien-cuu-hanh-vi-va-nhu-cau-nguoi-dung",
+   "title": "Nghiên cứu hành vi và nhu cầu người dùng",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Nghiên cứu hành vi và nhu cầu người dùng."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "thiet-ke-ui-ux",
+   "slug": "xay-dung-wireframe-prototype-va-thiet-ke-tuong-tac",
+   "title": "Xây dựng wireframe, prototype và thiết kế tương tác",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Xây dựng wireframe, prototype và thiết kế tương tác."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "thiet-ke-ui-ux",
+   "slug": "toi-uu-trai-nghiem-nguoi-dung-tren-cac-nen-tang-so",
+   "title": "Tối ưu trải nghiệm người dùng trên các nền tảng số",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tối ưu trải nghiệm người dùng trên các nền tảng số."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "thiet-ke-ui-ux",
+   "slug": "thiet-ke-giao-dien-hien-dai-than-thien-va-nhat-quan-voi-thuong-hieu",
+   "title": "Thiết kế giao diện hiện đại, thân thiện và nhất quán với thương hiệu",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 4,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Thiết kế giao diện hiện đại, thân thiện và nhất quán với thương hiệu."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": null,
+   "slug": "tu-van-chuyen-doi-so",
+   "title": "Tư vấn chuyển đổi số",
+   "excerpt": "Đánh giá hiện trạng, chọn công nghệ phù hợp và xây dựng lộ trình chuyển đổi theo từng giai đoạn.",
+   "label": null,
+   "keyPoints": [
+    "Đánh giá quy trình và hạ tầng hiện tại",
+    "Xác định ưu tiên, nguồn lực và lộ trình",
+    "Kết nối hệ thống và hỗ trợ chuyển giao"
+   ],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Đánh giá hiện trạng, chọn công nghệ phù hợp và xây dựng lộ trình chuyển đổi theo từng giai đoạn."
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Hạng mục"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Đánh giá hiện trạng công nghệ và quy trình vận hành"
+       }
+      ],
+      [
+       {
+        "text": "Tư vấn chiến lược và lộ trình chuyển đổi số"
+       }
+      ],
+      [
+       {
+        "text": "Tư vấn kiến trúc hệ thống và hạ tầng công nghệ"
+       }
+      ],
+      [
+       {
+        "text": "Triển khai giải pháp điện toán đám mây (Cloud Computing)"
+       }
+      ],
+      [
+       {
+        "text": "Tư vấn, phát triển và tích hợp nền tảng SaaS"
+       }
+      ],
+      [
+       {
+        "text": "Tối ưu quy trình quản lý và vận hành doanh nghiệp bằng công nghệ"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "tu-van-chuyen-doi-so",
+   "slug": "danh-gia-hien-trang-cong-nghe-va-quy-trinh-van-hanh",
+   "title": "Đánh giá hiện trạng công nghệ và quy trình vận hành",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Đánh giá hiện trạng công nghệ và quy trình vận hành."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "tu-van-chuyen-doi-so",
+   "slug": "tu-van-chien-luoc-va-lo-trinh-chuyen-doi-so",
+   "title": "Tư vấn chiến lược và lộ trình chuyển đổi số",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tư vấn chiến lược và lộ trình chuyển đổi số."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "tu-van-chuyen-doi-so",
+   "slug": "tu-van-kien-truc-he-thong-va-ha-tang-cong-nghe",
+   "title": "Tư vấn kiến trúc hệ thống và hạ tầng công nghệ",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tư vấn kiến trúc hệ thống và hạ tầng công nghệ."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "tu-van-chuyen-doi-so",
+   "slug": "trien-khai-giai-phap-dien-toan-dam-may-cloud-computing",
+   "title": "Triển khai giải pháp điện toán đám mây (Cloud Computing)",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Triển khai giải pháp điện toán đám mây (Cloud Computing)."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "tu-van-chuyen-doi-so",
+   "slug": "tu-van-phat-trien-va-tich-hop-nen-tang-saas",
+   "title": "Tư vấn, phát triển và tích hợp nền tảng SaaS",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 4,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tư vấn, phát triển và tích hợp nền tảng SaaS."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "tu-van-chuyen-doi-so",
+   "slug": "toi-uu-quy-trinh-quan-ly-va-van-hanh-doanh-nghiep-bang-cong-nghe",
+   "title": "Tối ưu quy trình quản lý và vận hành doanh nghiệp bằng công nghệ",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 5,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tối ưu quy trình quản lý và vận hành doanh nghiệp bằng công nghệ."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": null,
+   "slug": "nghien-cuu-va-phat-trien-cong-nghe-r-d",
+   "title": "Nghiên cứu và phát triển công nghệ (R&D)",
+   "excerpt": "Thử nghiệm và phát triển nguyên mẫu công nghệ theo yêu cầu, từ kết nối thiết bị đến thu thập dữ liệu.",
+   "label": null,
+   "keyPoints": [
+    "Xác định giả thuyết và yêu cầu kỹ thuật",
+    "Phát triển nguyên mẫu để kiểm chứng",
+    "Đánh giá khả năng mở rộng và tích hợp"
+   ],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Thử nghiệm và phát triển nguyên mẫu công nghệ theo yêu cầu, từ kết nối thiết bị đến thu thập dữ liệu."
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Hạng mục"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Nghiên cứu và phát triển giải pháp Internet vạn vật (IoT)"
+       }
+      ],
+      [
+       {
+        "text": "Thiết kế nguyên mẫu và thử nghiệm công nghệ mới"
+       }
+      ],
+      [
+       {
+        "text": "Tích hợp cảm biến, thiết bị và nền tảng dữ liệu"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "nghien-cuu-va-phat-trien-cong-nghe-r-d",
+   "slug": "nghien-cuu-va-phat-trien-giai-phap-internet-van-vat-iot",
+   "title": "Nghiên cứu và phát triển giải pháp Internet vạn vật (IoT)",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Nghiên cứu và phát triển giải pháp Internet vạn vật (IoT)."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "nghien-cuu-va-phat-trien-cong-nghe-r-d",
+   "slug": "thiet-ke-nguyen-mau-va-thu-nghiem-cong-nghe-moi",
+   "title": "Thiết kế nguyên mẫu và thử nghiệm công nghệ mới",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Thiết kế nguyên mẫu và thử nghiệm công nghệ mới."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "nghien-cuu-va-phat-trien-cong-nghe-r-d",
+   "slug": "tich-hop-cam-bien-thiet-bi-va-nen-tang-du-lieu",
+   "title": "Tích hợp cảm biến, thiết bị và nền tảng dữ liệu",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tích hợp cảm biến, thiết bị và nền tảng dữ liệu."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": null,
+   "slug": "quan-tri-website-marketing",
+   "title": "Quản trị Website & Marketing",
+   "excerpt": "Duy trì website hoạt động ổn định và hỗ trợ xây dựng trải nghiệm nội dung nhất quán trên kênh số.",
+   "label": null,
+   "keyPoints": [
+    "Cập nhật nội dung và tối ưu cấu trúc website",
+    "Theo dõi hiệu năng, bảo mật và khả năng truy cập",
+    "Đo lường hoạt động và cải thiện nội dung"
+   ],
+   "sortOrder": 4,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Duy trì website hoạt động ổn định và hỗ trợ xây dựng trải nghiệm nội dung nhất quán trên kênh số."
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Hạng mục"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Quản trị nội dung và cập nhật website định kỳ"
+       }
+      ],
+      [
+       {
+        "text": "Tối ưu SEO kỹ thuật và trải nghiệm trên công cụ tìm kiếm"
+       }
+      ],
+      [
+       {
+        "text": "Theo dõi hiệu suất website và báo cáo hoạt động"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "quan-tri-website-marketing",
+   "slug": "quan-tri-noi-dung-va-cap-nhat-website-dinh-ky",
+   "title": "Quản trị nội dung và cập nhật website định kỳ",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản trị nội dung và cập nhật website định kỳ."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "quan-tri-website-marketing",
+   "slug": "toi-uu-seo-ky-thuat-va-trai-nghiem-tren-cong-cu-tim-kiem",
+   "title": "Tối ưu SEO kỹ thuật và trải nghiệm trên công cụ tìm kiếm",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tối ưu SEO kỹ thuật và trải nghiệm trên công cụ tìm kiếm."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:dich-vu",
+   "parentSlug": "quan-tri-website-marketing",
+   "slug": "theo-doi-hieu-suat-website-va-bao-cao-hoat-dong",
+   "title": "Theo dõi hiệu suất website và báo cáo hoạt động",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Theo dõi hiệu suất website và báo cáo hoạt động."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": null,
+   "slug": "quan-tri-doanh-nghiep",
+   "title": "Quản trị doanh nghiệp",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "heading",
+     "level": 2,
+     "text": "Hạng mục"
+    },
+    {
+     "id": "b2",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Quản lý nhân sự"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý chấm công và tiền lương"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý KPI"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý mục tiêu và kết quả then chốt"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý công việc"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý ngân sách"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý tài sản"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý hợp đồng"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý văn bản và tài liệu"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý đào tạo nội bộ"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý khảo sát nội bộ"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý đánh giá nội bộ"
+       }
+      ],
+      [
+       {
+        "text": "Hệ thống xét duyệt nội bộ"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý thông báo nội bộ"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý cuộc họp"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý đặt cơm Canteen"
+       }
+      ],
+      [
+       {
+        "text": "Hệ thống đánh giá hồ sơ ứng tuyển nhân sự"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "quan-ly-nhan-su",
+   "title": "Quản lý nhân sự",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý nhân sự"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "quan-ly-cham-cong-va-tien-luong",
+   "title": "Quản lý chấm công và tiền lương",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý chấm công và tiền lương"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "quan-ly-kpi",
+   "title": "Quản lý KPI",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý KPI"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "quan-ly-muc-tieu-va-ket-qua-then-chot",
+   "title": "Quản lý mục tiêu và kết quả then chốt",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý mục tiêu và kết quả then chốt"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "quan-ly-cong-viec",
+   "title": "Quản lý công việc",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 4,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý công việc"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "quan-ly-ngan-sach",
+   "title": "Quản lý ngân sách",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 5,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý ngân sách"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "quan-ly-tai-san",
+   "title": "Quản lý tài sản",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 6,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý tài sản"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "quan-ly-hop-dong",
+   "title": "Quản lý hợp đồng",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 7,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý hợp đồng"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "quan-ly-van-ban-va-tai-lieu",
+   "title": "Quản lý văn bản và tài liệu",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 8,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý văn bản và tài liệu"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "quan-ly-dao-tao-noi-bo",
+   "title": "Quản lý đào tạo nội bộ",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 9,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý đào tạo nội bộ"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "quan-ly-khao-sat-noi-bo",
+   "title": "Quản lý khảo sát nội bộ",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 10,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý khảo sát nội bộ"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "quan-ly-danh-gia-noi-bo",
+   "title": "Quản lý đánh giá nội bộ",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 11,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý đánh giá nội bộ"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "he-thong-xet-duyet-noi-bo",
+   "title": "Hệ thống xét duyệt nội bộ",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 12,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Hệ thống xét duyệt nội bộ"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "quan-ly-thong-bao-noi-bo",
+   "title": "Quản lý thông báo nội bộ",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 13,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý thông báo nội bộ"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "quan-ly-cuoc-hop",
+   "title": "Quản lý cuộc họp",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 14,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý cuộc họp"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "quan-ly-dat-com-canteen",
+   "title": "Quản lý đặt cơm Canteen",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 15,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý đặt cơm Canteen"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "quan-tri-doanh-nghiep",
+   "slug": "he-thong-danh-gia-ho-so-ung-tuyen-nhan-su",
+   "title": "Hệ thống đánh giá hồ sơ ứng tuyển nhân sự",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 16,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Hệ thống đánh giá hồ sơ ứng tuyển nhân sự"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": null,
+   "slug": "kinh-doanh-va-thuong-mai",
+   "title": "Kinh doanh và thương mại",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "heading",
+     "level": 2,
+     "text": "Hạng mục"
+    },
+    {
+     "id": "b2",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Quản lý khách hàng"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý mua hàng"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý đơn hàng"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "kinh-doanh-va-thuong-mai",
+   "slug": "quan-ly-khach-hang",
+   "title": "Quản lý khách hàng",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý khách hàng"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "kinh-doanh-va-thuong-mai",
+   "slug": "quan-ly-mua-hang",
+   "title": "Quản lý mua hàng",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý mua hàng"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "kinh-doanh-va-thuong-mai",
+   "slug": "quan-ly-don-hang",
+   "title": "Quản lý đơn hàng",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý đơn hàng"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": null,
+   "slug": "san-xuat-va-chat-luong",
+   "title": "Sản xuất và chất lượng",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "heading",
+     "level": 2,
+     "text": "Hạng mục"
+    },
+    {
+     "id": "b2",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Quản lý sản xuất"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý chất lượng"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý bảo trì thiết bị"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý kho"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "san-xuat-va-chat-luong",
+   "slug": "quan-ly-san-xuat",
+   "title": "Quản lý sản xuất",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý sản xuất"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "san-xuat-va-chat-luong",
+   "slug": "quan-ly-chat-luong",
+   "title": "Quản lý chất lượng",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý chất lượng"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "san-xuat-va-chat-luong",
+   "slug": "quan-ly-bao-tri-thiet-bi",
+   "title": "Quản lý bảo trì thiết bị",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý bảo trì thiết bị"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "san-xuat-va-chat-luong",
+   "slug": "quan-ly-kho",
+   "title": "Quản lý kho",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý kho"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": null,
+   "slug": "van-hanh-va-logistics",
+   "title": "Vận hành và Logistics",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "heading",
+     "level": 2,
+     "text": "Hạng mục"
+    },
+    {
+     "id": "b2",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Quản lý giao nhận và vận tải"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý an toàn lao động"
+       }
+      ],
+      [
+       {
+        "text": "Quản lý năng lượng"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "van-hanh-va-logistics",
+   "slug": "quan-ly-giao-nhan-va-van-tai",
+   "title": "Quản lý giao nhận và vận tải",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý giao nhận và vận tải"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "van-hanh-va-logistics",
+   "slug": "quan-ly-an-toan-lao-dong",
+   "title": "Quản lý an toàn lao động",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý an toàn lao động"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "van-hanh-va-logistics",
+   "slug": "quan-ly-nang-luong",
+   "title": "Quản lý năng lượng",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quản lý năng lượng"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": null,
+   "slug": "ai-va-tu-dong-hoa-doanh-nghiep",
+   "title": "AI và tự động hóa doanh nghiệp",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 4,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "heading",
+     "level": 2,
+     "text": "Hạng mục"
+    },
+    {
+     "id": "b2",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "AI OCR & xử lý tài liệu"
+       }
+      ],
+      [
+       {
+        "text": "AI Chatbot doanh nghiệp"
+       }
+      ],
+      [
+       {
+        "text": "AI Dashboard"
+       }
+      ],
+      [
+       {
+        "text": "AI Forecast"
+       }
+      ],
+      [
+       {
+        "text": "AI Vision"
+       }
+      ],
+      [
+       {
+        "text": "AI Automation"
+       }
+      ],
+      [
+       {
+        "text": "AI Assistant"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "ai-va-tu-dong-hoa-doanh-nghiep",
+   "slug": "ai-ocr-xu-ly-tai-lieu",
+   "title": "AI OCR & xử lý tài liệu",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "AI OCR & xử lý tài liệu"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "ai-va-tu-dong-hoa-doanh-nghiep",
+   "slug": "ai-chatbot-doanh-nghiep",
+   "title": "AI Chatbot doanh nghiệp",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "AI Chatbot doanh nghiệp"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "ai-va-tu-dong-hoa-doanh-nghiep",
+   "slug": "ai-dashboard",
+   "title": "AI Dashboard",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "AI Dashboard"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "ai-va-tu-dong-hoa-doanh-nghiep",
+   "slug": "ai-forecast",
+   "title": "AI Forecast",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "AI Forecast"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "ai-va-tu-dong-hoa-doanh-nghiep",
+   "slug": "ai-vision",
+   "title": "AI Vision",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 4,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "AI Vision"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "ai-va-tu-dong-hoa-doanh-nghiep",
+   "slug": "ai-automation",
+   "title": "AI Automation",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 5,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "AI Automation"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "ai-va-tu-dong-hoa-doanh-nghiep",
+   "slug": "ai-assistant",
+   "title": "AI Assistant",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 6,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "AI Assistant"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": null,
+   "slug": "he-thong-erp",
+   "title": "Hệ thống ERP",
+   "excerpt": "Tư vấn triển khai hệ thống hoạch định nguồn lực doanh nghiệp, kết nối quy trình và dữ liệu giữa các phòng ban.",
+   "label": null,
+   "keyPoints": [
+    "Khảo sát quy trình và yêu cầu nghiệp vụ",
+    "Thiết kế cấu hình và kế hoạch chuyển đổi dữ liệu",
+    "Đào tạo người dùng và hỗ trợ vận hành"
+   ],
+   "sortOrder": 5,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tư vấn triển khai hệ thống hoạch định nguồn lực doanh nghiệp, kết nối quy trình và dữ liệu giữa các phòng ban."
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Hạng mục"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Khảo sát quy trình và yêu cầu hệ thống ERP"
+       }
+      ],
+      [
+       {
+        "text": "Tư vấn lựa chọn phạm vi và lộ trình triển khai ERP"
+       }
+      ],
+      [
+       {
+        "text": "Cấu hình phân hệ và tích hợp dữ liệu ERP"
+       }
+      ],
+      [
+       {
+        "text": "Đào tạo người dùng và chuyển giao vận hành ERP"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "he-thong-erp",
+   "slug": "khao-sat-quy-trinh-va-yeu-cau-he-thong-erp",
+   "title": "Khảo sát quy trình và yêu cầu hệ thống ERP",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Khảo sát quy trình và yêu cầu hệ thống ERP."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "he-thong-erp",
+   "slug": "tu-van-lua-chon-pham-vi-va-lo-trinh-trien-khai-erp",
+   "title": "Tư vấn lựa chọn phạm vi và lộ trình triển khai ERP",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tư vấn lựa chọn phạm vi và lộ trình triển khai ERP."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "he-thong-erp",
+   "slug": "cau-hinh-phan-he-va-tich-hop-du-lieu-erp",
+   "title": "Cấu hình phân hệ và tích hợp dữ liệu ERP",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Cấu hình phân hệ và tích hợp dữ liệu ERP."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "he-thong-erp",
+   "slug": "dao-tao-nguoi-dung-va-chuyen-giao-van-hanh-erp",
+   "title": "Đào tạo người dùng và chuyển giao vận hành ERP",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Đào tạo người dùng và chuyển giao vận hành ERP."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": null,
+   "slug": "he-thong-mes",
+   "title": "Hệ thống MES",
+   "excerpt": "Kết nối thông tin tại xưởng với kế hoạch sản xuất, hỗ trợ theo dõi tiến độ và chất lượng theo công đoạn.",
+   "label": null,
+   "keyPoints": [
+    "Khảo sát dây chuyền và quy trình sản xuất",
+    "Thiết kế phương án thu thập dữ liệu tại xưởng",
+    "Kết nối dữ liệu sản xuất với hệ thống quản trị"
+   ],
+   "sortOrder": 6,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Kết nối thông tin tại xưởng với kế hoạch sản xuất, hỗ trợ theo dõi tiến độ và chất lượng theo công đoạn."
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Hạng mục"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Khảo sát dây chuyền và yêu cầu hệ thống MES"
+       }
+      ],
+      [
+       {
+        "text": "Theo dõi tiến độ sản xuất theo công đoạn"
+       }
+      ],
+      [
+       {
+        "text": "Kết nối thiết bị và thu thập dữ liệu sản xuất"
+       }
+      ],
+      [
+       {
+        "text": "Thiết lập báo cáo chất lượng và hiệu suất xưởng"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "he-thong-mes",
+   "slug": "khao-sat-day-chuyen-va-yeu-cau-he-thong-mes",
+   "title": "Khảo sát dây chuyền và yêu cầu hệ thống MES",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Khảo sát dây chuyền và yêu cầu hệ thống MES."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "he-thong-mes",
+   "slug": "theo-doi-tien-do-san-xuat-theo-cong-doan",
+   "title": "Theo dõi tiến độ sản xuất theo công đoạn",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Theo dõi tiến độ sản xuất theo công đoạn."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "he-thong-mes",
+   "slug": "ket-noi-thiet-bi-va-thu-thap-du-lieu-san-xuat",
+   "title": "Kết nối thiết bị và thu thập dữ liệu sản xuất",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Kết nối thiết bị và thu thập dữ liệu sản xuất."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "he-thong-mes",
+   "slug": "thiet-lap-bao-cao-chat-luong-va-hieu-suat-xuong",
+   "title": "Thiết lập báo cáo chất lượng và hiệu suất xưởng",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Thiết lập báo cáo chất lượng và hiệu suất xưởng."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": null,
+   "slug": "he-thong-mrp",
+   "title": "Hệ thống MRP",
+   "excerpt": "Rà soát nhu cầu vật tư và kế hoạch cung ứng dựa trên sản lượng, tồn kho và thời gian đáp ứng.",
+   "label": null,
+   "keyPoints": [
+    "Chuẩn hóa dữ liệu định mức và tồn kho",
+    "Tính toán nhu cầu vật tư theo kế hoạch",
+    "Hỗ trợ theo dõi đề nghị mua và cung ứng"
+   ],
+   "sortOrder": 7,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Rà soát nhu cầu vật tư và kế hoạch cung ứng dựa trên sản lượng, tồn kho và thời gian đáp ứng."
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Hạng mục"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Chuẩn hóa dữ liệu định mức nguyên vật liệu"
+       }
+      ],
+      [
+       {
+        "text": "Lập kế hoạch nhu cầu vật tư theo sản xuất"
+       }
+      ],
+      [
+       {
+        "text": "Theo dõi tồn kho và đề nghị mua hàng"
+       }
+      ],
+      [
+       {
+        "text": "Đồng bộ kế hoạch MRP với hệ thống ERP"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "he-thong-mrp",
+   "slug": "chuan-hoa-du-lieu-dinh-muc-nguyen-vat-lieu",
+   "title": "Chuẩn hóa dữ liệu định mức nguyên vật liệu",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Chuẩn hóa dữ liệu định mức nguyên vật liệu."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "he-thong-mrp",
+   "slug": "lap-ke-hoach-nhu-cau-vat-tu-theo-san-xuat",
+   "title": "Lập kế hoạch nhu cầu vật tư theo sản xuất",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Lập kế hoạch nhu cầu vật tư theo sản xuất."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "he-thong-mrp",
+   "slug": "theo-doi-ton-kho-va-de-nghi-mua-hang",
+   "title": "Theo dõi tồn kho và đề nghị mua hàng",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Theo dõi tồn kho và đề nghị mua hàng."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "he-thong-mrp",
+   "slug": "dong-bo-ke-hoach-mrp-voi-he-thong-erp",
+   "title": "Đồng bộ kế hoạch MRP với hệ thống ERP",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Đồng bộ kế hoạch MRP với hệ thống ERP."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": null,
+   "slug": "bao-tri-he-thong-erp",
+   "title": "Bảo trì hệ thống ERP",
+   "excerpt": "Duy trì hệ thống ổn định qua hoạt động theo dõi, xử lý yêu cầu, cập nhật cấu hình và hỗ trợ người dùng.",
+   "label": null,
+   "keyPoints": [
+    "Tiếp nhận và phân loại yêu cầu hỗ trợ",
+    "Kiểm tra lỗi và đề xuất phương án xử lý",
+    "Theo dõi cập nhật và thay đổi hệ thống"
+   ],
+   "sortOrder": 8,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Duy trì hệ thống ổn định qua hoạt động theo dõi, xử lý yêu cầu, cập nhật cấu hình và hỗ trợ người dùng."
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Hạng mục"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Theo dõi vận hành và kiểm tra định kỳ hệ thống"
+       }
+      ],
+      [
+       {
+        "text": "Tiếp nhận, phân loại và xử lý yêu cầu người dùng"
+       }
+      ],
+      [
+       {
+        "text": "Cập nhật cấu hình và kiểm thử thay đổi ERP"
+       }
+      ],
+      [
+       {
+        "text": "Rà soát dữ liệu và lập báo cáo tình trạng hệ thống"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "bao-tri-he-thong-erp",
+   "slug": "theo-doi-van-hanh-va-kiem-tra-dinh-ky-he-thong",
+   "title": "Theo dõi vận hành và kiểm tra định kỳ hệ thống",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Theo dõi vận hành và kiểm tra định kỳ hệ thống."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "bao-tri-he-thong-erp",
+   "slug": "tiep-nhan-phan-loai-va-xu-ly-yeu-cau-nguoi-dung",
+   "title": "Tiếp nhận, phân loại và xử lý yêu cầu người dùng",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tiếp nhận, phân loại và xử lý yêu cầu người dùng."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "bao-tri-he-thong-erp",
+   "slug": "cap-nhat-cau-hinh-va-kiem-thu-thay-doi-erp",
+   "title": "Cập nhật cấu hình và kiểm thử thay đổi ERP",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Cập nhật cấu hình và kiểm thử thay đổi ERP."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "solution",
+   "topicKey": "solution:tu-van-trien-khai",
+   "parentSlug": "bao-tri-he-thong-erp",
+   "slug": "ra-soat-du-lieu-va-lap-bao-cao-tinh-trang-he-thong",
+   "title": "Rà soát dữ liệu và lập báo cáo tình trạng hệ thống",
+   "excerpt": null,
+   "label": null,
+   "keyPoints": [],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Rà soát dữ liệu và lập báo cáo tình trạng hệ thống."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "training",
+   "topicKey": "training:dao-tao",
+   "parentSlug": null,
+   "slug": "quan-tri-rui-ro",
+   "title": "Quản trị rủi ro",
+   "excerpt": "Nhận diện, đánh giá và kiểm soát rủi ro",
+   "label": null,
+   "keyPoints": [
+    "Danh mục rủi ro",
+    "Ma trận xác suất và tác động",
+    "KRI – chỉ số rủi ro trọng yếu",
+    "Kế hoạch ứng phó",
+    "Theo dõi hành động kiểm soát"
+   ],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Nhận diện, đánh giá và kiểm soát rủi ro"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Nội dung chính"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Danh mục rủi ro"
+       }
+      ],
+      [
+       {
+        "text": "Ma trận xác suất và tác động"
+       }
+      ],
+      [
+       {
+        "text": "KRI – chỉ số rủi ro trọng yếu"
+       }
+      ],
+      [
+       {
+        "text": "Kế hoạch ứng phó"
+       }
+      ],
+      [
+       {
+        "text": "Theo dõi hành động kiểm soát"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "training",
+   "topicKey": "training:dao-tao",
+   "parentSlug": null,
+   "slug": "quan-tri-doanh-nghiep",
+   "title": "Quản trị doanh nghiệp",
+   "excerpt": "Điều hành thống nhất theo mục tiêu và quy trình",
+   "label": null,
+   "keyPoints": [
+    "Chiến lược",
+    "Cơ cấu tổ chức",
+    "Phân quyền",
+    "Quy trình",
+    "KPI/OKR",
+    "Công việc",
+    "Văn bản"
+   ],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Điều hành thống nhất theo mục tiêu và quy trình"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Nội dung chính"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Chiến lược"
+       }
+      ],
+      [
+       {
+        "text": "Cơ cấu tổ chức"
+       }
+      ],
+      [
+       {
+        "text": "Phân quyền"
+       }
+      ],
+      [
+       {
+        "text": "Quy trình"
+       }
+      ],
+      [
+       {
+        "text": "KPI/OKR"
+       }
+      ],
+      [
+       {
+        "text": "Công việc"
+       }
+      ],
+      [
+       {
+        "text": "Văn bản"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "training",
+   "topicKey": "training:dao-tao",
+   "parentSlug": null,
+   "slug": "quan-ly-san-xuat",
+   "title": "Quản lý sản xuất",
+   "excerpt": "Tối ưu kế hoạch, nguồn lực, chất lượng và năng suất",
+   "label": null,
+   "keyPoints": [
+    "Kế hoạch sản xuất",
+    "Lệnh sản xuất",
+    "BOM/MRP",
+    "Nguyên vật liệu",
+    "Tiến độ",
+    "QC/kiểm soát chất lượng",
+    "Bảo trì",
+    "Giá thành"
+   ],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tối ưu kế hoạch, nguồn lực, chất lượng và năng suất"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Nội dung chính"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Kế hoạch sản xuất"
+       }
+      ],
+      [
+       {
+        "text": "Lệnh sản xuất"
+       }
+      ],
+      [
+       {
+        "text": "BOM/MRP"
+       }
+      ],
+      [
+       {
+        "text": "Nguyên vật liệu"
+       }
+      ],
+      [
+       {
+        "text": "Tiến độ"
+       }
+      ],
+      [
+       {
+        "text": "QC/kiểm soát chất lượng"
+       }
+      ],
+      [
+       {
+        "text": "Bảo trì"
+       }
+      ],
+      [
+       {
+        "text": "Giá thành"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "training",
+   "topicKey": "training:dao-tao",
+   "parentSlug": null,
+   "slug": "tai-chinh-lai-lo",
+   "title": "Tài chính – lãi lỗ",
+   "excerpt": "Kiểm soát hiệu quả tài chính và lợi nhuận",
+   "label": null,
+   "keyPoints": [
+    "Doanh thu",
+    "Chi phí",
+    "Giá vốn",
+    "Lãi/lỗ theo đơn hàng hoặc sản phẩm",
+    "Dòng tiền",
+    "Công nợ",
+    "Điểm hòa vốn"
+   ],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Kiểm soát hiệu quả tài chính và lợi nhuận"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Nội dung chính"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Doanh thu"
+       }
+      ],
+      [
+       {
+        "text": "Chi phí"
+       }
+      ],
+      [
+       {
+        "text": "Giá vốn"
+       }
+      ],
+      [
+       {
+        "text": "Lãi/lỗ theo đơn hàng hoặc sản phẩm"
+       }
+      ],
+      [
+       {
+        "text": "Dòng tiền"
+       }
+      ],
+      [
+       {
+        "text": "Công nợ"
+       }
+      ],
+      [
+       {
+        "text": "Điểm hòa vốn"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "training",
+   "topicKey": "training:dao-tao",
+   "parentSlug": null,
+   "slug": "dao-tao-phat-trien-nang-luc",
+   "title": "Đào tạo & phát triển năng lực",
+   "excerpt": "Nâng cao năng suất, cải tiến và năng lực số/AI",
+   "label": null,
+   "keyPoints": [
+    "Kaizen",
+    "AI Cơ Bản",
+    "AI X10 cho Doanh Nghiệp",
+    "Kế hoạch đào tạo",
+    "Đánh giá sau đào tạo"
+   ],
+   "sortOrder": 4,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Nâng cao năng suất, cải tiến và năng lực số/AI"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Nội dung chính"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Kaizen"
+       }
+      ],
+      [
+       {
+        "text": "AI Cơ Bản"
+       }
+      ],
+      [
+       {
+        "text": "AI X10 cho Doanh Nghiệp"
+       }
+      ],
+      [
+       {
+        "text": "Kế hoạch đào tạo"
+       }
+      ],
+      [
+       {
+        "text": "Đánh giá sau đào tạo"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "training",
+   "topicKey": "training:dao-tao",
+   "parentSlug": null,
+   "slug": "kaizen",
+   "title": "Kaizen",
+   "excerpt": "Cải tiến liên tục trong công việc và sản xuất",
+   "label": null,
+   "keyPoints": [
+    "Nhận diện lãng phí và vấn đề tại nơi làm việc",
+    "Phân tích nguyên nhân và đề xuất cải tiến",
+    "Chuẩn hóa cách làm hiệu quả",
+    "Theo dõi kết quả cải tiến"
+   ],
+   "sortOrder": 5,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Cải tiến liên tục trong công việc và sản xuất"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Nội dung chính"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Nhận diện lãng phí và vấn đề tại nơi làm việc"
+       }
+      ],
+      [
+       {
+        "text": "Phân tích nguyên nhân và đề xuất cải tiến"
+       }
+      ],
+      [
+       {
+        "text": "Chuẩn hóa cách làm hiệu quả"
+       }
+      ],
+      [
+       {
+        "text": "Theo dõi kết quả cải tiến"
+       }
+      ]
+     ]
+    },
+    {
+     "id": "b4",
+     "type": "callout",
+     "tone": "info",
+     "spans": [
+      {
+       "text": "Đối tượng phù hợp: Toàn thể nhân viên; ưu tiên quản lý chuyền, tổ trưởng, QA/QC và nhân sự kho."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "training",
+   "topicKey": "training:dao-tao",
+   "parentSlug": null,
+   "slug": "ai-co-ban",
+   "title": "AI Cơ Bản",
+   "excerpt": "Trang bị kiến thức và kỹ năng sử dụng AI an toàn, hiệu quả trong công việc",
+   "label": null,
+   "keyPoints": [
+    "Khái niệm và khả năng của AI",
+    "Cách đặt yêu cầu và làm việc với công cụ AI",
+    "Ứng dụng AI vào công việc văn phòng",
+    "Bảo mật dữ liệu, kiểm chứng kết quả và sử dụng AI có trách nhiệm"
+   ],
+   "sortOrder": 6,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Trang bị kiến thức và kỹ năng sử dụng AI an toàn, hiệu quả trong công việc"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Nội dung chính"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Khái niệm và khả năng của AI"
+       }
+      ],
+      [
+       {
+        "text": "Cách đặt yêu cầu và làm việc với công cụ AI"
+       }
+      ],
+      [
+       {
+        "text": "Ứng dụng AI vào công việc văn phòng"
+       }
+      ],
+      [
+       {
+        "text": "Bảo mật dữ liệu, kiểm chứng kết quả và sử dụng AI có trách nhiệm"
+       }
+      ]
+     ]
+    },
+    {
+     "id": "b4",
+     "type": "callout",
+     "tone": "info",
+     "spans": [
+      {
+       "text": "Đối tượng phù hợp: Toàn thể nhân viên, đặc biệt là nhóm văn phòng và quản lý."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "training",
+   "topicKey": "training:dao-tao",
+   "parentSlug": null,
+   "slug": "ai-cho-doanh-nghiep-x10-hieu-suat",
+   "title": "AI cho Doanh Nghiệp. X10 hiệu suất",
+   "excerpt": "Ứng dụng AI nâng cao hiệu suất và tái thiết kế quy trình doanh nghiệp",
+   "label": null,
+   "keyPoints": [
+    "Đánh giá quy trình và cơ hội ứng dụng AI",
+    "Tự động hóa công việc và luồng xử lý",
+    "Tái thiết kế quy trình doanh nghiệp với AI",
+    "Đo lường hiệu quả và quản trị thay đổi"
+   ],
+   "sortOrder": 7,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Ứng dụng AI nâng cao hiệu suất và tái thiết kế quy trình doanh nghiệp"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "heading",
+     "level": 2,
+     "text": "Nội dung chính"
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Đánh giá quy trình và cơ hội ứng dụng AI"
+       }
+      ],
+      [
+       {
+        "text": "Tự động hóa công việc và luồng xử lý"
+       }
+      ],
+      [
+       {
+        "text": "Tái thiết kế quy trình doanh nghiệp với AI"
+       }
+      ],
+      [
+       {
+        "text": "Đo lường hiệu quả và quản trị thay đổi"
+       }
+      ]
+     ]
+    },
+    {
+     "id": "b4",
+     "type": "callout",
+     "tone": "info",
+     "spans": [
+      {
+       "text": "Đối tượng phù hợp: Ban Giám đốc, trưởng/phó phòng, nhân sự nòng cốt, nhóm cải tiến và CNTT."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "news",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "cach-cai-dat-phan-mem-ban-quyen",
+   "title": "5 bước cài đặt phần mềm bản quyền đúng cách",
+   "excerpt": "Từ kiểm tra thiết bị đến kích hoạt, hướng dẫn từng bước giúp bạn cài phần mềm an toàn và tránh những lỗi thường gặp.",
+   "label": "HƯỚNG DẪN",
+   "publishedAt": "2025-08-12T09:00:00+07:00",
+   "readingMinutes": 4,
+   "coverImageUrl": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1000&q=80",
+   "coverImageAlt": "Người dùng làm việc trên máy tính xách tay",
+   "keyPoints": [
+    "Kiểm tra yêu cầu hệ thống trước khi mua",
+    "Tải bộ cài từ nguồn chính thức",
+    "Lưu thông tin kích hoạt an toàn"
+   ],
+   "sortOrder": 0,
+   "isFeatured": true,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "heading",
+     "level": 2,
+     "text": "Bước 1: Kiểm tra thiết bị và nhu cầu"
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Trước khi mua, hãy xác định thiết bị đang dùng, hệ điều hành và công việc cần phần mềm hỗ trợ. Một số giấy phép chỉ dùng được trên một hệ điều hành hoặc giới hạn số thiết bị."
+      }
+     ]
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Đối chiếu phiên bản Windows hoặc macOS với yêu cầu của phần mềm."
+       }
+      ],
+      [
+       {
+        "text": "Kiểm tra dung lượng trống, bộ nhớ và kết nối Internet."
+       }
+      ],
+      [
+       {
+        "text": "Đọc số thiết bị, thời hạn và phạm vi sử dụng của giấy phép."
+       }
+      ]
+     ]
+    },
+    {
+     "id": "b4",
+     "type": "heading",
+     "level": 2,
+     "text": "Bước 2: Nhận và kiểm tra thông tin giấy phép"
+    },
+    {
+     "id": "b5",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Sau khi mua, đối chiếu tên sản phẩm và thời hạn trên đơn hàng với hướng dẫn nhận được. Không công khai mã kích hoạt, mật khẩu hay liên kết đăng nhập cá nhân."
+      }
+     ]
+    },
+    {
+     "id": "b6",
+     "type": "heading",
+     "level": 2,
+     "text": "Bước 3–5: Tải, cài đặt và kích hoạt"
+    },
+    {
+     "id": "b7",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tải bộ cài từ trang web hoặc ứng dụng chính thức của nhà phát hành. Đóng các ứng dụng không cần thiết, chạy trình cài đặt và làm theo hướng dẫn trên màn hình. Khi được yêu cầu, đăng nhập tài khoản phù hợp hoặc nhập mã giấy phép đúng theo hướng dẫn đi kèm."
+      }
+     ]
+    },
+    {
+     "id": "b8",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Khởi động lại ứng dụng sau khi cài đặt nếu được yêu cầu."
+       }
+      ],
+      [
+       {
+        "text": "Kiểm tra trạng thái kích hoạt trong mục tài khoản hoặc giấy phép."
+       }
+      ],
+      [
+       {
+        "text": "Lưu hóa đơn và thông tin hỗ trợ ở nơi riêng tư để tiện tra cứu."
+       }
+      ]
+     ]
+    },
+    {
+     "id": "b9",
+     "type": "heading",
+     "level": 2,
+     "text": "Nếu gặp lỗi kích hoạt"
+    },
+    {
+     "id": "b10",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Kiểm tra lại chính tả mã, email đăng nhập, ngày giờ thiết bị và kết nối mạng. Nếu giấy phép báo đã sử dụng hoặc không đúng phiên bản, hãy liên hệ nhà cung cấp với mã đơn hàng; tuyệt đối không gửi mật khẩu tài khoản."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "news",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "bao-ve-tai-khoan-so",
+   "title": "Bắt đầu bảo vệ tài khoản số từ những điều nhỏ",
+   "excerpt": "Các thói quen dễ thực hiện giúp giảm nguy cơ mất tài khoản, lộ thông tin cá nhân và bị lợi dụng qua email hoặc liên kết giả mạo.",
+   "label": "BẢO MẬT",
+   "publishedAt": "2025-08-08T09:00:00+07:00",
+   "readingMinutes": 3,
+   "coverImageUrl": "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1000&q=80",
+   "coverImageAlt": "Màn hình máy tính minh họa bảo mật tài khoản số",
+   "keyPoints": [
+    "Dùng mật khẩu riêng cho từng dịch vụ",
+    "Bật xác thực nhiều lớp",
+    "Cẩn trọng với đường dẫn và mã xác minh"
+   ],
+   "sortOrder": 1,
+   "isFeatured": false,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "heading",
+     "level": 2,
+     "text": "Tạo lớp bảo vệ cơ bản"
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Mật khẩu bị dùng lại ở nhiều nơi sẽ khiến các tài khoản khác có nguy cơ bị truy cập nếu một dịch vụ gặp sự cố. Hãy dùng mật khẩu dài, khó đoán và riêng cho từng tài khoản; trình quản lý mật khẩu có thể giúp lưu trữ thuận tiện hơn."
+      }
+     ]
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Không dùng ngày sinh, số điện thoại hay chuỗi dễ đoán."
+       }
+      ],
+      [
+       {
+        "text": "Bật xác thực hai bước hoặc passkey nếu dịch vụ hỗ trợ."
+       }
+      ],
+      [
+       {
+        "text": "Cập nhật email và số điện thoại khôi phục tài khoản."
+       }
+      ]
+     ]
+    },
+    {
+     "id": "b4",
+     "type": "heading",
+     "level": 2,
+     "text": "Nhận biết email và liên kết đáng ngờ"
+    },
+    {
+     "id": "b5",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Kẻ gian có thể giả mạo thông báo giao hàng, hóa đơn hoặc cảnh báo tài khoản để dụ bạn mở liên kết. Hãy kiểm tra kỹ địa chỉ người gửi và tên miền trước khi đăng nhập."
+      }
+     ]
+    },
+    {
+     "id": "b6",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Tự mở ứng dụng hoặc gõ địa chỉ trang web thay vì bấm liên kết lạ."
+       }
+      ],
+      [
+       {
+        "text": "Không gửi mã OTP, mã khôi phục hoặc mật khẩu cho bất kỳ ai."
+       }
+      ],
+      [
+       {
+        "text": "Cẩn trọng với yêu cầu xử lý gấp, đe dọa khóa tài khoản hoặc đòi thanh toán."
+       }
+      ]
+     ]
+    },
+    {
+     "id": "b7",
+     "type": "heading",
+     "level": 2,
+     "text": "Kiểm tra thiết bị và phiên đăng nhập"
+    },
+    {
+     "id": "b8",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Định kỳ xem danh sách thiết bị đang đăng nhập, đăng xuất khỏi thiết bị không nhận ra và cập nhật hệ điều hành, trình duyệt. Nếu nghi ngờ tài khoản bị truy cập, hãy đổi mật khẩu từ thiết bị an toàn và thu hồi các phiên lạ."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "news",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "chon-ten-mien-cho-thuong-hieu",
+   "title": "Chọn tên miền phù hợp cho thương hiệu của bạn",
+   "excerpt": "Tìm một tên miền dễ nhớ, dễ đọc và phù hợp mục tiêu kinh doanh; đồng thời biết cách kiểm tra, đăng ký và gia hạn.",
+   "label": "MẸO HAY",
+   "publishedAt": "2025-08-02T09:00:00+07:00",
+   "readingMinutes": 5,
+   "coverImageUrl": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1000&q=80",
+   "coverImageAlt": "Bảng phân tích website và sự hiện diện trực tuyến của thương hiệu",
+   "keyPoints": [
+    "Ưu tiên tên ngắn, dễ đọc và dễ gõ",
+    "Chọn đuôi miền phù hợp khách hàng",
+    "Kiểm tra khả năng gia hạn và quyền quản lý"
+   ],
+   "sortOrder": 2,
+   "isFeatured": false,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "heading",
+     "level": 2,
+     "text": "Chọn tên dễ nhớ và đại diện đúng thương hiệu"
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tên miền thường là điểm chạm đầu tiên khi khách hàng tìm website. Nên chọn tên ngắn gọn, dễ phát âm, dễ viết và nhất quán với tên doanh nghiệp hoặc sản phẩm."
+      }
+     ]
+    },
+    {
+     "id": "b3",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Tránh cách viết dễ nhầm, nhiều dấu gạch nối hoặc dãy số khó nhớ."
+       }
+      ],
+      [
+       {
+        "text": "Kiểm tra tên có ý nghĩa không mong muốn trong ngôn ngữ khác."
+       }
+      ],
+      [
+       {
+        "text": "Đảm bảo bạn có quyền sử dụng tên thương hiệu đã chọn."
+       }
+      ]
+     ]
+    },
+    {
+     "id": "b4",
+     "type": "heading",
+     "level": 2,
+     "text": "Chọn đuôi tên miền phù hợp"
+    },
+    {
+     "id": "b5",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Đuôi .vn thường phù hợp với tổ chức hướng tới khách hàng tại Việt Nam; .com được nhận diện rộng rãi cho mục tiêu quốc tế. Các đuôi chuyên biệt có thể phù hợp với ngành nghề, nhưng hãy cân nhắc mức độ quen thuộc và chi phí gia hạn."
+      }
+     ]
+    },
+    {
+     "id": "b6",
+     "type": "heading",
+     "level": 2,
+     "text": "Kiểm tra, đăng ký và quản lý"
+    },
+    {
+     "id": "b7",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Trạng thái tên miền có thể thay đổi theo thời gian. Hãy kiểm tra với nhà đăng ký tên miền chính thức trước khi quyết định; công cụ demo trên trang này không tra cứu trạng thái Internet thực tế."
+      }
+     ]
+    },
+    {
+     "id": "b8",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Đăng ký bằng thông tin chủ thể chính xác và giữ quyền truy cập tài khoản quản lý."
+       }
+      ],
+      [
+       {
+        "text": "Bật tự động gia hạn hoặc đặt nhắc lịch trước ngày hết hạn."
+       }
+      ],
+      [
+       {
+        "text": "Bật xác thực nhiều lớp và lưu thông tin DNS, nhà đăng ký ở nơi an toàn."
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "news",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "chon-phan-mem-quan-ly-doanh-nghiep",
+   "title": "Chọn phần mềm quản lý phù hợp với doanh nghiệp",
+   "excerpt": "Bắt đầu từ quy trình và mục tiêu vận hành để lựa chọn phần mềm vừa nhu cầu, dễ áp dụng và có thể mở rộng.",
+   "label": "GIẢI PHÁP",
+   "publishedAt": "2025-07-28T09:00:00+07:00",
+   "readingMinutes": 4,
+   "coverImageUrl": "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1000&q=80",
+   "coverImageAlt": "Nhóm doanh nghiệp trao đổi về giải pháp quản lý",
+   "keyPoints": [
+    "Xác định điểm nghẽn trong quy trình",
+    "Ưu tiên nhu cầu thiết yếu",
+    "Đánh giá khả năng tích hợp và mở rộng"
+   ],
+   "sortOrder": 3,
+   "isFeatured": false,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "heading",
+     "level": 2,
+     "text": "Bắt đầu từ quy trình hiện tại"
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Liệt kê cách các bộ phận đang tiếp nhận công việc, chia sẻ dữ liệu và phê duyệt. Xác định bước nào mất thời gian, dễ sai sót hoặc thiếu thông tin trước khi so sánh các phần mềm."
+      }
+     ]
+    },
+    {
+     "id": "b3",
+     "type": "heading",
+     "level": 2,
+     "text": "Chọn phạm vi phù hợp"
+    },
+    {
+     "id": "b4",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Ưu tiên các chức năng giải quyết vấn đề thường xuyên nhất. Một phạm vi triển khai rõ ràng giúp đội ngũ làm quen, đánh giá kết quả và bổ sung tính năng theo từng giai đoạn."
+      }
+     ]
+    },
+    {
+     "id": "b5",
+     "type": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "text": "Xác định nhóm người dùng và vai trò cần thiết."
+       }
+      ],
+      [
+       {
+        "text": "Kiểm tra khả năng kết nối với các hệ thống đang sử dụng."
+       }
+      ],
+      [
+       {
+        "text": "Đánh giá phương án nhập dữ liệu và hỗ trợ sau triển khai."
+       }
+      ]
+     ]
+    },
+    {
+     "id": "b6",
+     "type": "heading",
+     "level": 2,
+     "text": "Chuẩn bị cho việc áp dụng"
+    },
+    {
+     "id": "b7",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Phần mềm chỉ phát huy hiệu quả khi quy trình, dữ liệu và cách sử dụng được thống nhất. Hãy bố trí người phụ trách, kế hoạch hướng dẫn và tiêu chí đo lường trước khi đưa hệ thống vào vận hành."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "news",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "bao-ve-du-lieu-khi-lam-viec-tren-cloud",
+   "title": "Những lưu ý bảo vệ dữ liệu khi làm việc trên Cloud",
+   "excerpt": "Một số nguyên tắc cơ bản về phân quyền, sao lưu và bảo mật giúp đội ngũ sử dụng dịch vụ đám mây an toàn hơn.",
+   "label": "CÔNG NGHỆ",
+   "publishedAt": "2025-07-20T09:00:00+07:00",
+   "readingMinutes": 3,
+   "coverImageUrl": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1000&q=80",
+   "coverImageAlt": "Hình ảnh minh họa kết nối dữ liệu và dịch vụ đám mây",
+   "keyPoints": [
+    "Phân quyền đúng nhu cầu công việc",
+    "Bật xác thực nhiều lớp",
+    "Kiểm tra khả năng khôi phục bản sao lưu"
+   ],
+   "sortOrder": 4,
+   "isFeatured": false,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "heading",
+     "level": 2,
+     "text": "Kiểm soát quyền truy cập"
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Chỉ cấp quyền cần thiết cho từng vai trò và rà soát định kỳ tài khoản không còn sử dụng. Bật xác thực nhiều lớp để tăng thêm lớp bảo vệ cho tài khoản quản trị và người dùng."
+      }
+     ]
+    },
+    {
+     "id": "b3",
+     "type": "heading",
+     "level": 2,
+     "text": "Sao lưu và thử khôi phục"
+    },
+    {
+     "id": "b4",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Không nên mặc định rằng dữ liệu đã đồng bộ đồng nghĩa với dữ liệu đã được sao lưu. Xác định lịch sao lưu, người chịu trách nhiệm và thử khôi phục để bảo đảm bản sao có thể sử dụng khi cần."
+      }
+     ]
+    },
+    {
+     "id": "b5",
+     "type": "heading",
+     "level": 2,
+     "text": "Thiết lập quy tắc chia sẻ"
+    },
+    {
+     "id": "b6",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Hạn chế liên kết chia sẻ công khai, đặt thời hạn truy cập khi phù hợp và hướng dẫn nhân viên xử lý tệp nhạy cảm. Lưu lại quy trình phản hồi để đội ngũ biết cần làm gì khi phát hiện truy cập bất thường."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "resource",
+   "topicKey": "resource:tai-lieu/sach",
+   "parentSlug": null,
+   "slug": "the-lean-startup",
+   "title": "The Lean Startup",
+   "excerpt": "Tư duy thử nghiệm tinh gọn, kiểm chứng giả thuyết sản phẩm và rút ngắn chu kỳ phát triển cho doanh nghiệp công nghệ.",
+   "label": "Khởi nghiệp & Sản phẩm",
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tác giả: Eric Ries · 336 trang"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tư duy thử nghiệm tinh gọn, kiểm chứng giả thuyết sản phẩm và rút ngắn chu kỳ phát triển cho doanh nghiệp công nghệ."
+      }
+     ]
+    },
+    {
+     "id": "b3",
+     "type": "cta",
+     "label": "Xem sách",
+     "href": "https://books.google.com/books?q=The+Lean+Startup+Eric+Ries"
+    }
+   ]
+  },
+  {
+   "postType": "resource",
+   "topicKey": "resource:tai-lieu/sach",
+   "parentSlug": null,
+   "slug": "inspired-how-to-create-tech-products-customers-love",
+   "title": "Inspired: How to Create Tech Products Customers Love",
+   "excerpt": "Phương pháp xây dựng sản phẩm công nghệ lấy khách hàng làm trọng tâm từ các tập đoàn công nghệ hàng đầu thế giới.",
+   "label": "Quản trị sản phẩm",
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tác giả: Marty Cagan · 368 trang"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Phương pháp xây dựng sản phẩm công nghệ lấy khách hàng làm trọng tâm từ các tập đoàn công nghệ hàng đầu thế giới."
+      }
+     ]
+    },
+    {
+     "id": "b3",
+     "type": "cta",
+     "label": "Xem sách",
+     "href": "https://books.google.com/books?q=Inspired+Marty+Cagan"
+    }
+   ]
+  },
+  {
+   "postType": "resource",
+   "topicKey": "resource:tai-lieu/sach",
+   "parentSlug": null,
+   "slug": "designing-data-intensive-applications",
+   "title": "Designing Data-Intensive Applications",
+   "excerpt": "Kiến thức nền tảng và chuyên sâu về hệ thống dữ liệu lớn, kiến trúc phân tán, độ tin cậy và khả năng mở rộng của ứng dụng.",
+   "label": "Kiến trúc & Kỹ thuật",
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tác giả: Martin Kleppmann · 616 trang"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Kiến thức nền tảng và chuyên sâu về hệ thống dữ liệu lớn, kiến trúc phân tán, độ tin cậy và khả năng mở rộng của ứng dụng."
+      }
+     ]
+    },
+    {
+     "id": "b3",
+     "type": "cta",
+     "label": "Xem sách",
+     "href": "https://books.google.com/books?q=Designing+Data-Intensive+Applications"
+    }
+   ]
+  },
+  {
+   "postType": "resource",
+   "topicKey": "resource:tai-lieu/sach",
+   "parentSlug": null,
+   "slug": "clean-code-a-handbook-of-agile-software-craftsmanship",
+   "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
+   "excerpt": "Các nguyên lý, mẫu hình thiết kế và kỹ thuật viết mã sạch, dễ bảo trì, dễ kiểm thử cho lập trình viên chuyên nghiệp.",
+   "label": "Lập trình chuyên nghiệp",
+   "keyPoints": [],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tác giả: Robert C. Martin · 464 trang"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Các nguyên lý, mẫu hình thiết kế và kỹ thuật viết mã sạch, dễ bảo trì, dễ kiểm thử cho lập trình viên chuyên nghiệp."
+      }
+     ]
+    },
+    {
+     "id": "b3",
+     "type": "cta",
+     "label": "Xem sách",
+     "href": "https://books.google.com/books?q=Clean+Code+Robert+C+Martin"
+    }
+   ]
+  },
+  {
+   "postType": "resource",
+   "topicKey": "resource:tai-lieu/download",
+   "parentSlug": null,
+   "slug": "bang-tra-cuu-toi-uu-seo-ky-thuat-seo-technical-cheat-sheet",
+   "title": "Bảng Tra Cứu Tối Ưu SEO Kỹ Thuật (SEO Technical Cheat Sheet)",
+   "excerpt": "Checklist toàn diện rà soát Core Web Vitals, Schema markup, robots.txt, canonical và tối ưu cấu trúc website doanh nghiệp.",
+   "label": "Google Search Central",
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Checklist toàn diện rà soát Core Web Vitals, Schema markup, robots.txt, canonical và tối ưu cấu trúc website doanh nghiệp."
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "cta",
+     "label": "Mở tài liệu",
+     "href": "https://developers.google.com/search/docs/fundamentals/seo-starter-guide"
+    }
+   ]
+  },
+  {
+   "postType": "resource",
+   "topicKey": "resource:tai-lieu/download",
+   "parentSlug": null,
+   "slug": "cam-nang-hieu-nang-kha-nang-truy-cap-web-2026",
+   "title": "Cẩm Nang Hiệu Năng & Khả Năng Truy Cập Web 2026",
+   "excerpt": "Tài liệu hướng dẫn tối ưu thời gian tải trang, Lighthouse 100/100, tối ưu hình ảnh và khả năng truy cập (a11y).",
+   "label": "Web.dev & Google",
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tài liệu hướng dẫn tối ưu thời gian tải trang, Lighthouse 100/100, tối ưu hình ảnh và khả năng truy cập (a11y)."
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "cta",
+     "label": "Mở tài liệu",
+     "href": "https://web.dev/learn/"
+    }
+   ]
+  },
+  {
+   "postType": "resource",
+   "topicKey": "resource:tai-lieu/download",
+   "parentSlug": null,
+   "slug": "owasp-top-10-huong-dan-phong-ngua-lo-hong-bao-mat-web",
+   "title": "OWASP Top 10 — Hướng Dẫn Phòng Ngừa Lỗ Hổng Bảo Mật Web",
+   "excerpt": "Tổng hợp 10 nhóm rủi ro an ninh mạng phổ biến nhất và giải pháp mã hóa, phòng vệ từ các chuyên gia an toàn thông tin.",
+   "label": "OWASP Foundation",
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tổng hợp 10 nhóm rủi ro an ninh mạng phổ biến nhất và giải pháp mã hóa, phòng vệ từ các chuyên gia an toàn thông tin."
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "cta",
+     "label": "Mở tài liệu",
+     "href": "https://owasp.org/www-project-top-ten/"
+    }
+   ]
+  },
+  {
+   "postType": "resource",
+   "topicKey": "resource:tai-lieu/download",
+   "parentSlug": null,
+   "slug": "so-tay-kien-truc-dien-toan-dam-may-microservices",
+   "title": "Sổ Tay Kiến Trúc Điện Toán Đám Mây & Microservices",
+   "excerpt": "Mô hình triển khai Cloud, container Docker, Kubernetes và thiết kế hệ thống có tính sẵn sàng cao (High Availability).",
+   "label": "DXTechs Architecture",
+   "keyPoints": [],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Mô hình triển khai Cloud, container Docker, Kubernetes và thiết kế hệ thống có tính sẵn sàng cao (High Availability)."
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "cta",
+     "label": "Mở tài liệu",
+     "href": "https://vuejs.org/guide/introduction.html"
+    }
+   ]
+  },
+  {
+   "postType": "glossary",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "api",
+   "title": "API",
+   "excerpt": "Giao diện lập trình ứng dụng giúp các hệ thống trao đổi dữ liệu và thực thi tác vụ với nhau một cách bảo mật.",
+   "label": "Phần mềm",
+   "keyPoints": [],
+   "sortOrder": 0,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Application Programming Interface"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Giao diện lập trình ứng dụng giúp các hệ thống trao đổi dữ liệu và thực thi tác vụ với nhau một cách bảo mật."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "glossary",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "cloud-computing",
+   "title": "Cloud Computing",
+   "excerpt": "Mô hình cung cấp tài nguyên máy chủ, mạng, lưu trữ và dịch vụ qua Internet theo nhu cầu thực tế.",
+   "label": "Hạ tầng",
+   "keyPoints": [],
+   "sortOrder": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Điện toán đám mây"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Mô hình cung cấp tài nguyên máy chủ, mạng, lưu trữ và dịch vụ qua Internet theo nhu cầu thực tế."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "glossary",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "saas",
+   "title": "SaaS",
+   "excerpt": "Mô hình phân phối phần mềm qua đám mây, người dùng trả phí định kỳ và truy cập qua trình duyệt mà không cần cài đặt phức tạp.",
+   "label": "Giải pháp",
+   "keyPoints": [],
+   "sortOrder": 2,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Software as a Service"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Mô hình phân phối phần mềm qua đám mây, người dùng trả phí định kỳ và truy cập qua trình duyệt mà không cần cài đặt phức tạp."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "glossary",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "paas",
+   "title": "PaaS",
+   "excerpt": "Nền tảng đám mây cung cấp môi trường hoàn chỉnh để phát triển, chạy và quản lý ứng dụng mà không cần quản trị máy chủ bên dưới.",
+   "label": "Hạ tầng",
+   "keyPoints": [],
+   "sortOrder": 3,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Platform as a Service"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Nền tảng đám mây cung cấp môi trường hoàn chỉnh để phát triển, chạy và quản lý ứng dụng mà không cần quản trị máy chủ bên dưới."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "glossary",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "ci-cd",
+   "title": "CI/CD",
+   "excerpt": "Quy trình tự động hóa tích hợp mã nguồn, kiểm thử tự động và triển khai phần mềm liên tục lên môi trường sản xuất.",
+   "label": "DevOps",
+   "keyPoints": [],
+   "sortOrder": 4,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Continuous Integration / Continuous Delivery"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Quy trình tự động hóa tích hợp mã nguồn, kiểm thử tự động và triển khai phần mềm liên tục lên môi trường sản xuất."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "glossary",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "ssl-tls",
+   "title": "SSL / TLS",
+   "excerpt": "Giao thức mã hóa dữ liệu giữa trình duyệt người dùng và máy chủ web, đảm bảo thông tin cá nhân và thanh toán không bị đánh cắp.",
+   "label": "Bảo mật",
+   "keyPoints": [],
+   "sortOrder": 5,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Secure Sockets Layer / Transport Layer Security"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Giao thức mã hóa dữ liệu giữa trình duyệt người dùng và máy chủ web, đảm bảo thông tin cá nhân và thanh toán không bị đánh cắp."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "glossary",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "cdn",
+   "title": "CDN",
+   "excerpt": "Mạng lưới máy chủ phân tán toàn cầu lưu trữ bản sao dữ liệu tĩnh, giúp website tải nhanh hơn đối với người dùng ở mọi vị trí địa lý.",
+   "label": "Hạ tầng",
+   "keyPoints": [],
+   "sortOrder": 6,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Content Delivery Network"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Mạng lưới máy chủ phân tán toàn cầu lưu trữ bản sao dữ liệu tĩnh, giúp website tải nhanh hơn đối với người dùng ở mọi vị trí địa lý."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "glossary",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "erp",
+   "title": "ERP",
+   "excerpt": "Hệ thống hoạch định nguồn lực doanh nghiệp, kết nối tài chính, nhân sự, chuỗi cung ứng và bán hàng trên một cơ sở dữ liệu duy nhất.",
+   "label": "Doanh nghiệp",
+   "keyPoints": [],
+   "sortOrder": 7,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Enterprise Resource Planning"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Hệ thống hoạch định nguồn lực doanh nghiệp, kết nối tài chính, nhân sự, chuỗi cung ứng và bán hàng trên một cơ sở dữ liệu duy nhất."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "glossary",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "crm",
+   "title": "CRM",
+   "excerpt": "Hệ thống quản lý thông tin khách hàng, quy trình bán hàng và chăm sóc hậu mãi giúp tối ưu hóa doanh thu.",
+   "label": "Doanh nghiệp",
+   "keyPoints": [],
+   "sortOrder": 8,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Customer Relationship Management"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Hệ thống quản lý thông tin khách hàng, quy trình bán hàng và chăm sóc hậu mãi giúp tối ưu hóa doanh thu."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "glossary",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "cms",
+   "title": "CMS",
+   "excerpt": "Hệ quản trị nội dung giúp doanh nghiệp tạo, chỉnh sửa và xuất bản nội dung số lên website dễ dàng không cần biết lập trình.",
+   "label": "Website",
+   "keyPoints": [],
+   "sortOrder": 9,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Content Management System"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Hệ quản trị nội dung giúp doanh nghiệp tạo, chỉnh sửa và xuất bản nội dung số lên website dễ dàng không cần biết lập trình."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "glossary",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "seo",
+   "title": "SEO",
+   "excerpt": "Tối ưu hóa công cụ tìm kiếm giúp website cải thiện thứ hạng tự nhiên trên Google, thu hút lượt truy cập khách hàng tiềm năng.",
+   "label": "Marketing",
+   "keyPoints": [],
+   "sortOrder": 10,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Search Engine Optimization"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Tối ưu hóa công cụ tìm kiếm giúp website cải thiện thứ hạng tự nhiên trên Google, thu hút lượt truy cập khách hàng tiềm năng."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "postType": "glossary",
+   "topicKey": null,
+   "parentSlug": null,
+   "slug": "docker-k8s",
+   "title": "Docker & K8s",
+   "excerpt": "Công nghệ đóng gói ứng dụng độc lập trong các container và hệ thống điều phối tự động giúp mở rộng linh hoạt theo quy mô.",
+   "label": "DevOps",
+   "keyPoints": [],
+   "sortOrder": 11,
+   "blocks": [
+    {
+     "id": "b1",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Containers & Kubernetes"
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "type": "paragraph",
+     "spans": [
+      {
+       "text": "Công nghệ đóng gói ứng dụng độc lập trong các container và hệ thống điều phối tự động giúp mở rộng linh hoạt theo quy mô."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
