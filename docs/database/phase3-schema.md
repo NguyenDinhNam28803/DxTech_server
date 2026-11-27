@@ -1,6 +1,6 @@
 # Thiết kế chi tiết Phase 3 — schema `sales`, `payments`, `inventory`
 
-- **Trạng thái:** Đã duyệt (26/11/2026) · DDL chi tiết + quyền DB: `docs/design/pr-09-10-phase3-schema-and-cart-quote.md`
+- **Trạng thái:** Đã duyệt (26/11/2026) · **Bảng đã tạo ở PR-9** (migration `20261127034854_Phase3_Sales_Payments_Inventory`) · DDL chi tiết + quyền DB: `docs/design/pr-09-10-phase3-schema-and-cart-quote.md`
 - **Ngày:** 26/11/2026 · **Thay cho:** *Thiết kế toàn bộ Database v1.0* mục 7–9 (phần Phase 3)
 - **Quyết định:** ADR-013 (thanh toán), ADR-014 (mã hoá license key), ADR-006 (id, tiền, thời gian), ADR-007 (concurrency),
   ADR-009 (role DB), ADR-012 (xác thực, rate limit)

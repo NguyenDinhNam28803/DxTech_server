@@ -137,6 +137,29 @@ $$;
 SELECT 'REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON public."__EFMigrationsHistory" FROM dxtechs_app'
  WHERE to_regclass('public."__EFMigrationsHistory"') IS NOT NULL \gexec
 
+-- 5b. Phase 3 (PR-9): bảng chứng từ không bị xoá, lịch sử + payment chỉ thêm ----------------------
+-- Mục 5 vừa cấp lại SELECT/INSERT/UPDATE/DELETE cho MỌI bảng ⇒ phải thu hồi lại ở đây mỗi lần chạy.
+-- Giống hệt server/Modules/Sales/Persistence/Phase3Privileges.cs (migration dùng bản đó lần tạo bảng).
+-- Bỏ qua khi migration Phase 3 chưa chạy (lần deploy đầu tiên: db-roles chạy trước migrate).
+DO $roles5b$
+BEGIN
+  IF to_regclass('sales.orders') IS NOT NULL THEN
+    EXECUTE $sql$
+        DO $phase3$
+        BEGIN
+          IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dxtechs_app') THEN
+            REVOKE DELETE, TRUNCATE ON sales.orders, sales.order_items, inventory.license_keys, inventory.import_batches FROM dxtechs_app;
+            REVOKE UPDATE, DELETE, TRUNCATE ON sales.order_status_history, payments.payments FROM dxtechs_app;
+            GRANT UPDATE (resolved_at, resolved_by, resolution_note) ON payments.payments TO dxtechs_app;
+            REVOKE TRUNCATE ON payments.webhook_events FROM dxtechs_app;
+          END IF;
+        END
+        $phase3$;
+    $sql$;
+  END IF;
+END
+$roles5b$;
+
 -- 6. Quyền tự động cho đối tượng dxtechs_owner tạo SAU NÀY (schema/bảng của migration mới) -------
 ALTER DEFAULT PRIVILEGES FOR ROLE dxtechs_owner GRANT USAGE ON SCHEMAS TO dxtechs_app;
 ALTER DEFAULT PRIVILEGES FOR ROLE dxtechs_owner GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO dxtechs_app;

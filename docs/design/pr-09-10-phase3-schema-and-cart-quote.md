@@ -1,6 +1,6 @@
 # Thiết kế triển khai PR-9 + PR-10 (Phase 3)
 
-- **Trạng thái:** Chờ Backend Lead duyệt · **Ngày:** 26/11/2026
+- **Trạng thái:** Đã duyệt (PR #13, 26/11/2026) · PR-9 đã triển khai 27/11 (mục A7) · PR-10 chờ làm
 - **Dựa trên:** `docs/database/phase3-schema.md` (đã duyệt 26/11), ADR-013, ADR-014, ADR-001/002/003 (module, DbContext),
   ADR-006 (id, tiền), ADR-007 (concurrency), ADR-009 (role DB), ADR-012 (rate limit)
 - **Phạm vi:** PR-9 = cấu trúc dữ liệu (chưa có API). PR-10 = API báo giá giỏ hàng + tồn kho trên trang sản phẩm.
@@ -249,6 +249,23 @@ REVOKE TRUNCATE ON ALL TABLES IN SCHEMA sales, payments, inventory FROM dxtechs_
 | `OrderCode` (unit) | 10.000 mã: đúng regex, không ký tự I/L/O/U, phân bố đều (không ký tự nào > 2× trung bình) |
 | Snapshot migration | `dotnet ef migrations has-pending-model-changes` = không |
 | Quyền (`test-db-roles.sh`) | App: INSERT/SELECT được; DELETE orders ⇒ lỗi; UPDATE `payments.amount_vnd` ⇒ lỗi; UPDATE `payments.resolved_at` ⇒ được; chạy `roles.sql` lần 2 rồi kiểm lại (bắt lỗi cấp lại quyền) |
+
+---
+
+## A7. Ghi chú triển khai PR-9 (27/11/2026) — khác bản thiết kế
+
+| Điểm | Thiết kế | Triển khai | Lý do |
+|---|---|---|---|
+| `DEFAULT` cho `status`, `discount_vnd`, `key_version` | Có trong DDL | Không đặt ở DB; entity luôn gán giá trị | Cột enum/số có giá trị mặc định trùng giá trị CLR mặc định gây cảnh báo “sentinel” của EF; mọi đường ghi đều qua entity hoặc ghi tường minh |
+| `webhook_events.attempts` | `DEFAULT 0` | Giữ `DEFAULT 0` | Phát hiện khi viết test: INSERT tay thiếu cột này bị lỗi NOT NULL |
+| CHECK bổ sung | — | `ck_orders_customer_email` (3–254 ký tự), `ck_webhook_events_payload` (object/array), độ dài `bank_reference` (≤ 100) và `resolution_note` (≤ 1000), `ck_license_keys_available` thêm `delivered_at IS NULL` | Lớp phòng thủ cuối cho dữ liệu nhập tay / module sau |
+| Index bổ sung | — | `ix_payments_resolved_by`, `ix_import_batches_imported_by` (partial), `ix_license_keys_batch_id` | Index cho FK sang `identity.users` / lô nhập: tránh quét toàn bảng khi kiểm tra FK |
+| FK chéo module | Trong DDL | `HasOne<T>()` không navigation trong `Persistence/` | Domain của module không tham chiếu kiểu nội bộ module khác (test kiến trúc ADR-001) |
+| Quyền DB (A5) | Migration + `roles.sql` | `Phase3Privileges.Sql` dùng cho migration; `roles.sql` mục 5b chứa bản giống hệt, test đơn vị so sánh hai bản | Lệch hai bản ⇒ lần deploy thứ hai trả lại quyền DELETE |
+| Kiểm thử quyền | Chạy `roles.sql` 2 lần | Thêm: thử phá có chủ đích (bỏ mục 5b ⇒ 6 kiểm tra đỏ); ca “xoá đơn” dùng đơn không có dòng phụ thuộc | Ca “xoá đơn” ban đầu qua vì khoá ngoại chặn, không phải vì quyền — đã sửa |
+
+Kết quả: unit 106 → **131**, integration 162 → **225** (ràng buộc 45 ca, chuyển đổi hợp lệ 4 ca, index 14, EF, xmin, SKIP LOCKED),
+`test-db-roles.sh` +19 kiểm tra Phase 3. SQL review: `docs/migrations/20261127034854_Phase3_Sales_Payments_Inventory.sql`.
 
 ---
 
