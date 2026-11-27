@@ -17,8 +17,15 @@ namespace server.Modules.Content.Features.Public;
 
 public sealed record PostLink(string Type, string Slug, string Title, string? Excerpt, string? Path);
 
+/// <summary>
+/// Trang cấp 1 của một chủ đề, đủ để web dựng menu + thẻ mà không phải gọi chi tiết từng trang (CT-C1):
+/// ý chính, ghi chú nổi bật (khối callout đầu tiên — ví dụ "Đối tượng phù hợp: …") và các hạng mục con đã đăng.
+/// </summary>
+public sealed record TopicPage(string Type, string Slug, string Title, string? Excerpt, string? Path,
+    IReadOnlyList<string> KeyPoints, string? Callout, IReadOnlyList<PostLink> Children);
+
 public sealed record TopicNode(string Slug, string Name, string? Description, string? ImageUrl, string? Path,
-    IReadOnlyList<TopicNode> Children, IReadOnlyList<PostLink> Pages);
+    IReadOnlyList<TopicNode> Children, IReadOnlyList<TopicPage> Pages);
 
 public sealed record CoverImage(string Url, string? Alt);
 
@@ -120,16 +127,27 @@ public sealed class PublicContentHandler
         var pages = (await Visible()
                 .Where(p => p.PostType == type && p.ParentId == null && p.TopicId != null)
                 .OrderBy(p => p.SortOrder).ThenBy(p => p.Title)
-                .Select(p => new { p.TopicId, p.Slug, p.Title, p.Excerpt })
+                .Select(p => new { p.Id, p.TopicId, p.Slug, p.Title, p.Excerpt, p.KeyPoints, p.Blocks })
                 .ToListAsync(ct))
             .ToLookup(p => p.TopicId!.Value);
+
+        // Hạng mục con đã đăng của mọi trang — một truy vấn cho cả cây (không N+1).
+        var children = (await Visible()
+                .Where(p => p.PostType == type && p.ParentId != null)
+                .OrderBy(p => p.SortOrder).ThenBy(p => p.Title)
+                .Select(p => new { ParentId = p.ParentId!.Value, p.Slug, p.Title, p.Excerpt })
+                .ToListAsync(ct))
+            .ToLookup(c => c.ParentId);
 
         TopicNode Node(Topic t)
         {
             IReadOnlyList<string> chain = topics.Chain(t.Id);
             return new TopicNode(t.Slug, t.Name, t.Description, t.ImageUrl, WebPaths.Topic(type, chain),
                 topics.ChildrenOf(t.Id).Select(Node).ToList(),
-                pages[t.Id].Select(p => new PostLink(typeValue!, p.Slug, p.Title, p.Excerpt, WebPaths.Post(type, p.Slug, chain, null))).ToList());
+                pages[t.Id].Select(p => new TopicPage(typeValue!, p.Slug, p.Title, p.Excerpt, WebPaths.Post(type, p.Slug, chain, null),
+                    p.KeyPoints, FirstCallout(p.Blocks),
+                    children[p.Id].Select(c => new PostLink(typeValue!, c.Slug, c.Title, c.Excerpt, WebPaths.Post(type, c.Slug, chain, p.Slug))).ToList()))
+                .ToList());
         }
 
         return topics.ChildrenOf(null).Select(Node).ToList();
@@ -332,6 +350,21 @@ public sealed class PublicContentHandler
     }
 
     // ---------- Hỗ trợ ----------
+
+    /// <summary>Chữ của khối callout đầu tiên (nối các đoạn chữ), null nếu không có.</summary>
+    internal static string? FirstCallout(string blocks)
+    {
+        using JsonDocument doc = JsonDocument.Parse(blocks);
+        foreach (JsonElement b in doc.RootElement.EnumerateArray())
+        {
+            if (b.TryGetProperty("type", out JsonElement type) && type.GetString() == "callout" && b.TryGetProperty("spans", out JsonElement spans))
+            {
+                return string.Concat(spans.EnumerateArray().Select(s => s.TryGetProperty("text", out JsonElement t) ? t.GetString() : ""));
+            }
+        }
+
+        return null;
+    }
 
     private async Task<Dictionary<Guid, MediaRef>> MediaAsync(IEnumerable<Guid> ids, CancellationToken ct)
     {

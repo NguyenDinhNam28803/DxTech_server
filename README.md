@@ -179,7 +179,7 @@ GET trả `Cache-Control: public, max-age=60` ⇒ bài mới đăng hiện trên
 
 | Method · Path | Kết quả |
 |---|---|
-| `GET /api/content/topics?type=solution` | Cây chủ đề + các trang cấp 1 của từng chủ đề, kèm `path` trên web |
+| `GET /api/content/topics?type=solution` | Cây chủ đề + các trang cấp 1 (ý chính, ghi chú nổi bật, hạng mục con) — đủ để web dựng menu, không cần gọi từng trang |
 | `GET /api/content/posts?type=news&topic=&q=&cursor=&limit=&sort=` | Mới nhất trước + `nextCursor`; `topic` gồm chủ đề con; `q` tìm không dấu cả chữ trong khối; `sort=order` theo thứ tự biên tập |
 | `GET /api/content/posts/{type}/{slug}` | Chi tiết: khối nội dung, ý chính, breadcrumb, trang cha/con, ảnh. Slug cũ ⇒ **301**. Trang cha chưa đăng ⇒ hạng mục con cũng 404 |
 | `GET /api/content/featured?type=training&limit=6` | Bài nổi bật (thẻ trang chủ) |
