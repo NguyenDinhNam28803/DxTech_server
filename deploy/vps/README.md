@@ -19,6 +19,7 @@ bash audit.sh            # CHỈ ĐỌC — chụp hiện trạng, chạy trư�
 | 6 | `ufw-cleanup.sh` | Xoá rule mở cổng 22 (chỉ khi ufw đang bật) | Không | `ufw allow 22/tcp` |
 | 6b | `ufw-enable.sh` | Bật ufw: chỉ mở 24700, 80, 443; **tự tắt sau 5 phút** nếu không `--confirm` | Chặn mọi cổng vào khác | `ufw-enable.sh --rollback` |
 | 7 | `webdeploy.sh '<public key>'` | User riêng cho CI client, không có Docker | Cần đổi secret repo client | `webdeploy.sh --rollback` |
+| 8 | `ct3-media.sh` | Thư mục ảnh `/var/www/dxtechs/media` (uid 1654 của container API) + Nginx `/media/` (chỉ tên file API sinh, nosniff) và `/sitemap.xml` | Reload Nginx (không gián đoạn) | Lệnh `cp` in ra cuối script |
 
 **Backup** chạy bằng user `deploy` (không phải root) — xem [`backup/README.md`](backup/README.md):
 

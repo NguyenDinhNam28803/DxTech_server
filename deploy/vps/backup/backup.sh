@@ -8,6 +8,7 @@
 #
 # Luồng: pg_dump (trong container) → file .tmp → kiểm tra đọc được (pg_restore --list) → đổi tên
 #        → SHA-256 → giữ KEEP_DAYS ngày trên VPS → mã hoá GPG bằng PUBLIC key → tải ra ngoài (S3 hoặc thư mục)
+#        → thư mục ảnh (MEDIA_DIR): tar → mã hoá → tải ra ngoài (chỉ khi có kho ngoài)
 # VPS chỉ giữ public key: kẻ chiếm VPS không giải mã được các bản đã gửi đi. Private key do Backend Lead giữ.
 # Cấu hình: ~/.config/dxtechs-backup/backup.env (chmod 600) — mẫu: backup.env.example. Chi tiết: README.md.
 set -Eeuo pipefail
@@ -40,6 +41,7 @@ load_config() {
   GPG_RECIPIENT_FILE="${GPG_RECIPIENT_FILE:-$(dirname "$CONFIG")/recipient.asc}"
   MIN_TABLES="${MIN_TABLES:-4}"
   COMPOSE_DIR="${COMPOSE_DIR:-$HOME/dxtechs-server}"
+  MEDIA_DIR="${MEDIA_DIR:-/var/www/dxtechs/media}"   # ảnh của module Content (chỉ cần quyền đọc)
   if [ -n "${BACKUP_PG_EXEC:-}" ]; then
     read -r -a PG_EXEC <<<"$BACKUP_PG_EXEC"       # test thay bằng lệnh giả
   else
@@ -111,10 +113,28 @@ run_backup() {
     key="$OFFSITE_PREFIX/${ts:0:4}/${ts:4:2}/$(basename "$out").gpg"
     upload "$enc" "$key" || die "Tải ra ngoài lỗi ($OFFSITE)"
     log "OFFSITE OK $OFFSITE:$key $(stat -c %s "$enc") bytes"
+    backup_media "$ts"
   else
     log "OFFSITE SKIP (OFFSITE=none) — backup mới chỉ nằm trên VPS"
   fi
   ping_ok
+}
+
+# Ảnh của module Content (CT-3b): tar → mã hoá → kho ngoài. Không giữ bản trên VPS (cùng ổ đĩa với ảnh gốc thì vô ích).
+# Ảnh đã nén sẵn ⇒ tar không nén. Thư mục chưa có/rỗng ⇒ bỏ qua (chưa ai tải ảnh).
+backup_media() { # backup_media <ts>
+  local tar_file media_enc key count
+  [ -d "$MEDIA_DIR" ] || { log "MEDIA SKIP ($MEDIA_DIR chưa có)"; return 0; }
+  count="$(find "$MEDIA_DIR" -type f ! -name '.*' | wc -l)"
+  [ "$count" -gt 0 ] || { log "MEDIA SKIP ($MEDIA_DIR rỗng)"; return 0; }
+  tar_file="$(mktemp "$BACKUP_DIR/.media.XXXXXX")"; media_enc="$(mktemp "$BACKUP_DIR/.media-enc.XXXXXX")"
+  # File tạm của API (.upload-*.tmp) không phải ảnh hoàn chỉnh ⇒ bỏ.
+  tar -C "$(dirname "$MEDIA_DIR")" --exclude='.*' -cf "$tar_file" "$(basename "$MEDIA_DIR")" || { rm -f "$tar_file" "$media_enc"; die "tar ảnh lỗi"; }
+  encrypt "$tar_file" "$media_enc" || { rm -f "$tar_file" "$media_enc"; die "Mã hoá GPG ảnh lỗi"; }
+  key="$OFFSITE_PREFIX/${1:0:4}/${1:4:2}/dxtechs-media-$1.tar.gpg"
+  upload "$media_enc" "$key" || { rm -f "$tar_file" "$media_enc"; die "Tải ảnh ra ngoài lỗi ($OFFSITE)"; }
+  log "MEDIA OK $OFFSITE:$key $count file, $(stat -c %s "$media_enc") bytes"
+  rm -f "$tar_file" "$media_enc"
 }
 
 run_check() {

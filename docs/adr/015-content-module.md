@@ -125,3 +125,19 @@ Lệnh `--seed-content` đọc bản xuất JSON của `articles.ts`, `solutions
 - Khôi phục revision kiểm lại khối (ảnh trong bản cũ có thể đã bị xoá) và tạo revision mới — lịch sử không bao giờ bị viết lại.
 - Thử phá policy (cho cả customer) ⇒ test phân quyền đỏ.
 
+## Ghi chú triển khai (CT-3b, 27/11/2026)
+- `ImageSanitizer`: nhận diện bằng magic bytes; đọc segment/chunk đến hết với kiểm biên ⇒ file cắt cụt/giả bị từ chối. Bỏ metadata theo
+  **danh sách trắng**: JPEG giữ APP0, APP2 ICC, APP14 Adobe + segment ảnh, bỏ APP1 (EXIF/XMP), APP13 (IPTC), COM…; PNG giữ chunk hiển thị,
+  bỏ tEXt/zTXt/iTXt/eXIf/tIME và mọi thứ sau IEND (chặn file "PNG + HTML"); WebP bỏ EXIF/XMP, xoá cờ tương ứng trong VP8X, tính lại kích thước RIFF.
+  Kiểm trên ảnh thật (Pillow, có EXIF GPS): JPEG/PNG/WebP/WebP alpha sau khi làm sạch mở được, **pixel giống hệt**, không còn EXIF/GPS.
+- Trade-off: không giải mã ảnh ⇒ không tự xoay theo EXIF Orientation (cần thư viện xử lý ảnh, ngoài ràng buộc gói Microsoft). Biên tập viên
+  xoay ảnh trước khi tải; xem lại khi có nhu cầu (ví dụ ảnh từ điện thoại nhiều).
+- Lưu file: ghi tạm cùng ổ → đổi tên một lần (không có file viết dở dưới tên thật); lưu DB lỗi ⇒ xoá file. Trùng SHA-256 ⇒ trả ảnh có sẵn
+  (đang xoá mềm ⇒ khôi phục). Thư mục không ghi được ⇒ 422 chỉ cho tải ảnh, API vẫn chạy.
+- Nginx (`deploy/vps/ct3-media.sh` + `ct3-nginx.py`, kiểm thử trong CI kèm `nginx -t`): `/media/` chỉ phục vụ tên khớp
+  `yyyy/mm/<32 hex>.(jpg|png|webp)`, `types` cố định theo đuôi, `nosniff`, CSP `default-src 'none'; sandbox`, cache 1 năm; khác mẫu ⇒ 404.
+  Đã chạy thử nginx thật: ảnh 200 `image/png` + nosniff; `.svg` 404; `/sitemap.xml` proxy tới API với Host `api.dxtechs.com`.
+- Backup: thư mục ảnh tar + mã hoá GPG ra kho ngoài cùng lần backup DB (không giữ bản trên VPS — cùng ổ với ảnh gốc thì vô ích).
+- Thử phá: giữ APP1 ⇒ test GPS đỏ (unit + integration); bỏ chặn xoá ảnh đang dùng ⇒ test đỏ; bỏ giới hạn 6000 px ⇒ test đỏ (CHECK của DB
+  cũng chặn — lớp thứ hai).
+

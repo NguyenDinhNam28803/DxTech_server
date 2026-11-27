@@ -34,6 +34,8 @@ public static class ContentModule
             sp.GetRequiredService<IOptions<ContentOptions>>()));
         services.AddScoped(sp => new AdminPostsHandler(sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<TimeProvider>()));
         services.AddScoped(sp => new AdminContentHandler(sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<TimeProvider>()));
+        services.AddScoped(sp => new AdminMediaHandler(
+            sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<TimeProvider>(), sp.GetRequiredService<IOptions<ContentOptions>>()));
         services.AddScoped<ContentSeeder>();
 
         services.AddSingleton<ContentMaintenance>();

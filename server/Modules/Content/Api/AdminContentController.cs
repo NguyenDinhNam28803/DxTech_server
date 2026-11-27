@@ -15,7 +15,7 @@ namespace server.Modules.Content.Api;
 [ApiController]
 [Authorize(Policy = Policies.Content)]
 [Route("api/admin/content")]
-public sealed class AdminContentController(AdminPostsHandler posts, AdminContentHandler content) : ControllerBase
+public sealed class AdminContentController(AdminPostsHandler posts, AdminContentHandler content, AdminMediaHandler media) : ControllerBase
 {
     private Guid UserId => CurrentUser.IdOf(User) ?? throw new InvalidOperationException("Policy content bảo đảm có người dùng.");
 
@@ -139,6 +139,46 @@ public sealed class AdminContentController(AdminPostsHandler posts, AdminContent
     [HttpPut("leads/{id:guid}")]
     public async Task<IActionResult> UpdateLead(Guid id, [FromBody] LeadUpdate input, CancellationToken ct)
         => this.ToActionResult(await content.UpdateLeadAsync(id, input, UserId, ct));
+
+    // ---------- Ảnh ----------
+
+    /// <summary>Tải ảnh (multipart: <c>file</c>, <c>alt</c> tuỳ chọn). 201 ảnh mới · 200 ảnh đã có (trùng nội dung) · 400 sai loại/quá lớn.</summary>
+    [HttpPost("media")]
+    [RequestSizeLimit(6 * 1024 * 1024)]
+    [RequestFormLimits(MultipartBodyLengthLimit = 6 * 1024 * 1024)]
+    [ProducesResponseType(typeof(MediaView), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(MediaView), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Upload(IFormFile? file, [FromForm] string? alt, CancellationToken ct)
+    {
+        if (file is null)
+        {
+            return this.ToProblem(Error.Validation("content.invalid_media", "Thiếu file ảnh (trường file)."));
+        }
+
+        await using Stream stream = file.OpenReadStream();
+        Result<MediaView> r = await media.UploadAsync(stream, file.Length, alt, UserId, ct);
+        if (r.IsFailure)
+        {
+            return this.ToProblem(r.Error);
+        }
+
+        return r.Value.Duplicate ? Ok(r.Value) : Created(r.Value.Url, r.Value);
+    }
+
+    [HttpGet("media")]
+    [ProducesResponseType(typeof(MediaPage), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Media([FromQuery] string? cursor, [FromQuery] int limit = 40, CancellationToken ct = default)
+        => this.ToActionResult(await media.ListAsync(cursor, limit, ct));
+
+    [HttpDelete("media/{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> DeleteMedia(Guid id, CancellationToken ct)
+    {
+        Result r = await media.DeleteAsync(id, ct);
+        return r.IsSuccess ? NoContent() : this.ToProblem(r.Error);
+    }
 
     // ---------- Hỗ trợ ----------
 

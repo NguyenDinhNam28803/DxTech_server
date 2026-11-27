@@ -70,7 +70,8 @@ decrypt() { gpg --batch --quiet --decrypt "$1" 2>/dev/null; }
 
 export FAKEPG_LOG="$W/fakepg.log" BACKUP_PG_EXEC="$W/fakepg"
 newcfg() { # newcfg <OFFSITE> [extra lines...]
-  { echo "BACKUP_DIR=$W/backups"; echo "OFFSITE=$1"; echo "GPG_RECIPIENT_FILE=$W/cfg/recipient.asc"; shift; printf '%s\n' "$@"; } >"$W/cfg/backup.env"
+  # MEDIA_DIR mặc định trỏ vào thư mục không tồn tại ⇒ các kiểm thử cũ không phụ thuộc máy chạy (mục 10 kiểm thử ảnh).
+  { echo "BACKUP_DIR=$W/backups"; echo "OFFSITE=$1"; echo "GPG_RECIPIENT_FILE=$W/cfg/recipient.asc"; echo "MEDIA_DIR=$W/no-media"; shift; printf '%s\n' "$@"; } >"$W/cfg/backup.env"
   chmod 600 "$W/cfg/backup.env"
 }
 export BACKUP_CONFIG="$W/cfg/backup.env"
@@ -170,5 +171,26 @@ grep -q 'backup-db.sh' "$CRONTAB_FILE" && fail "còn dòng backup-db.sh cũ"
 HOME="$W/home" BACKUP_CRONTAB="$W/crontab" BACKUP_CONFIG="$W/home/.config/dxtechs-backup/backup.env" "$B" --install >/dev/null 2>&1
 [ "$(grep -c 'dxtechs-backup/backup.sh' "$CRONTAB_FILE")" -eq 2 ] || fail "chạy lại --install bị nhân đôi cron"
 pass "--check OK; --install giữ cron khác, bỏ dòng cũ, chạy lại không nhân đôi"
+
+echo "10. Ảnh (CT-3b): tar mã hoá ra kho ngoài, bỏ file tạm, không để lại bản trên VPS"
+rm -rf "$W/backups" "$W/offsite"
+mkdir -p "$W/media/2026/11"
+printf 'png-1' >"$W/media/2026/11/0123456789abcdef0123456789abcdef.png"
+printf 'jpg-2' >"$W/media/2026/11/fedcba9876543210fedcba9876543210.jpg"
+printf 'dang-ghi' >"$W/media/.upload-123.tmp"
+newcfg dir "OFFSITE_DIR=$W/offsite" "MEDIA_DIR=$W/media"
+out="$("$B" 2>&1)" || fail "backup lỗi: $out"
+menc="$(find "$W/offsite" -name 'dxtechs-media-*.tar.gpg')"
+[ -n "$menc" ] || fail "không có bản ảnh ở kho ngoài: $out"
+listing="$(decrypt "$menc" | tar -tf -)"
+grep -q 'media/2026/11/0123456789abcdef0123456789abcdef.png' <<<"$listing" || fail "thiếu ảnh trong tar: $listing"
+grep -q 'upload-123' <<<"$listing" && fail "tar chứa file tạm đang ghi"
+! grep -q 'png-1' "$menc" || fail "bản ảnh ngoài VPS không được mã hoá"
+compgen -G "$W/backups/.media*" >/dev/null && fail "còn file ảnh tạm trên VPS"
+grep -q 'MEDIA OK dir:.* 2 file' <<<"$out" || fail "log thiếu MEDIA OK: $out"
+rm -rf "$W/media"/*; newcfg dir "OFFSITE_DIR=$W/offsite" "MEDIA_DIR=$W/media"
+out="$("$B" 2>&1)" || fail "backup lỗi khi thư mục ảnh rỗng: $out"
+grep -q 'MEDIA SKIP' <<<"$out" || fail "thư mục rỗng phải bỏ qua: $out"
+pass "ảnh được tar + mã hoá + giải mã khớp; file tạm bị loại; thư mục rỗng bỏ qua"
 
 echo "Tất cả kiểm thử backup: OK"

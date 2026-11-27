@@ -342,9 +342,8 @@ public sealed class PublicContentHandler
         }
 
         string baseUrl = _options.MediaBaseUrl.EndsWith('/') ? _options.MediaBaseUrl : _options.MediaBaseUrl + "/";
-        return await _db.Set<MediaFile>().AsNoTracking().Where(m => list.Contains(m.Id))
-            .ToDictionaryAsync(m => m.Id, m => new MediaRef(
-                $"{baseUrl}{m.CreatedAt.UtcDateTime:yyyy}/{m.CreatedAt.UtcDateTime:MM}/{m.FileName}", m.Width, m.Height), ct);
+        return (await _db.Set<MediaFile>().AsNoTracking().Where(m => list.Contains(m.Id)).ToListAsync(ct))
+            .ToDictionary(m => m.Id, m => new MediaRef(baseUrl + m.RelativePath, m.Width, m.Height));
     }
 
     private static CoverImage? Cover(Guid? mediaId, string? url, string? alt, IReadOnlyDictionary<Guid, MediaRef> media)
