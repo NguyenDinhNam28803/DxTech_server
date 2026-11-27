@@ -114,3 +114,14 @@ Lệnh `--seed-content` đọc bản xuất JSON của `articles.ts`, `solutions
 - Sitemap dùng `Catalog.Contracts.IProductSitemap` cho sản phẩm. Nginx trỏ `dxtechs.com/sitemap.xml` về API: làm cùng `location /media/` ở CT-3.
 - `SearchText` (dựng tsquery an toàn) chuyển sang `Shared/Text` để Catalog và Content dùng chung, không gọi chéo module.
 
+## Ghi chú triển khai (CT-3a, 27/11/2026)
+- CT-3 tách làm hai PR: **3a** API quản trị (bài, chủ đề, revision, lịch khai giảng, lead, job) — **3b** ảnh (magic bytes, xoá EXIF), Nginx
+  `/media/` + `/sitemap.xml`, backup thư mục ảnh.
+- Chống ghi đè bằng `ETag`/`If-Match` = xmin, hai lớp: so với bản vừa đọc + EF `WHERE xmin = …` khi UPDATE. 6 người lưu cùng một version cùng lúc
+  ⇒ đúng 1 thành công, 5 nhận 409. Thử phá (bỏ so version) ⇒ test "If-Match cũ ⇒ 409" đỏ. Thiếu `If-Match` trả 400 (không có 428 trong bộ mã lỗi chung).
+- Cấu trúc tối đa 2 tầng bài (trang → hạng mục) để khớp URL 3 cấp; bài cha phải cùng loại.
+- Đổi slug: ghi chuyển hướng từ slug cũ; slug mới từng là slug cũ thì xoá dòng chuyển hướng đó (lấy lại URL, không vòng). Thử phá ⇒ test đỏ.
+  Slug đang chuyển hướng không cho bài mới chiếm (tránh cướp URL cũ của bài khác).
+- Khôi phục revision kiểm lại khối (ảnh trong bản cũ có thể đã bị xoá) và tạo revision mới — lịch sử không bao giờ bị viết lại.
+- Thử phá policy (cho cả customer) ⇒ test phân quyền đỏ.
+
