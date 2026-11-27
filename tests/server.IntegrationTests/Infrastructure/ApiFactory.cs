@@ -24,6 +24,7 @@ public class ApiFactory : WebApplicationFactory<Program>
     public const string TestSigningKey = "integration-test-signing-key-0123456789abcdef";
     public const string TestLicenseKey = "dGVzdC1vbmx5LWxpY2Vuc2UtZW5jcnlwdGlvbi1rZXk=";
     public const string TestSepaySecret = "test-only-sepay-webhook-secret";
+    public const string TestConsentVersion = "test-consent-v1";
     public const string TestHmacKey = "dGVzdC1vbmx5LWxpY2Vuc2UtaG1hYy1rZXktMDAwMDA=";
 
     /// <summary>Ghi đè chuỗi kết nối; <c>null</c> = dùng <see cref="ConnectionString"/>.</summary>
@@ -47,6 +48,9 @@ public class ApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("Auth:RateLimits:OtherPerMinute", "10000");
         builder.UseSetting("Auth:RateLimits:CartQuotePerMinute", "10000");
         builder.UseSetting("Auth:RateLimits:OrdersPerHour", "10000");
+        builder.UseSetting("Auth:RateLimits:LeadsPerHour", "10000");
+        // ADR-015 (CT-2): văn bản đồng ý giả để mở form lead (test riêng kiểm tra trường hợp chưa cấu hình).
+        builder.UseSetting("Content:Leads:ConsentVersion", TestConsentVersion);
         // ADR-014: khoá license chỉ dùng trong test. ADR-013: tài khoản nhận tiền giả để mở đặt hàng.
         builder.UseSetting("License:CurrentVersion", "1");
         builder.UseSetting("License:EncryptionKeys:1", TestLicenseKey);

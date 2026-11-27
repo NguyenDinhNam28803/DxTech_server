@@ -103,3 +103,14 @@ Lệnh `--seed-content` đọc bản xuất JSON của `articles.ts`, `solutions
 - Policy `content` (editor | admin) dùng chung handler với `admin`: role trong DB + trạng thái + security stamp. Thử phá (bỏ so stamp) ⇒ test
   "nâng lại admin, token cũ vẫn bị từ chối" đỏ.
 
+## Ghi chú triển khai (CT-2, 27/11/2026)
+- Một điều kiện hiển thị duy nhất (`PublicContentHandler.Visible`) dùng cho chi tiết, danh sách, cây chủ đề, bài nổi bật, sitemap. Thử phá (bỏ
+  `published_at <= now`) ⇒ test bài hẹn giờ đỏ. Trang cha bị ẩn ⇒ hạng mục con 404 và không vào sitemap; chủ đề tắt ⇒ cả nhánh ẩn khỏi cây.
+- Slug cũ ⇒ 301 chỉ khi bài đích đang hiển thị (không lộ slug của bản nháp).
+- Danh sách: keyset `(published_at, id)` — thử phá (bỏ so `id` khi trùng thời điểm) ⇒ mất bài giữa hai trang, test đỏ.
+- `path` của mỗi bài/chủ đề tính ở `WebPaths` (một nơi, khớp router web) — web, sitemap và AI tư vấn dùng chung.
+- Lead: form đóng tới khi có `Content:Leads:ConsentVersion` (văn bản đồng ý do pháp chế duyệt, câu hỏi mở 2). Bot (trường bẫy, gửi < 3 giây)
+  nhận 202 như thật nhưng không ghi — thử phá (bỏ trường bẫy) ⇒ test đỏ. Rate limit nhóm `leads` 5/giờ/IP. Email thông báo: Phase 4.
+- Sitemap dùng `Catalog.Contracts.IProductSitemap` cho sản phẩm. Nginx trỏ `dxtechs.com/sitemap.xml` về API: làm cùng `location /media/` ở CT-3.
+- `SearchText` (dựng tsquery an toàn) chuyển sang `Shared/Text` để Catalog và Content dùng chung, không gọi chéo module.
+

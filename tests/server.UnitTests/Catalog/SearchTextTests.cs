@@ -1,3 +1,4 @@
+using server.Shared.Text;
 using server.Modules.Catalog.Features.Products;
 
 namespace server.UnitTests.Catalog;

@@ -33,6 +33,7 @@ public static class CatalogModule
         services.AddScoped<DemoCatalogSeeder>();
         services.AddScoped<Contracts.IVariantPricing, VariantPricing>();
         services.AddScoped<Contracts.IVariantDirectory, VariantDirectory>();
+        services.AddScoped<Contracts.IProductSitemap, ProductSitemap>();
         return services;
     }
 
