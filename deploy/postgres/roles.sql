@@ -160,6 +160,26 @@ BEGIN
 END
 $roles5b$;
 
+-- 5c. Content (CT-1, ADR-015): bài/chủ đề/ảnh/lead không xoá cứng, revision chỉ thêm --------------------
+-- Giống hệt server/Modules/Content/Persistence/ContentPrivileges.cs. Bỏ qua khi migration Content_Initial chưa chạy.
+DO $roles5c$
+BEGIN
+  IF to_regclass('content.posts') IS NOT NULL THEN
+    EXECUTE $sql$
+        DO $content$
+        BEGIN
+          IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'dxtechs_app') THEN
+            REVOKE DELETE, TRUNCATE ON content.posts, content.topics, content.media, content.leads FROM dxtechs_app;
+            REVOKE UPDATE, TRUNCATE ON content.post_revisions FROM dxtechs_app;
+            REVOKE TRUNCATE ON content.slug_redirects, content.course_sessions FROM dxtechs_app;
+          END IF;
+        END
+        $content$;
+    $sql$;
+  END IF;
+END
+$roles5c$;
+
 -- 6. Quyền tự động cho đối tượng dxtechs_owner tạo SAU NÀY (schema/bảng của migration mới) -------
 ALTER DEFAULT PRIVILEGES FOR ROLE dxtechs_owner GRANT USAGE ON SCHEMAS TO dxtechs_app;
 ALTER DEFAULT PRIVILEGES FOR ROLE dxtechs_owner GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO dxtechs_app;

@@ -5,4 +5,7 @@ public static class Policies
 {
     /// <summary>Admin đang hoạt động — kiểm tra lại trạng thái trong DB.</summary>
     public const string Admin = "admin";
+
+    /// <summary>Quản lý nội dung (ADR-015 §4): editor hoặc admin đang hoạt động — kiểm tra lại DB như <see cref="Admin"/>.</summary>
+    public const string Content = "content";
 }

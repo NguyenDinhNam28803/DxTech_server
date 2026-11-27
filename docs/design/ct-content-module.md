@@ -1,6 +1,6 @@
 # Thiết kế triển khai module Content (CT-1 → CT-C2)
 
-- **Trạng thái:** Chờ Backend Lead duyệt · **Ngày:** 27/11/2026 · **Quyết định:** ADR-015
+- **Trạng thái:** Đã duyệt 27/11/2026 · CT-1 đã làm (xem ghi chú triển khai cuối ADR-015) · **Ngày:** 27/11/2026 · **Quyết định:** ADR-015
 - **Lịch (phương án B):** 07/12 → 20/12/2026, sau PR-9/10/11. Thứ tự: CT-1 → CT-2 → CT-3 → CT-C1 → CT-C2.
 
 ## 1. Bảng (schema `content`)

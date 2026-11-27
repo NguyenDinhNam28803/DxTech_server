@@ -188,10 +188,49 @@ if [ "${DB_ROLES_RUN_MIGRATIONS:-0}" = 1 ]; then
       "UPDATE sales.orders SET note = 'kiểm tra quyền' WHERE code = 'DX7K3QH9M2'"
     expect_ok "app dọn webhook cũ ($1)" dxtechs_app "$new_app_pw" "DELETE FROM payments.webhook_events WHERE received_at < now() - interval '180 days'"
   }
+  # CT-1 (ADR-015): role editor hợp lệ; bài/chủ đề/lead không xoá cứng; revision chỉ thêm (được xoá để dọn bản cũ).
+  content_seed="
+    INSERT INTO identity.users (id, email, password_hash, full_name, role, status, failed_login_count, security_stamp)
+      VALUES ('00000000-0000-7000-8000-000000000011', 'editor@dxtechs.test', repeat('h', 40), 'Editor', 'editor', 'active', 0, gen_random_uuid())
+      ON CONFLICT DO NOTHING;
+    INSERT INTO content.topics (id, post_type, slug, name, sort_order) VALUES ('00000000-0000-7000-8000-000000000012', 'news', 'roles-test', 'Roles', 0)
+      ON CONFLICT DO NOTHING;
+    INSERT INTO content.posts (id, post_type, topic_id, slug, title, blocks, status, published_at, author_id, updated_by, sort_order, is_featured)
+      VALUES ('00000000-0000-7000-8000-000000000013', 'news', '00000000-0000-7000-8000-000000000012', 'roles-test', 'Điện toán đám mây',
+              '[{\"id\":\"b1\",\"type\":\"paragraph\",\"spans\":[{\"text\":\"Kiểm tra quyền\"}]}]', 'published', now(),
+              '00000000-0000-7000-8000-000000000011', '00000000-0000-7000-8000-000000000011', 0, false)
+      ON CONFLICT DO NOTHING;
+    -- Bài + chủ đề KHÔNG có dòng phụ thuộc: DELETE chỉ có thể bị chặn bởi quyền, không phải bởi khoá ngoại.
+    INSERT INTO content.topics (id, post_type, slug, name, sort_order) VALUES ('00000000-0000-7000-8000-000000000015', 'news', 'roles-empty', 'Rỗng', 0)
+      ON CONFLICT DO NOTHING;
+    INSERT INTO content.posts (id, post_type, slug, title, blocks, status, author_id, updated_by, sort_order, is_featured)
+      VALUES ('00000000-0000-7000-8000-000000000016', 'news', 'roles-empty', 'Rỗng', '[]', 'draft',
+              '00000000-0000-7000-8000-000000000011', '00000000-0000-7000-8000-000000000011', 0, false)
+      ON CONFLICT DO NOTHING;
+    INSERT INTO content.post_revisions (post_id, title, blocks, key_points, saved_by)
+      VALUES ('00000000-0000-7000-8000-000000000013', 'v1', '[]', '[]', '00000000-0000-7000-8000-000000000011');
+    INSERT INTO content.leads (id, kind, full_name, email, consent_version, consent_at)
+      VALUES ('00000000-0000-7000-8000-000000000014', 'consultation', 'Khách', 'lead@dxtechs.test', 'v1', now()) ON CONFLICT DO NOTHING"
+  expect_ok "app tạo bài + revision + lead, user role editor (Content)" dxtechs_app "$new_app_pw" "$content_seed"
+  content_checks() {
+    expect_denied "app xoá bài viết ($1)" dxtechs_app "$new_app_pw" "DELETE FROM content.posts WHERE slug = 'roles-empty'"
+    expect_denied "app xoá chủ đề ($1)" dxtechs_app "$new_app_pw" "DELETE FROM content.topics WHERE slug = 'roles-empty'"
+    expect_denied "app xoá lead ($1)" dxtechs_app "$new_app_pw" "DELETE FROM content.leads"
+    expect_denied "app sửa revision ($1)" dxtechs_app "$new_app_pw" "UPDATE content.post_revisions SET title = 'x'"
+    expect_ok "app sửa bài + tìm không dấu trong khối ($1)" dxtechs_app "$new_app_pw" \
+      "UPDATE content.posts SET excerpt = 'x' WHERE slug = 'roles-test';
+       DO \$\$ BEGIN IF NOT EXISTS (SELECT 1 FROM content.posts WHERE search_vector @@ plainto_tsquery('simple', 'kiem tra quyen'))
+         THEN RAISE EXCEPTION 'search_vector không chứa chữ trong khối'; END IF; END \$\$"
+    expect_ok "app ẩn danh hoá lead ($1)" dxtechs_app "$new_app_pw" \
+      "UPDATE content.leads SET full_name = 'Đã ẩn danh', email = NULL, anonymized_at = now() WHERE id = '00000000-0000-7000-8000-000000000014'"
+    expect_ok "app dọn revision cũ ($1)" dxtechs_app "$new_app_pw" "DELETE FROM content.post_revisions WHERE title = 'không tồn tại'"
+  }
+  content_checks "sau migration"
   phase3_checks "sau migration"
   # db-roles chạy lại ở MỌI lần deploy và mục 5 cấp lại toàn bộ quyền ⇒ mục 5b phải thu hồi lại.
   DB_APP_PASSWORD="$new_app_pw" run_roles
   phase3_checks "sau khi chạy lại roles.sql"
+  content_checks "sau khi chạy lại roles.sql"
   expect_denied "app xoá bảng identity" dxtechs_app "$new_app_pw" "DROP TABLE identity.refresh_tokens"
   expect_denied "app tạo bảng trong catalog" dxtechs_app "$new_app_pw" "CREATE TABLE catalog.hack (id int)"
   expect_denied "app xoá bảng catalog" dxtechs_app "$new_app_pw" "DROP TABLE catalog.product_variants"

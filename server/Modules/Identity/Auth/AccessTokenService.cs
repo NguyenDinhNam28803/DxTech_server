@@ -76,7 +76,7 @@ internal sealed class AccessTokenService
             Subject = new ClaimsIdentity(
             [
                 new Claim(AuthClaims.Subject, user.Id.ToString()),
-                new Claim(AuthClaims.Role, user.Role == UserRole.Admin ? "admin" : "customer"),
+                new Claim(AuthClaims.Role, UserRoles.Name(user.Role)),
                 new Claim(AuthClaims.StampPrefix, AuthClaims.StampOf(user)),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
             ]),

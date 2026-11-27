@@ -1,10 +1,37 @@
 namespace server.Modules.Identity.Domain;
 
-/// <summary>Vai trò của tài khoản (ADR-012 §5). Lưu DB: customer | admin. Tự đăng ký luôn là customer.</summary>
+/// <summary>
+/// Vai trò của tài khoản (ADR-012 §5, ADR-015 §4). Lưu DB: customer | editor | admin. Tự đăng ký luôn là customer;
+/// editor/admin chỉ cấp qua CLI (<c>--create-admin</c>, <c>--set-role</c>).
+/// </summary>
 internal enum UserRole
 {
     Customer,
+    /// <summary>Biên tập nội dung (module Content): không thấy đơn hàng, thanh toán, key, người dùng.</summary>
+    Editor,
     Admin,
+}
+
+/// <summary>Tên role trong token/API — trùng giá trị lưu DB (snake_case của enum).</summary>
+internal static class UserRoles
+{
+    public static string Name(UserRole role)
+        => server.Infrastructure.Persistence.Conversions.SnakeCaseEnumConverter<UserRole>.ToProvider(role);
+
+    public static bool TryParse(string? value, out UserRole role)
+    {
+        foreach (UserRole r in Enum.GetValues<UserRole>())
+        {
+            if (string.Equals(Name(r), value?.Trim(), StringComparison.OrdinalIgnoreCase))
+            {
+                role = r;
+                return true;
+            }
+        }
+
+        role = default;
+        return false;
+    }
 }
 
 /// <summary>

@@ -29,6 +29,7 @@ public static class IdentityModule
 
         // Handler có constructor internal (nhận kiểu internal của module) ⇒ đăng ký tường minh.
         services.AddScoped(sp => new CreateAdminHandler(sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<IPasswordHasher<User>>()));
+        services.AddScoped(sp => new SetRoleHandler(sp.GetRequiredService<AppDbContext>()));
         services.AddScoped(sp => new RegisterHandler(
             sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<IPasswordHasher<User>>(), sp.GetRequiredService<SessionService>()));
         services.AddScoped(sp => new LoginHandler(
@@ -96,6 +97,37 @@ public static class IdentityModule
         }
 
         await output.WriteLineAsync($"create-admin: đã tạo admin {result.Value.Email} (id {result.Value.Id}).");
+        return 0;
+    }
+
+    /// <summary>
+    /// Lệnh <c>--set-role &lt;email&gt; &lt;customer|editor|admin&gt;</c> (ADR-015 §4): đổi role tài khoản đã đăng ký rồi thoát.
+    /// Mã thoát: 0 thành công (kể cả không đổi gì), 1 lỗi, 2 sai cú pháp.
+    /// </summary>
+    public static async Task<int> SetRoleAsync(IServiceProvider services, string[] args, TextWriter output, CancellationToken ct = default)
+    {
+        int i = Array.IndexOf(args, "--set-role");
+        string? email = i >= 0 && i + 1 < args.Length && !args[i + 1].StartsWith("--") ? args[i + 1] : null;
+        string? role = i >= 0 && i + 2 < args.Length && !args[i + 2].StartsWith("--") ? args[i + 2] : null;
+        if (email is null || role is null)
+        {
+            await output.WriteLineAsync("Dùng: --set-role <email> <customer|editor|admin>");
+            return 2;
+        }
+
+        await using AsyncServiceScope scope = services.CreateAsyncScope();
+        Result<SetRoleResponse> result = await scope.ServiceProvider.GetRequiredService<SetRoleHandler>()
+            .HandleAsync(new SetRoleCommand(email, role), ct);
+        if (result.IsFailure)
+        {
+            await output.WriteLineAsync($"set-role THẤT BẠI: {result.Error.Message}");
+            return 1;
+        }
+
+        SetRoleResponse r = result.Value;
+        await output.WriteLineAsync(r.Changed
+            ? $"set-role: {r.Email} {r.PreviousRole} → {r.Role} (token cũ hết quyền ngay; lần làm mới phiên kế tiếp nhận role mới)."
+            : $"set-role: {r.Email} đã là {r.Role} — không đổi gì.");
         return 0;
     }
 

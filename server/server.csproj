@@ -19,6 +19,8 @@
     <EmbeddedResource Include="Modules/Catalog/Seeding/demo-catalog.json" LogicalName="server.Modules.Catalog.Seeding.demo-catalog.json" />
     <Content Remove="Modules/Catalog/Seeding/demo-catalog.json" />
     <!-- Mật khẩu phổ biến (ADR-012 §2), đọc một lần khi khởi động. -->
+    <EmbeddedResource Include="Modules/Content/Seeding/content-seed.json" LogicalName="server.Modules.Content.Seeding.content-seed.json" />
+    <Content Remove="Modules/Content/Seeding/content-seed.json" />
     <EmbeddedResource Include="Modules/Identity/Domain/common-passwords.txt" LogicalName="server.Modules.Identity.Domain.common-passwords.txt" />
   </ItemGroup>
 

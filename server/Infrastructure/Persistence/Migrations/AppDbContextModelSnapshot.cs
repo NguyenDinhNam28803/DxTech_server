@@ -336,6 +336,689 @@ namespace server.Infrastructure.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("server.Modules.Content.Domain.CourseSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateOnly?>("EndsOn")
+                        .HasColumnType("date")
+                        .HasColumnName("ends_on");
+
+                    b.Property<string>("Format")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("format");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("text")
+                        .HasColumnName("location");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("post_id");
+
+                    b.Property<long?>("PriceVnd")
+                        .HasColumnType("bigint")
+                        .HasColumnName("price_vnd");
+
+                    b.Property<int?>("Seats")
+                        .HasColumnType("integer")
+                        .HasColumnName("seats");
+
+                    b.Property<DateOnly>("StartsOn")
+                        .HasColumnType("date")
+                        .HasColumnName("starts_on");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("open")
+                        .HasColumnName("status");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.HasKey("Id")
+                        .HasName("pk_course_sessions");
+
+                    b.HasIndex("PostId", "StartsOn")
+                        .HasDatabaseName("ix_course_sessions_post_id");
+
+                    b.ToTable("course_sessions", "content", t =>
+                        {
+                            t.HasCheckConstraint("ck_course_sessions_dates", "ends_on IS NULL OR ends_on >= starts_on");
+
+                            t.HasCheckConstraint("ck_course_sessions_format", "format IN ('online', 'offline', 'hybrid')");
+
+                            t.HasCheckConstraint("ck_course_sessions_location", "location IS NULL OR char_length(location) <= 200");
+
+                            t.HasCheckConstraint("ck_course_sessions_price", "price_vnd IS NULL OR price_vnd >= 0");
+
+                            t.HasCheckConstraint("ck_course_sessions_seats", "seats IS NULL OR seats > 0");
+
+                            t.HasCheckConstraint("ck_course_sessions_status", "status IN ('open', 'full', 'closed')");
+                        });
+                });
+
+            modelBuilder.Entity("server.Modules.Content.Domain.Lead", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset?>("AnonymizedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("anonymized_at");
+
+                    b.Property<string>("Company")
+                        .HasColumnType("text")
+                        .HasColumnName("company");
+
+                    b.Property<DateTimeOffset>("ConsentAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("consent_at");
+
+                    b.Property<string>("ConsentVersion")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("consent_version");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("citext")
+                        .HasColumnName("email");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("full_name");
+
+                    b.Property<Guid?>("HandledBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("handled_by");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("kind");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("text")
+                        .HasColumnName("message");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("text")
+                        .HasColumnName("note");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("text")
+                        .HasColumnName("phone");
+
+                    b.Property<Guid?>("PostId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("post_id");
+
+                    b.Property<Guid?>("SessionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("session_id");
+
+                    b.Property<IPAddress>("SourceIp")
+                        .HasColumnType("inet")
+                        .HasColumnName("source_ip");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("new")
+                        .HasColumnName("status");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("UserAgent")
+                        .HasColumnType("text")
+                        .HasColumnName("user_agent");
+
+                    b.HasKey("Id")
+                        .HasName("pk_leads");
+
+                    b.HasIndex("CreatedAt")
+                        .HasDatabaseName("ix_leads_to_anonymize")
+                        .HasFilter("anonymized_at IS NULL");
+
+                    b.HasIndex("HandledBy")
+                        .HasDatabaseName("ix_leads_handled_by");
+
+                    b.HasIndex("PostId")
+                        .HasDatabaseName("ix_leads_post_id");
+
+                    b.HasIndex("SessionId")
+                        .HasDatabaseName("ix_leads_session_id");
+
+                    b.HasIndex("Status", "CreatedAt")
+                        .IsDescending(false, true)
+                        .HasDatabaseName("ix_leads_status_created_at");
+
+                    b.ToTable("leads", "content", t =>
+                        {
+                            t.HasCheckConstraint("ck_leads_consent_version", "char_length(consent_version) BETWEEN 1 AND 40");
+
+                            t.HasCheckConstraint("ck_leads_contact", "anonymized_at IS NOT NULL OR email IS NOT NULL OR phone IS NOT NULL");
+
+                            t.HasCheckConstraint("ck_leads_course", "kind <> 'course' OR post_id IS NOT NULL");
+
+                            t.HasCheckConstraint("ck_leads_email", "email IS NULL OR char_length(email) BETWEEN 3 AND 254");
+
+                            t.HasCheckConstraint("ck_leads_full_name", "char_length(full_name) BETWEEN 1 AND 100");
+
+                            t.HasCheckConstraint("ck_leads_kind", "kind IN ('consultation', 'course')");
+
+                            t.HasCheckConstraint("ck_leads_phone", "phone IS NULL OR phone ~ '^\\+?[0-9]{8,15}$'");
+
+                            t.HasCheckConstraint("ck_leads_status", "status IN ('new', 'contacted', 'closed')");
+
+                            t.HasCheckConstraint("ck_leads_texts", "(company IS NULL OR char_length(company) <= 200) AND (message IS NULL OR char_length(message) <= 2000) AND (user_agent IS NULL OR char_length(user_agent) <= 500) AND (note IS NULL OR char_length(note) <= 2000)");
+                        });
+                });
+
+            modelBuilder.Entity("server.Modules.Content.Domain.MediaFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("AltDefault")
+                        .HasColumnType("text")
+                        .HasColumnName("alt_default");
+
+                    b.Property<long>("Bytes")
+                        .HasColumnType("bigint")
+                        .HasColumnName("bytes");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("content_type");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("file_name");
+
+                    b.Property<int>("Height")
+                        .HasColumnType("integer")
+                        .HasColumnName("height");
+
+                    b.Property<byte[]>("Sha256")
+                        .IsRequired()
+                        .HasColumnType("bytea")
+                        .HasColumnName("sha256");
+
+                    b.Property<Guid>("UploadedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("uploaded_by");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("integer")
+                        .HasColumnName("width");
+
+                    b.HasKey("Id")
+                        .HasName("pk_media");
+
+                    b.HasIndex("FileName")
+                        .IsUnique()
+                        .HasDatabaseName("ix_media_file_name");
+
+                    b.HasIndex("Sha256")
+                        .IsUnique()
+                        .HasDatabaseName("ix_media_sha256");
+
+                    b.HasIndex("UploadedBy")
+                        .HasDatabaseName("ix_media_uploaded_by");
+
+                    b.ToTable("media", "content", t =>
+                        {
+                            t.HasCheckConstraint("ck_media_alt_default", "alt_default IS NULL OR char_length(alt_default) <= 200");
+
+                            t.HasCheckConstraint("ck_media_bytes", "bytes BETWEEN 1 AND 5242880");
+
+                            t.HasCheckConstraint("ck_media_content_type", "content_type IN ('image/jpeg', 'image/png', 'image/webp')");
+
+                            t.HasCheckConstraint("ck_media_dimensions", "width BETWEEN 1 AND 6000 AND height BETWEEN 1 AND 6000");
+
+                            t.HasCheckConstraint("ck_media_file_name", "file_name ~ '^[0-9a-f]{32}\\.(jpg|png|webp)$'");
+
+                            t.HasCheckConstraint("ck_media_sha256", "octet_length(sha256) = 32");
+                        });
+                });
+
+            modelBuilder.Entity("server.Modules.Content.Domain.Post", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("author_id");
+
+                    b.Property<string>("Blocks")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("blocks")
+                        .HasDefaultValueSql("'[]'::jsonb");
+
+                    b.Property<string>("CoverImageAlt")
+                        .HasColumnType("text")
+                        .HasColumnName("cover_image_alt");
+
+                    b.Property<string>("CoverImageUrl")
+                        .HasColumnType("text")
+                        .HasColumnName("cover_image_url");
+
+                    b.Property<Guid?>("CoverMediaId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("cover_media_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<string>("Excerpt")
+                        .HasColumnType("text")
+                        .HasColumnName("excerpt");
+
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_featured");
+
+                    b.Property<string>("KeyPoints")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("key_points")
+                        .HasDefaultValueSql("'[]'::jsonb");
+
+                    b.Property<string>("Label")
+                        .HasColumnType("text")
+                        .HasColumnName("label");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("parent_id");
+
+                    b.Property<string>("PostType")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("post_type");
+
+                    b.Property<DateTimeOffset?>("PublishedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("published_at");
+
+                    b.Property<short?>("ReadingMinutes")
+                        .HasColumnType("smallint")
+                        .HasColumnName("reading_minutes");
+
+                    b.Property<NpgsqlTsVector>("SearchVector")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("tsvector")
+                        .HasColumnName("search_vector")
+                        .HasComputedColumnSql("setweight(to_tsvector('simple'::regconfig, content.f_unaccent(coalesce(title, ''))), 'A') || setweight(to_tsvector('simple'::regconfig, content.f_unaccent(coalesce(excerpt, ''))), 'B') || setweight(to_tsvector('simple'::regconfig, content.f_unaccent(content.f_blocks_text(blocks))), 'C')", true);
+
+                    b.Property<string>("SeoDescription")
+                        .HasColumnType("text")
+                        .HasColumnName("seo_description");
+
+                    b.Property<string>("SeoTitle")
+                        .HasColumnType("text")
+                        .HasColumnName("seo_title");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("slug");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer")
+                        .HasColumnName("sort_order");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("draft")
+                        .HasColumnName("status");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title");
+
+                    b.Property<Guid?>("TopicId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("topic_id");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_posts");
+
+                    b.HasIndex("AuthorId")
+                        .HasDatabaseName("ix_posts_author_id");
+
+                    b.HasIndex("CoverMediaId")
+                        .HasDatabaseName("ix_posts_cover_media_id");
+
+                    b.HasIndex("SearchVector")
+                        .HasDatabaseName("ix_posts_search_vector");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "gin");
+
+                    b.HasIndex("UpdatedBy")
+                        .HasDatabaseName("ix_posts_updated_by");
+
+                    b.HasIndex("ParentId", "SortOrder")
+                        .HasDatabaseName("ix_posts_parent_id_sort_order");
+
+                    b.HasIndex("PostType", "PublishedAt")
+                        .IsDescending(false, true)
+                        .HasDatabaseName("ix_posts_public_list")
+                        .HasFilter("status = 'published' AND deleted_at IS NULL");
+
+                    b.HasIndex("PostType", "Slug")
+                        .IsUnique()
+                        .HasDatabaseName("ux_posts_type_slug")
+                        .HasFilter("deleted_at IS NULL");
+
+                    b.HasIndex("PostType", "UpdatedAt")
+                        .IsDescending(false, true)
+                        .HasDatabaseName("ix_posts_admin_list");
+
+                    b.HasIndex("TopicId", "SortOrder")
+                        .HasDatabaseName("ix_posts_topic_id_sort_order");
+
+                    b.ToTable("posts", "content", t =>
+                        {
+                            t.HasCheckConstraint("ck_posts_blocks", "jsonb_typeof(blocks) = 'array' AND jsonb_array_length(blocks) <= 200");
+
+                            t.HasCheckConstraint("ck_posts_cover_image", "(cover_image_url IS NULL OR (cover_image_url ~ '^https://[^\\s]+$' AND char_length(cover_image_url) <= 2000)) AND (cover_image_alt IS NULL OR char_length(cover_image_alt) <= 200)");
+
+                            t.HasCheckConstraint("ck_posts_excerpt", "excerpt IS NULL OR char_length(excerpt) <= 500");
+
+                            t.HasCheckConstraint("ck_posts_key_points", "jsonb_typeof(key_points) = 'array' AND jsonb_array_length(key_points) <= 10");
+
+                            t.HasCheckConstraint("ck_posts_label", "label IS NULL OR char_length(label) <= 40");
+
+                            t.HasCheckConstraint("ck_posts_not_own_parent", "parent_id IS DISTINCT FROM id");
+
+                            t.HasCheckConstraint("ck_posts_post_type", "post_type IN ('news', 'solution', 'training', 'resource', 'glossary', 'page')");
+
+                            t.HasCheckConstraint("ck_posts_published_at", "status <> 'published' OR published_at IS NOT NULL");
+
+                            t.HasCheckConstraint("ck_posts_reading_minutes", "reading_minutes IS NULL OR reading_minutes BETWEEN 1 AND 600");
+
+                            t.HasCheckConstraint("ck_posts_seo", "(seo_title IS NULL OR char_length(seo_title) <= 70) AND (seo_description IS NULL OR char_length(seo_description) <= 160)");
+
+                            t.HasCheckConstraint("ck_posts_slug", "slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$' AND char_length(slug) <= 150");
+
+                            t.HasCheckConstraint("ck_posts_status", "status IN ('draft', 'published', 'archived')");
+
+                            t.HasCheckConstraint("ck_posts_title", "char_length(title) BETWEEN 1 AND 200");
+                        });
+                });
+
+            modelBuilder.Entity("server.Modules.Content.Domain.PostRevision", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Blocks")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("blocks");
+
+                    b.Property<string>("KeyPoints")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("key_points");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("post_id");
+
+                    b.Property<DateTimeOffset>("SavedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("saved_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid>("SavedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("saved_by");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title");
+
+                    b.HasKey("Id")
+                        .HasName("pk_post_revisions");
+
+                    b.HasIndex("SavedBy")
+                        .HasDatabaseName("ix_post_revisions_saved_by");
+
+                    b.HasIndex("PostId", "Id")
+                        .IsDescending(false, true)
+                        .HasDatabaseName("ix_post_revisions_post_id");
+
+                    b.ToTable("post_revisions", "content", t =>
+                        {
+                            t.HasCheckConstraint("ck_post_revisions_blocks", "jsonb_typeof(blocks) = 'array'");
+
+                            t.HasCheckConstraint("ck_post_revisions_key_points", "jsonb_typeof(key_points) = 'array'");
+
+                            t.HasCheckConstraint("ck_post_revisions_title", "char_length(title) BETWEEN 1 AND 200");
+                        });
+                });
+
+            modelBuilder.Entity("server.Modules.Content.Domain.SlugRedirect", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("OldSlug")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("old_slug");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("post_id");
+
+                    b.Property<string>("PostType")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("post_type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_slug_redirects");
+
+                    b.HasIndex("PostId")
+                        .HasDatabaseName("ix_slug_redirects_post_id");
+
+                    b.HasIndex("PostType", "OldSlug")
+                        .IsUnique()
+                        .HasDatabaseName("ux_slug_redirects_type_old_slug");
+
+                    b.ToTable("slug_redirects", "content", t =>
+                        {
+                            t.HasCheckConstraint("ck_slug_redirects_old_slug", "old_slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$' AND char_length(old_slug) <= 150");
+
+                            t.HasCheckConstraint("ck_slug_redirects_post_type", "post_type IN ('news', 'solution', 'training', 'resource', 'glossary', 'page')");
+                        });
+                });
+
+            modelBuilder.Entity("server.Modules.Content.Domain.Topic", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text")
+                        .HasColumnName("image_url");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("parent_id");
+
+                    b.Property<string>("PostType")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("post_type");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("slug");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer")
+                        .HasColumnName("sort_order");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_topics");
+
+                    b.HasIndex("ParentId")
+                        .HasDatabaseName("ix_topics_parent_id");
+
+                    b.HasIndex("PostType", "ParentId", "Slug")
+                        .IsUnique()
+                        .HasDatabaseName("ux_topics_type_parent_slug")
+                        .HasFilter("deleted_at IS NULL");
+
+                    NpgsqlIndexBuilderExtensions.AreNullsDistinct(b.HasIndex("PostType", "ParentId", "Slug"), false);
+
+                    b.ToTable("topics", "content", t =>
+                        {
+                            t.HasCheckConstraint("ck_topics_description", "description IS NULL OR char_length(description) <= 500");
+
+                            t.HasCheckConstraint("ck_topics_image_url", "image_url IS NULL OR (image_url ~ '^https://[^\\s]+$' AND char_length(image_url) <= 2000)");
+
+                            t.HasCheckConstraint("ck_topics_name", "char_length(name) BETWEEN 1 AND 100");
+
+                            t.HasCheckConstraint("ck_topics_not_own_parent", "parent_id IS DISTINCT FROM id");
+
+                            t.HasCheckConstraint("ck_topics_post_type", "post_type IN ('news', 'solution', 'training', 'resource', 'glossary', 'page')");
+
+                            t.HasCheckConstraint("ck_topics_slug", "slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$' AND char_length(slug) <= 150");
+                        });
+                });
+
             modelBuilder.Entity("server.Modules.Identity.Domain.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -533,7 +1216,7 @@ namespace server.Infrastructure.Persistence.Migrations
 
                             t.HasCheckConstraint("ck_users_phone", "phone IS NULL OR phone ~ '^\\+?[0-9]{8,15}$'");
 
-                            t.HasCheckConstraint("ck_users_role", "role IN ('customer', 'admin')");
+                            t.HasCheckConstraint("ck_users_role", "role IN ('customer', 'editor', 'admin')");
 
                             t.HasCheckConstraint("ck_users_status", "status IN ('active', 'locked', 'disabled')");
 
@@ -1222,6 +1905,118 @@ namespace server.Infrastructure.Persistence.Migrations
                         .HasConstraintName("fk_product_variants_products_product_id");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("server.Modules.Content.Domain.CourseSession", b =>
+                {
+                    b.HasOne("server.Modules.Content.Domain.Post", null)
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_course_sessions_posts_post_id");
+                });
+
+            modelBuilder.Entity("server.Modules.Content.Domain.Lead", b =>
+                {
+                    b.HasOne("server.Modules.Identity.Domain.User", null)
+                        .WithMany()
+                        .HasForeignKey("HandledBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_leads_users_handled_by");
+
+                    b.HasOne("server.Modules.Content.Domain.Post", null)
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_leads_posts_post_id");
+
+                    b.HasOne("server.Modules.Content.Domain.CourseSession", null)
+                        .WithMany()
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_leads_course_sessions_session_id");
+                });
+
+            modelBuilder.Entity("server.Modules.Content.Domain.MediaFile", b =>
+                {
+                    b.HasOne("server.Modules.Identity.Domain.User", null)
+                        .WithMany()
+                        .HasForeignKey("UploadedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_media_users_uploaded_by");
+                });
+
+            modelBuilder.Entity("server.Modules.Content.Domain.Post", b =>
+                {
+                    b.HasOne("server.Modules.Identity.Domain.User", null)
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_posts_users_author_id");
+
+                    b.HasOne("server.Modules.Content.Domain.MediaFile", null)
+                        .WithMany()
+                        .HasForeignKey("CoverMediaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_posts_media_cover_media_id");
+
+                    b.HasOne("server.Modules.Content.Domain.Post", null)
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_posts_posts_parent_id");
+
+                    b.HasOne("server.Modules.Content.Domain.Topic", null)
+                        .WithMany()
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_posts_topics_topic_id");
+
+                    b.HasOne("server.Modules.Identity.Domain.User", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_posts_users_updated_by");
+                });
+
+            modelBuilder.Entity("server.Modules.Content.Domain.PostRevision", b =>
+                {
+                    b.HasOne("server.Modules.Content.Domain.Post", null)
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_post_revisions_posts_post_id");
+
+                    b.HasOne("server.Modules.Identity.Domain.User", null)
+                        .WithMany()
+                        .HasForeignKey("SavedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_post_revisions_users_saved_by");
+                });
+
+            modelBuilder.Entity("server.Modules.Content.Domain.SlugRedirect", b =>
+                {
+                    b.HasOne("server.Modules.Content.Domain.Post", null)
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_slug_redirects_posts_post_id");
+                });
+
+            modelBuilder.Entity("server.Modules.Content.Domain.Topic", b =>
+                {
+                    b.HasOne("server.Modules.Content.Domain.Topic", null)
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_topics_topics_parent_id");
                 });
 
             modelBuilder.Entity("server.Modules.Identity.Domain.RefreshToken", b =>

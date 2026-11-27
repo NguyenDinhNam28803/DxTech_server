@@ -8,6 +8,7 @@ using server.Infrastructure.Options;
 using server.Infrastructure.Persistence;
 using server.Infrastructure.Persistence.Interceptors;
 using server.Modules.Catalog;
+using server.Modules.Content;
 using server.Modules.Identity;
 using server.Modules.Inventory;
 using server.Modules.Payments;
@@ -48,6 +49,7 @@ builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
 
 // Module nghiệp vụ (ADR-001): mỗi module tự đăng ký service của mình.
 builder.Services.AddCatalogModule(builder.Configuration);
+builder.Services.AddContentModule(builder.Configuration);
 builder.Services.AddIdentityModule(builder.Configuration);
 builder.Services.AddInventoryModule(builder.Configuration);
 builder.Services.AddPaymentsModule(builder.Configuration);
@@ -128,6 +130,20 @@ if (args.Contains("--create-admin"))
 {
     return await IdentityModule.CreateAdminAsync(
         app.Services, args, Console.In, Console.Out, interactive: !Console.IsInputRedirected);
+}
+
+// ADR-015 (CT-1): đổi role tài khoản đã đăng ký (cấp quyền biên tập viên) — chạy rồi thoát.
+//   docker compose ... run --rm --no-deps api --set-role bientap@dxtechs.com editor
+if (args.Contains("--set-role"))
+{
+    return await IdentityModule.SetRoleAsync(app.Services, args, Console.Out);
+}
+
+// ADR-015 (CT-1): nạp nội dung web hiện có (tin tức, giải pháp, đào tạo, tài nguyên) — giữ nguyên slug, chạy lại không nhân đôi.
+//   docker compose ... run --rm --no-deps api --seed-content [--dry-run]
+if (args.Contains("--seed-content"))
+{
+    return await ContentModule.SeedContentAsync(app.Services, dryRun: args.Contains("--dry-run"), Console.Out);
 }
 
 // ADR-014 (PR-11): nhập license key — key đọc từ stdin, mỗi dòng một key; chỉ in số lượng, không in key.

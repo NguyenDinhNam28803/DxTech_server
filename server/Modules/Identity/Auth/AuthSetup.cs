@@ -17,6 +17,9 @@ internal static class AuthPolicies
 {
     /// <summary>Admin đang hoạt động — kiểm tra lại DB (ADR-012 §5).</summary>
     public const string Admin = Contracts.Policies.Admin;
+
+    /// <summary>Editor hoặc admin đang hoạt động (ADR-015 §4).</summary>
+    public const string Content = Contracts.Policies.Content;
 }
 
 /// <summary>Đăng ký xác thực, phân quyền, giới hạn tần suất cho module Identity (ADR-012).</summary>
@@ -56,12 +59,16 @@ internal static class AuthSetup
                 };
             });
 
-        services.AddScoped<IAuthorizationHandler, ActiveAdminHandler>();
+        services.AddScoped<IAuthorizationHandler, ActiveRoleHandler>();
         services.AddAuthorizationBuilder()
             .AddPolicy(AuthPolicies.Admin, policy => policy
                 .RequireAuthenticatedUser()
-                .RequireClaim(AuthClaims.Role, "admin")
-                .AddRequirements(new ActiveAdminRequirement()));
+                .RequireClaim(AuthClaims.Role, UserRoles.Name(UserRole.Admin))
+                .AddRequirements(new ActiveRoleRequirement(UserRole.Admin)))
+            .AddPolicy(AuthPolicies.Content, policy => policy
+                .RequireAuthenticatedUser()
+                .RequireClaim(AuthClaims.Role, UserRoles.Name(UserRole.Editor), UserRoles.Name(UserRole.Admin))
+                .AddRequirements(new ActiveRoleRequirement(UserRole.Editor, UserRole.Admin)));
 
         services.AddRateLimiter(_ => { });
         services.AddOptions<RateLimiterOptions>()
@@ -154,15 +161,21 @@ internal static class AuthSetup
     };
 }
 
-/// <summary>Admin phải còn hoạt động và security stamp trong token khớp DB (bị hạ quyền/khoá ⇒ mất quyền gần như ngay).</summary>
-internal sealed class ActiveAdminRequirement : IAuthorizationRequirement;
+/// <summary>
+/// Tài khoản phải còn hoạt động, role trong DB thuộc <see cref="Roles"/> và security stamp trong token khớp DB
+/// (bị hạ quyền/khoá ⇒ mất quyền gần như ngay, không chờ access token hết hạn). Dùng cho policy admin và content.
+/// </summary>
+internal sealed class ActiveRoleRequirement(params UserRole[] roles) : IAuthorizationRequirement
+{
+    public IReadOnlyCollection<UserRole> Roles { get; } = roles;
+}
 
-internal sealed class ActiveAdminHandler(AppDbContext db, IMemoryCache cache, IOptions<AuthOptions> options)
-    : AuthorizationHandler<ActiveAdminRequirement>
+internal sealed class ActiveRoleHandler(AppDbContext db, IMemoryCache cache, IOptions<AuthOptions> options)
+    : AuthorizationHandler<ActiveRoleRequirement>
 {
     private sealed record AdminState(UserRole Role, UserStatus Status, string Stamp);
 
-    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, ActiveAdminRequirement requirement)
+    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, ActiveRoleRequirement requirement)
     {
         string? sub = context.User.FindFirst(AuthClaims.Subject)?.Value;
         string? stamp = context.User.FindFirst(AuthClaims.StampPrefix)?.Value;
@@ -172,7 +185,7 @@ internal sealed class ActiveAdminHandler(AppDbContext db, IMemoryCache cache, IO
         }
 
         AdminState? state = await Load(userId);
-        if (state is { Role: UserRole.Admin, Status: UserStatus.Active } && state.Stamp == stamp)
+        if (state is { Status: UserStatus.Active } && requirement.Roles.Contains(state.Role) && state.Stamp == stamp)
         {
             context.Succeed(requirement);
         }
