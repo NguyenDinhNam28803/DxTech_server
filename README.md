@@ -175,6 +175,29 @@ shred -u keys.txt
 **Tài khoản nhận tiền** (công khai, tuỳ chọn tới khi có tài khoản): `PAYMENTS_BANK_BIN`, `PAYMENTS_BANK_NAME`,
 `PAYMENTS_ACCOUNT_NUMBER`, `PAYMENTS_ACCOUNT_NAME` trong `.env`. Để trống ⇒ `POST /api/orders` trả 422 `sales.ordering_unavailable`.
 
+## Webhook SePay (ADR-013, PR-12)
+
+`POST /api/payments/webhooks/sepay` — SePay gọi khi tài khoản nhận tiền. Kiểm **IP nguồn** (danh sách SePay công bố,
+`Payments:Sepay:AllowedIps`), **chữ ký** HMAC-SHA256 trên raw body + **timestamp** ±5 phút; ghi hộp thư `webhook_events` trước rồi
+xử lý trong một transaction: ghi `payments` → đơn `paid` → giao key → `fulfilled`. Trả 200 `{"success":true}` (kể cả gửi trùng),
+401 sai chữ ký/IP/timestamp (lưu làm bằng chứng, tối đa 1.000/ngày), 500 ⇒ SePay gửi lại + job `WebhookMaintenance` xử lý lại mỗi phút.
+
+| Tình huống | `match_status` | Đơn |
+|---|---|---|
+| Đúng mã, đủ tiền | `matched` | `fulfilled` (có dòng account/manual ⇒ `paid`) |
+| Thừa tiền | `overpaid` | như trên — hoàn phần thừa |
+| Thiếu tiền | `underpaid` | giữ nguyên |
+| Không có mã / mã lạ | `no_order_code` / `unknown_order` | — |
+| Đơn đã trả / huỷ không phải do hết hạn / quá 24 giờ | `order_not_payable` | giữ nguyên — hoàn tiền |
+| Đến muộn ≤ 24 giờ, còn key | `matched`/`overpaid` | mở lại ⇒ `fulfilled` (`late_payment`) |
+| Đến muộn, hết key | `late_no_stock` | `cancelled` — hoàn tiền |
+
+Admin xem khoản lệch: `GET /api/admin/payments/unresolved`.
+
+**Bật trên production** (khi có tài khoản SePay): SePay → Webhooks → URL `https://api.dxtechs.com/api/payments/webhooks/sepay`,
+xác thực **HMAC-SHA256** → chép Secret Key, gõ trực tiếp trên VPS: `printf '\nPAYMENTS_SEPAY_WEBHOOK_SECRET=%s\n' '<secret>' >> .env`
+(hoặc `nano .env`), cùng 4 biến `PAYMENTS_BANK_*`/`PAYMENTS_ACCOUNT_*` → chạy lại job Deploy. Chưa có secret ⇒ endpoint trả 404.
+
 ## Quy ước route
 
 Mọi controller dùng tiền tố `api/`, ví dụ `[Route("api/[controller]")]`. Nginx trên VPS chỉ chuyển

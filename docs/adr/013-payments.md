@@ -90,3 +90,15 @@ như `AUTH_SIGNING_KEY`. Thông tin tài khoản nhận tiền (ngân hàng, s�
 - Tài khoản nhận tiền qua `Payments:BankTransfer:*` (biến `PAYMENTS_*`); chưa cấu hình ⇒ không nhận đặt hàng (422), phần còn lại chạy bình thường.
 - Đặt hàng: advisory lock theo người dùng trong transaction ⇒ giới hạn 3 đơn chờ và idempotency không bị vượt do đua; báo giá lại
   bằng cùng lõi PR-10; thiếu key khi giữ ⇒ ROLLBACK cả đơn. Webhook + tiền đến muộn: PR-12.
+
+## Ghi chú triển khai (PR-12, 27/11/2026)
+- `Payments/Features/Sepay`: chữ ký `sha256=<hex>` = HMAC-SHA256(secret, "{timestamp}.{raw body}"), so sánh thời gian hằng; lệch giờ > 300 giây ⇒ 401;
+  IP ngoài danh sách SePay (appsettings, tắt được bằng `Payments:Sepay:CheckIps=false`) ⇒ 401. Body đọc thẳng từ `Request.Body` (≤ 64 KB) —
+  không qua model binding nên chữ ký tính trên đúng byte nhận được.
+- Ranh giới module: Payments chỉ ghi nhận tiền; luật áp tiền vào đơn nằm ở Sales (`Sales.Contracts.IOrderPayments`), chạy trong cùng transaction,
+  khoá dòng đơn `FOR UPDATE` — webhook, job hết hạn, khách huỷ không đè nhau.
+- Thời điểm giao dịch SePay là giờ Việt Nam ⇒ đổi sang UTC trước khi lưu (phát hiện khi viết test: Npgsql từ chối offset +07).
+- Hai lớp chống trùng: UNIQUE `webhook_events (provider, event_key)` và UNIQUE `payments (provider, provider_txn_id)`. Thử phá lớp thứ nhất
+  (mỗi lần gửi lại thành sự kiện mới) ⇒ 10 lần gửi vẫn chỉ 1 payment nhờ lớp thứ hai.
+- Job `WebhookMaintenance`: xử lý lại sự kiện treo mỗi phút (≤ 10 lần, 50 sự kiện/lượt), dọn sự kiện > 180 ngày không gắn payment.
+- ⚠️ Trước khi mở bán: chuyển thật 2.000 ₫ để xác nhận tên trường payload SePay (`id`, `transferAmount`, `content`, `transactionDate`…) và định dạng chữ ký.

@@ -9,6 +9,7 @@
 #   LICENSE_ENC_KEY_V1=...  license key AES   (api)      — generate: openssl rand -base64 32   (ADR-014)
 #   LICENSE_HMAC_KEY=...    license key HMAC  (api)      — generate: openssl rand -base64 32   (ADR-014)
 #   PAYMENTS_BANK_BIN / _BANK_NAME / _ACCOUNT_NUMBER / _ACCOUNT_NAME — optional until the bank account exists (ADR-013)
+#   PAYMENTS_SEPAY_WEBHOOK_SECRET — optional until SePay is set up (ADR-013, PR-12)
 # Hex passwords on purpose: they go into connection strings without any escaping.
 # API_TAG is set by CI to the short commit SHA, so every deploy leaves a tagged
 # image behind that can be started again for a rollback (see .github/workflows/ci-cd.yml).
@@ -108,6 +109,8 @@ services:
       Payments__BankTransfer__BankName: ${PAYMENTS_BANK_NAME:-}
       Payments__BankTransfer__AccountNumber: ${PAYMENTS_ACCOUNT_NUMBER:-}
       Payments__BankTransfer__AccountName: ${PAYMENTS_ACCOUNT_NAME:-}
+      # ADR-013 (PR-12): SePay webhook HMAC secret (SePay dashboard → Webhooks → Secret Key). Empty ⇒ webhook endpoint returns 404.
+      Payments__Sepay__WebhookSecret: ${PAYMENTS_SEPAY_WEBHOOK_SECRET:-}
     ports:
       - "127.0.0.1:8080:8080"   # only Nginx on the VPS can reach it; required by the forwarded-headers setup in Program.cs
 
