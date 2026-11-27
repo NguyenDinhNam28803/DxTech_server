@@ -10,6 +10,7 @@ using server.Infrastructure.Persistence.Interceptors;
 using server.Modules.Catalog;
 using server.Modules.Identity;
 using server.Modules.Inventory;
+using server.Modules.Payments;
 using server.Modules.Sales;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,8 +49,9 @@ builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
 // Module nghiệp vụ (ADR-001): mỗi module tự đăng ký service của mình.
 builder.Services.AddCatalogModule(builder.Configuration);
 builder.Services.AddIdentityModule(builder.Configuration);
-builder.Services.AddInventoryModule();
-builder.Services.AddSalesModule();
+builder.Services.AddInventoryModule(builder.Configuration);
+builder.Services.AddPaymentsModule(builder.Configuration);
+builder.Services.AddSalesModule(builder.Configuration);
 
 // An toàn mặc định (ADR-012 §5): mọi action MVC yêu cầu đăng nhập, trừ khi ghi [AllowAnonymous] rõ ràng
 // (test kiến trúc bắt buộc mỗi controller ghi rõ). Dùng filter thay cho FallbackPolicy để URL không tồn tại vẫn
@@ -126,6 +128,13 @@ if (args.Contains("--create-admin"))
 {
     return await IdentityModule.CreateAdminAsync(
         app.Services, args, Console.In, Console.Out, interactive: !Console.IsInputRedirected);
+}
+
+// ADR-014 (PR-11): nhập license key — key đọc từ stdin, mỗi dòng một key; chỉ in số lượng, không in key.
+//   docker compose ... run --rm --no-deps -T api --import-keys <SKU> [--note "Hoá đơn"] [--dry-run] < keys.txt
+if (args.Contains("--import-keys"))
+{
+    return await InventoryModule.ImportKeysAsync(app.Services, args, Console.In, Console.Out);
 }
 
 // ---------------------------------------------------------------------------

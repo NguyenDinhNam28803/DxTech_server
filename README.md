@@ -142,6 +142,39 @@ $C run --rm --no-deps api --create-admin admin@dxtechs.com --name "Nguyễn Đì
 Quy tắc mật khẩu (NIST SP 800-63B): 10–128 ký tự, cho phép dấu tiếng Việt và khoảng trắng, không bắt buộc ký tự
 đặc biệt; từ chối mật khẩu phổ biến và mật khẩu chứa phần trước `@` của email. Mã thoát: 0 thành công, 1 lỗi, 2 sai cú pháp.
 
+## Đơn hàng & giỏ hàng (Phase 3: PR-10, PR-11)
+
+| Method · Path | Xác thực | Kết quả |
+|---|---|---|
+| `POST /api/cart/quote` | — (60/phút/IP) | Báo giá: giá, tồn, tổng do server tính; trạng thái từng dòng |
+| `POST /api/orders` + header `Idempotency-Key` | Bearer (10/giờ/IP) | 201 đơn mới + hướng dẫn chuyển khoản VietQR (hạn 30 phút) · 200 nếu gửi lại cùng khoá · 409 hết hàng / quá 3 đơn chờ · 422 chưa cấu hình tài khoản nhận tiền |
+| `GET /api/orders/{code}` | Bearer, chủ đơn | Chi tiết + dòng thời gian; key rõ khi đơn `fulfilled`; đơn người khác ⇒ 404 |
+| `POST /api/orders/{code}/cancel` | Bearer, chủ đơn | Huỷ đơn chờ thanh toán, key về kho |
+| `GET /api/me/orders?cursor=` | Bearer | “Đơn của tôi”, mới nhất trước |
+
+Job nền `OrderExpiry` chạy mỗi phút: huỷ đơn quá hạn (lý do `expired`), trả key về kho.
+
+## License key (ADR-014, PR-11)
+
+**Khoá mã hoá** — bắt buộc trong `.env` trước khi deploy PR-11 (thiếu ⇒ `docker compose` dừng trước khi thay container):
+```bash
+cd ~/dxtechs-server && cp .env .env.bak-$(date +%F)
+printf '\nLICENSE_ENC_KEY_V1=%s\nLICENSE_HMAC_KEY=%s\n' "$(openssl rand -base64 32)" "$(openssl rand -base64 32)" >> .env
+grep -c '^LICENSE_' .env      # 2 — KHÔNG cat .env
+```
+Khoá **không** nằm trong backup DB: chép hai giá trị sang **2 nơi tách biệt** (trình quản lý mật khẩu + nơi công ty chỉ định)
+trước khi nhập key thật. Mất khoá = mọi key trong kho không giải mã được.
+
+**Nhập key** (mỗi dòng một key; dòng trống và dòng `#` bị bỏ qua; trùng được đếm và bỏ qua; không in key):
+```bash
+$C run --rm --no-deps -T api --import-keys <SKU> --note "Hoá đơn NPP số …" --dry-run < keys.txt   # thử
+$C run --rm --no-deps -T api --import-keys <SKU> --note "Hoá đơn NPP số …" < keys.txt             # thật
+shred -u keys.txt
+```
+
+**Tài khoản nhận tiền** (công khai, tuỳ chọn tới khi có tài khoản): `PAYMENTS_BANK_BIN`, `PAYMENTS_BANK_NAME`,
+`PAYMENTS_ACCOUNT_NUMBER`, `PAYMENTS_ACCOUNT_NAME` trong `.env`. Để trống ⇒ `POST /api/orders` trả 422 `sales.ordering_unavailable`.
+
 ## Quy ước route
 
 Mọi controller dùng tiền tố `api/`, ví dụ `[Route("api/[controller]")]`. Nginx trên VPS chỉ chuyển

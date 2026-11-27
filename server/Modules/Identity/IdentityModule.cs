@@ -38,6 +38,8 @@ public static class IdentityModule
         services.AddScoped(sp => new AccountHandler(
             sp.GetRequiredService<AppDbContext>(), sp.GetRequiredService<IPasswordHasher<User>>(), sp.GetRequiredService<SessionService>()));
 
+        services.AddScoped<Contracts.IUserProfiles, UserProfiles>();
+
         services.AddSingleton<RefreshTokenCleanup>();
         services.AddHostedService(sp => sp.GetRequiredService<RefreshTokenCleanup>());
         return services;

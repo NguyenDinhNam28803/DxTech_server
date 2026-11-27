@@ -83,10 +83,10 @@ jobs:
 
       - name: Validate production compose file
         run: |
-          POSTGRES_USER=u POSTGRES_PASSWORD=p POSTGRES_DB=d DB_OWNER_PASSWORD=o DB_APP_PASSWORD=a AUTH_SIGNING_KEY=k \
+          POSTGRES_USER=u POSTGRES_PASSWORD=p POSTGRES_DB=d DB_OWNER_PASSWORD=o DB_APP_PASSWORD=a AUTH_SIGNING_KEY=k LICENSE_ENC_KEY_V1=e LICENSE_HMAC_KEY=h \
             docker compose -f docker-compose.prod.yml config --quiet
           # Every service must have log rotation.
-          POSTGRES_USER=u POSTGRES_PASSWORD=p POSTGRES_DB=d DB_OWNER_PASSWORD=o DB_APP_PASSWORD=a AUTH_SIGNING_KEY=k \
+          POSTGRES_USER=u POSTGRES_PASSWORD=p POSTGRES_DB=d DB_OWNER_PASSWORD=o DB_APP_PASSWORD=a AUTH_SIGNING_KEY=k LICENSE_ENC_KEY_V1=e LICENSE_HMAC_KEY=h \
             docker compose -f docker-compose.prod.yml config --format json \
             | python3 -c 'import json,sys; s=json.load(sys.stdin)["services"]; bad=[n for n,v in s.items() if v.get("logging",{}).get("options",{}).get("max-size")!="10m"]; sys.exit("no log rotation: %s" % bad if bad else 0)'
 

@@ -1,6 +1,6 @@
 # ADR-014: Mã hoá license key trong database
 
-- **Trạng thái:** Đã duyệt (26/11/2026) — thiết kế bảng: `docs/database/phase3-schema.md` mục 3.7
+- **Trạng thái:** Áp dụng (PR-11, 27/11/2026) — thiết kế bảng: `docs/database/phase3-schema.md` mục 3.7
 - **Ngày:** 2026-11-25
 - **Liên quan:** ADR-009 (role DB), ADR-013 (cấp key sau thanh toán); *Thiết kế toàn bộ Database v1.0* mục 9
   (`inventory.license_keys`), 13.3 (sao lưu khoá); backup mã hoá (`deploy/vps/backup/`)
@@ -50,3 +50,13 @@ toán, (3) xoay khoá được, (4) chỉ dùng thư viện có sẵn của .NET
 - Kiểm thử bắt buộc: mã hoá → giải mã khớp; đổi 1 byte ciphertext/tag/AAD ⇒ lỗi; hai lần mã hoá cùng key ⇒ ciphertext khác
   nhau, hash giống nhau; nhập key trùng (khác định dạng `-`/hoa thường) ⇒ bị UNIQUE chặn; xoay V1→V2 giữ giải mã được;
   log không chứa key rõ.
+
+## Ghi chú triển khai (PR-11, 27/11/2026)
+- `Modules/Inventory/Crypto/LicenseKeyProtector.cs`: AAD = `variant_id` (16 byte) ‖ `key_version` (2 byte big-endian) — đổi phiên bản
+  trong DB cũng làm giải mã thất bại. Key **gốc** (giữ định dạng nhà phát hành) được mã hoá; HMAC tính trên key **chuẩn hoá**.
+- Cấu hình `License:CurrentVersion`, `License:EncryptionKeys:{n}`, `License:HmacKey`; kiểm tra khi khởi động: thiếu khoá phiên bản hiện tại,
+  khoá ≠ 32 byte, HMAC trùng khoá mã hoá ⇒ API không chạy. Compose: `LICENSE_ENC_KEY_V1`, `LICENSE_HMAC_KEY` bắt buộc (`:?`).
+- Lệnh `--import-keys <SKU>` đọc stdin (file key không vào image/container), một transaction, `--dry-run`; chỉ in số lượng và số dòng lỗi.
+- Lệnh `--rewrap-license-keys` (xoay khoá) **chưa làm** — chỉ cần khi xoay khoá lần đầu (Phase 5 hoặc khi nghi lộ).
+- Kiểm thử: đổi 1 byte nonce/ciphertext/tag ⇒ lỗi; chép sang gói khác ⇒ lỗi; xoay V1→V2 đọc được cả hai; bản mã không chứa key rõ;
+  key giữ khi đặt hàng bằng `FOR UPDATE SKIP LOCKED` — thử phá (bỏ khoá) ⇒ 25/25 đơn thành công trên 10 key, test đỏ.

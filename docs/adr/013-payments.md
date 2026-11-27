@@ -83,3 +83,10 @@ như `AUTH_SIGNING_KEY`. Thông tin tài khoản nhận tiền (ngân hàng, s�
 - Kiểm thử bắt buộc (PR-11): chữ ký sai/thiếu/timestamp cũ ⇒ 401 + inbox `signature_valid=false`; webhook ×10 ⇒ 1 payment;
   lệch tiền ⇒ không cấp key; tiền đến sau hết hạn; 50 đơn đồng thời không trùng key; lỗi giữa transaction ⇒ không có
   payment nửa vời, job xử lý lại thành công.
+
+## Ghi chú triển khai (PR-11, 27/11/2026)
+- Hướng dẫn chuyển khoản: `Payments.Contracts.IPaymentInstructions`; chuỗi VietQR tự dựng (`Modules/Payments/Features/VietQr.cs`:
+  EMVCo, NAPAS `A000000727`, dịch vụ `QRIBFTTA`, CRC-16/CCITT-FALSE). **Cần quét thử bằng app vài ngân hàng trước khi mở bán.**
+- Tài khoản nhận tiền qua `Payments:BankTransfer:*` (biến `PAYMENTS_*`); chưa cấu hình ⇒ không nhận đặt hàng (422), phần còn lại chạy bình thường.
+- Đặt hàng: advisory lock theo người dùng trong transaction ⇒ giới hạn 3 đơn chờ và idempotency không bị vượt do đua; báo giá lại
+  bằng cùng lõi PR-10; thiếu key khi giữ ⇒ ROLLBACK cả đơn. Webhook + tiền đến muộn: PR-12.

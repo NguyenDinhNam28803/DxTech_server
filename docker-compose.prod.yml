@@ -6,6 +6,9 @@
 #   DB_OWNER_PASSWORD=...   role dxtechs_owner (migrate)  — generate: openssl rand -hex 24
 #   DB_APP_PASSWORD=...     role dxtechs_app   (api)      — generate: openssl rand -hex 24
 #   AUTH_SIGNING_KEY=...    JWT signing key    (api)      — generate: openssl rand -base64 48   (ADR-012)
+#   LICENSE_ENC_KEY_V1=...  license key AES   (api)      — generate: openssl rand -base64 32   (ADR-014)
+#   LICENSE_HMAC_KEY=...    license key HMAC  (api)      — generate: openssl rand -base64 32   (ADR-014)
+#   PAYMENTS_BANK_BIN / _BANK_NAME / _ACCOUNT_NUMBER / _ACCOUNT_NAME — optional until the bank account exists (ADR-013)
 # Hex passwords on purpose: they go into connection strings without any escaping.
 # API_TAG is set by CI to the short commit SHA, so every deploy leaves a tagged
 # image behind that can be started again for a rollback (see .github/workflows/ci-cd.yml).
@@ -93,6 +96,18 @@ services:
       Auth__SigningKeys__0: ${AUTH_SIGNING_KEY:?set in .env (openssl rand -base64 48)}
       # Only during key rotation: the previous key, so tokens signed with it stay valid for their last 15 minutes.
       Auth__SigningKeys__1: ${AUTH_SIGNING_KEY_PREVIOUS:-}
+      # ADR-014 (PR-11): license key encryption. NOT in DB backups — keep copies in 2 separate places.
+      # Missing ⇒ `docker compose up` fails BEFORE any container is replaced (old API keeps running).
+      License__CurrentVersion: ${LICENSE_CURRENT_VERSION:-1}
+      License__EncryptionKeys__1: ${LICENSE_ENC_KEY_V1:?set in .env (openssl rand -base64 32)}
+      License__EncryptionKeys__2: ${LICENSE_ENC_KEY_V2:-}
+      License__HmacKey: ${LICENSE_HMAC_KEY:?set in .env (openssl rand -base64 32)}
+      # ADR-013 (PR-11): company bank account shown on the payment page (public info, not secrets).
+      # Empty ⇒ POST /api/orders answers "ordering unavailable" (422); everything else keeps working.
+      Payments__BankTransfer__BankBin: ${PAYMENTS_BANK_BIN:-}
+      Payments__BankTransfer__BankName: ${PAYMENTS_BANK_NAME:-}
+      Payments__BankTransfer__AccountNumber: ${PAYMENTS_ACCOUNT_NUMBER:-}
+      Payments__BankTransfer__AccountName: ${PAYMENTS_ACCOUNT_NAME:-}
     ports:
       - "127.0.0.1:8080:8080"   # only Nginx on the VPS can reach it; required by the forwarded-headers setup in Program.cs
 

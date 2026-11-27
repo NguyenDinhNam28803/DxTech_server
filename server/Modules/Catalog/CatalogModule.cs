@@ -32,6 +32,7 @@ public static class CatalogModule
             sp.GetRequiredService<Inventory.Contracts.IStockQuery>()));
         services.AddScoped<DemoCatalogSeeder>();
         services.AddScoped<Contracts.IVariantPricing, VariantPricing>();
+        services.AddScoped<Contracts.IVariantDirectory, VariantDirectory>();
         return services;
     }
 
